@@ -1,0 +1,2889 @@
+version: 2
+sources:
+  - name: company_info
+    schema: "{{ target.schema }}_external_company_info"
+    config:
+      freshness:
+        warn_after:
+          count: 8 # tables are weekly updated
+          period: day
+        filter: dt > DATE_SUB(CURRENT_DATE(), INTERVAL 10
+          DAY)
+      loaded_at_field: CAST(dt AS TIMESTAMP)
+    tables:
+      - name: MatchingTable
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_MatchingTable/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "\t" # tab character
+            ignore_unknown_values: true
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_MatchingTable
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: KLANTKEY
+            data_type: INTEGER
+            description: Sligro customer identifier
+          - name: SIZOKEY
+            data_type: STRING
+            description: Company.Info identifier
+          - name: OPGEHEVEN_JN
+            data_type: INTEGER
+            description: Is dissolved flag
+          - name: DATUM_OPGEHEVEN
+            data_type: STRING
+            description: Date dissolved
+          - name: Naam_score
+            data_type: INTEGER
+            description: Matching score name
+          - name: Adres_score
+            data_type: INTEGER
+            description: Matching score address
+          - name: KVK_score
+            data_type: INTEGER
+            description: Matching score KVK number
+          - name: Telefoon_score
+            data_type: INTEGER
+            description: Matching score phone number
+          - name: Opgehevend_score
+            data_type: INTEGER
+            description: Matching score dissolved
+          - name: Totaal_score
+            data_type: INTEGER
+            description: Matching score total
+          - name: Startdatum_klant
+            data_type: STRING #some data rows are in inconsistent date format
+            description: Start date customer
+      - name: BAG
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_BAG/*.jsonl.gz
+          options:
+            format: json
+            compression: gzip
+            hive_partition_uri_prefix: |
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_BAG
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOLOCIDM
+            data_type: STRING
+            description:
+              Het resultaat van de keuze tussen locatie ID en locatie ID match
+              op basis van de bronnen Kadaster (BAG), EAN en UPC.""
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Het resultaat van de keuze tussen LocatieID
+                en LocatieIDMatch op basis van de bronnen BAG, EAN en UPC.""
+          - name: BAGONUMID
+            data_type: STRING
+            description: Number Designation ID
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: BAGOOBRID
+            data_type: STRING
+            description: Public Space ID
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: BAGOPLTID
+            data_type: STRING
+            description: City ID
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: BAGOVBOID
+            data_type: STRING
+            description: Residence Object ID
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: BAGOLIGID
+            data_type: STRING
+            description: Anchorage ID
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: BAGOSTDID
+            data_type: STRING
+            description: Stand ID
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: BAGOPNDID
+            data_type: STRING
+            description: Uniek pand ID afkomstig uit de Kadaster data.
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel naar het pand
+          - name: BAGCNUMTYP
+            data_type: TINYINT
+            description: Number Designation Type
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGOPCD
+            data_type: STRING
+            description: Postal Code
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: BAGOHNR
+            data_type: INTEGER
+            description: House Number
+            meta:
+              source_data_type: I
+              source_functional_description: ""
+          - name: BAGOTHN
+            data_type: STRING
+            description: Addition
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: BAGOKIX
+            data_type: STRING
+            description: KIX
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: BAGWBWJR
+            data_type: SMALLINT
+            description: Construction Year Residence Object
+            meta:
+              source_data_type: SI
+              source_functional_description: ""
+          - name: BAGKBWJR
+            data_type: TINYINT
+            description: Class Construction Year Residence Object
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGWOPVL
+            data_type: DECIMAL
+            description: Surface Residence Area Object
+            meta:
+              source_data_type: I
+              source_functional_description: ""
+          - name: BAGKOPVL
+            data_type: TINYINT
+            description: Class Surface Area Residence Object
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGCGBDL
+            data_type: TINYINT
+            description: Main Usage Purpose Residence Object
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD1BIJ
+            data_type: TINYINT
+            description: Usage purpose Residence Object Meeting Function
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD2CEL
+            data_type: TINYINT
+            description: Usage purpose Residence Object Cell Function
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD3GEZ
+            data_type: TINYINT
+            description: Usage purpose Residence Object Healthcare Function
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD4IND
+            data_type: TINYINT
+            description: Usage purpose Residence Object Industry Function
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD5KAN
+            data_type: TINYINT
+            description: Usage purpose Residence Object Office Function
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD6LOG
+            data_type: TINYINT
+            description: Usage purpose Residence Object Lodgin Function
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD7OND
+            data_type: TINYINT
+            description: Usage purpose Residence Object Education Function
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD8SPO
+            data_type: TINYINT
+            description: Usage purpose Residence Object Sport Function
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD9WIN
+            data_type: TINYINT
+            description: Usage purpose Residence Object Shopping
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD10WO
+            data_type: TINYINT
+            description: Usage purpose Residence Object Residential
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLGD0OVE
+            data_type: TINYINT
+            description: Usage purpose Residence Object Remainder Usage
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGCSTPND
+            data_type: TINYINT
+            description: Status Building
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGCSTVBO
+            data_type: TINYINT
+            description: Status Residence Object
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: SIZOLATIT
+            data_type: STRING
+            description: "GPS co\xC3\xB6rdinaat breedtegraad."
+            meta:
+              source_data_type: D
+              source_functional_description: "GPS Co\xC3\xB6rdinaat Breedtegraad"
+          - name: SIZOLONGIT
+            data_type: STRING
+            description: "GPS co\xC3\xB6rdinaat lengte breedtegraad."
+            meta:
+              source_data_type: D
+              source_functional_description: "GPS Co\xC3\xB6rdinaat Lengtegraad"
+          - name: SIZORDX
+            data_type: INTEGER
+            description: National Triangulation X-cordinat
+            meta:
+              source_data_type: I
+              source_functional_description: ""
+          - name: SIZORDY
+            data_type: INTEGER
+            description: National Triangulation Y-cordinat
+            meta:
+              source_data_type: I
+              source_functional_description: ""
+          - name: SIZOGEO
+            data_type: STRING
+            description: Geografisch punt
+            meta:
+              source_data_type: G
+              source_functional_description: Geografisch punt
+          - name: SIZOGEOTXT
+            data_type: STRING
+            description: Geografisch punt in tekst format
+            meta:
+              source_data_type: C
+              source_functional_description: Geografisch punt in tekst format
+          - name: SIZCLOCTYP
+            data_type: TINYINT
+            description: Locationtype
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: SIZWCONADR
+            data_type: SMALLINT
+            description: Number of Enterprises Address
+            meta:
+              source_data_type: SI
+              source_functional_description: ""
+          - name: SIZKCONADR
+            data_type: TINYINT
+            description: Class Number of Enterprises Address
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: PECTYPWO
+            data_type: TINYINT
+            description: Type of Home
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: PECCEIG
+            data_type: TINYINT
+            description: Type of Ownership
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: PECWWOZ
+            data_type: DECIMAL
+            description: Property Valuation
+            meta:
+              source_data_type: I
+              source_functional_description: ""
+          - name: PECCENERL
+            data_type: TINYINT
+            description: Energy Lable Ressidence Object
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: PECCORIENT
+            data_type: TINYINT
+            description: Orientation
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: CIENERL
+            data_type: TINYINT
+            description: Energy Lable Ressidence Object
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: CIENINX
+            data_type: FLOAT64
+            description: Energy Index Ressidence Object
+            meta:
+              source_data_type: F
+              source_functional_description: ""
+          - name: CIENEST
+            data_type: TINYINT
+            description: Energy Lable Status Ressidence Object
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGLADRHFD
+            data_type: TINYINT
+            description: Main Address
+            meta:
+              source_data_type: TI
+              source_functional_description: ""
+          - name: BAGRBESNUM
+            data_type: SMALLINT
+            description: Best Number Designation At Residance Object
+            meta:
+              source_data_type: SI
+              source_functional_description: ""
+          - name: BAGOSTR
+            data_type: STRING
+            description: Street
+            meta:
+              source_data_type: C
+              source_functional_description: ""
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: BAG_Pand
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_BAG_Pand/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_BAG_Pand
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: BAGOPNDID
+            data_type: STRING
+            description: Uniek pand ID afkomstig uit de Kadaster data.
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel naar het pand
+          - name: SIZCBEDVER
+            data_type: TINYINT
+            description:
+              Indicatie of er mogelijk sprake is van een verzamelpand en wat
+              voor soort (winkelcentra, zorgcentra of bedrijfsverzamelpand).
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicator die aangeeft of een bedrijf gevestigd
+                is in een bedrijfsverzamelpand en wat voor soort
+          - name: PECWOZB
+            data_type: STRING
+            description: Onroerendezaakbelasting in percentages.
+            meta:
+              source_data_type: D
+              source_functional_description: Onroerendezaakbelasting in percentages
+          - name: PECWPNDIH
+            data_type: STRING
+            description: Inhoud van het pand, in kubieke meters.
+            meta:
+              source_data_type: D
+              source_functional_description: Inhoud pand in kubieke meters
+          - name: PECKPNDIH
+            data_type: TINYINT
+            description: Classificatie van de inhoud van het pand, in kubieke meters.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Classificatie van de inhoud van het pand, in
+                kubieke meters
+          - name: PECWTUIOP
+            data_type: STRING
+            description: Oppervlakte van een tuin of landgoed bij een pand.
+            meta:
+              source_data_type: D
+              source_functional_description:
+                Oppervlakte van de tuin of landgoed bij een
+                pand
+          - name: PECWDAKOP
+            data_type: STRING
+            description: Oppervlakte van het dak van het pand.
+            meta:
+              source_data_type: D
+              source_functional_description: Oppervlakte van het dak van het pand
+          - name: PECKDAKOP
+            data_type: TINYINT
+            description: Classificatie van de oppervlakte van het dak van een pand.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Classificatie van de oppervlakte van het dak
+                van een pand
+          - name: PECWPNDHO
+            data_type: STRING
+            description: Hoogte van een pand, in meters.
+            meta:
+              source_data_type: D
+              source_functional_description: Hoogte van een pand in meters
+          - name: PECKPNDHO
+            data_type: TINYINT
+            description: Classificatie van de hoogte van een pand, in meters.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Classificatie van de hoogte van een pand in
+                meters
+          - name: PECCDAK
+            data_type: TINYINT
+            description: Geeft aan of het dak plat of schuin is.
+            meta:
+              source_data_type: TI
+              source_functional_description: Geeft aan of het dak plat of schuin is.
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: Concerns
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Concerns/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Concerns
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOKEY_UP
+            data_type: STRING
+            description:
+              Verwijzing naar het unieke nummer van de bovenste instelling in
+              de organisatieboom, op basis van de door Company.info vastgestelde concernverbinding
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel van het concern
+          - name: SIZOSBIC
+            data_type: STRING
+            description: De SBI-code die het meest typerend is voor het concern.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                De SBI-code die het meest typerend is voor
+                het concern
+          - name: SIZOSBI2C
+            data_type: STRING
+            description: De 2-cijerige SBI-code die het meest typerend is voor het concern.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                De 2-cijerige SBI-code die het meest typerend
+                is voor het concern
+          - name: SIZOSBISEC
+            data_type: TINYINT
+            description: Het SBI-segment dat het meest typerend is voor het concern.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Het SBI-segment dat het meest typerend is voor
+                het concern
+          - name: SIZWAM_CO
+            data_type: INTEGER
+            description: Gesommeerd aantal concern medewerkers in Nederland.
+            meta:
+              source_data_type: I
+              source_functional_description: Gesommeerd aantal concern-medewerkers in Nederland
+          - name: SIZKAM_CO
+            data_type: TINYINT
+            description: Klasse gesommeerd aantal concern medewerkers in Nederland.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Klasse gesommeerd aantal concern-medewerkers
+                in Nederland
+          - name: SIZWAI_CO
+            data_type: SMALLINT
+            description: Aantal Organisaties behorende tot hetzelfde concern.
+            meta:
+              source_data_type: SI
+              source_functional_description:
+                Aantal Organisaties behorende tot hetzelfde
+                Concern
+          - name: SIZWLOC_CO
+            data_type: SMALLINT
+            description: Aantal unieke postcodes waar een concern activiteiten uitoefend.
+            meta:
+              source_data_type: SI
+              source_functional_description:
+                Aantal unieke postcodes waar een concern activiteiten
+                uitoefend
+          - name: SIZWLFTC
+            data_type: SMALLINT
+            description:
+              Leeftijd concern, waarbij de leeftijd van het oudste instelling
+              bepalend is.
+            meta:
+              source_data_type: SI
+              source_functional_description:
+                Leeftijd concern, waarbij de leeftijd van het
+                oudste instelling bepalend is
+          - name: SIZKLFTC
+            data_type: TINYINT
+            description:
+              Klasse indeling leeftijd concern, waarbij de leeftijd van de oudste
+              instelling bepalend is.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Klasse indeling leeftijd concern, waarbij de
+                leeftijd van het oudste instelling bepalend is?
+          - name: SIZWASBI2C
+            data_type: TINYINT
+            description: Het aantal verschillende tweecijferige branche codes van een concern.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Het aantal verschillende tweecijferige branche
+                codes van een concern
+          - name: SIZPMARBRC
+            data_type: STRING
+            description:
+              De gemiddelde bruto marge is in de sector waarin het bedrijf actief
+              is.
+            meta:
+              source_data_type: D
+              source_functional_description:
+                De gemiddelde bruto marge is in de sector waarin
+                het bedrijf actief is
+          - name: SIZPCLOBAC
+            data_type: STRING
+            description: Mate waarin een bedrijf de IT activiteiten in de cloud heeft.
+            meta:
+              source_data_type: D
+              source_functional_description:
+                Mate waarin een bedrijf de IT activiteiten
+                in de cloud heeft
+          - name: SIZLONDWEC
+            data_type: TINYINT
+            description:
+              indicator die aangeeft welk percentage van de medewerkers van een
+              concern mobiel is.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                indicator die aangeeft welk percentage van
+                de medewerkers van een concern mobiel is
+          - name: SIZLCUSTRC
+            data_type: TINYINT
+            description: Mate waarin een bedrijf bezig is met online marketing.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Mate waarin een bedrijf bezig is met online
+                marketing
+          - name: SIZLINTC
+            data_type: TINYINT
+            description:
+              De door Company.info ontwikkelde indicator dat aangeeft of het
+              concern internationaal actief is op basis van naam.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Inidicator van internationale bedrijven op
+                basis van bedrijfsnaam
+          - name: SELLBRVC
+            data_type: TINYINT
+            description:
+              Indicator of het concern een buitenlandse rechtsvorm heeft en daarmee
+              gevestigd is in het buitenland.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Inidicator van internationale bedrijven op
+                basis van buitenlandse rechtvorm
+          - name: SIZCCOMINT
+            data_type: TINYINT
+            description:
+              Dit kenmerk geeft weer in welke mate een concern behoefte heeft
+              aan ondersteuning op het vlak van interne communicatie.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Inidicator die aangeeft in wat de intensiteit
+                van de interne communicatie is
+          - name: SIZCAFZGEB
+            data_type: TINYINT
+            description:
+              Dit kenmerk geeft weer wat het afzetgebied van het bedrijf is van
+              lokaal naar internationaal.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Inidicator die aangeeft of een concern lokaal,
+                regionaal, interregionaal, landelijk of internationaal werkt
+          - name: SIZCWEBPRC
+            data_type: TINYINT
+            description:
+              Indicator die aangeeft wat de rol van de website van het concern
+              is in relatie tot omzet en communicatie.
+            meta:
+              source_data_type: TI
+              source_functional_description: Web profiel van het concern
+          - name: SIZCSOCMEC
+            data_type: TINYINT
+            description:
+              Indicator of concerrn actief is op social media  en waar sociale
+              media zich op richt (B-to-B en/of B-to-C).
+            meta:
+              source_data_type: TI
+              source_functional_description: Soort Social media binnen het concern
+          - name: SIZCMVOPYC
+            data_type: TINYINT
+            description:
+              Geeft aan of een bedrijf iets communiceert op het gebied van MVO
+              onder te verdelen in 5 niveau's van geen MVO genoemd tot ISO 14001.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Mate waarin bedrijf op de website uitdraagt
+                dat het aan Maatschappelijk Verantwoord Ondernemen (MVO) doet
+          - name: SIZLINTERC
+            data_type: TINYINT
+            description:
+              Door Company.info op basis van de website vastgestelde indicatie
+              of het concern internationaal actief is
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Door SIZO, op basis van de website vastgestelde
+                indicatie of het bedrijf internationaal actief is
+          - name: SIZKINTTEC
+            data_type: TINYINT
+            description: Indeling naar aantal gevonden internationale telefoonnummers.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indeling naar aantal gevonden internationale
+                telefoonnummers.
+          - name: SIZKINTLNC
+            data_type: TINYINT
+            description:
+              Aantal landen waarmee het concern een relatie heeft op basis van
+              waarnemingen op de website(s) van het concern.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Aantal landen waarmee het concern een relatie
+                heeft op basis van waarnemingen op de website(s) van het
+          - name: SIZLSISITE
+            data_type: TINYINT
+            description:
+              Kenmerk dat aangeeft dat een concern in zijn geheel op 1 locatie
+              gevestigd is.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Veld dat aangeeft dat een concern op locatie
+                gevestigd is
+          - name: SIZWCODIEP
+            data_type: TINYINT
+            description: Aantal lagen waaruit de concernboom is opgebouwd.
+            meta:
+              source_data_type: TI
+              source_functional_description: Maximaal aantal Hierarchische Lagen In Concern
+          - name: SIZKLOC_CO
+            data_type: TINYINT
+            description: Aantal verschillende locaties van het concern.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Aantal unieke postcodes waar een concern activiteiten
+                uitoefend
+          - name: SIZKAI_CO
+            data_type: TINYINT
+            description:
+              Aantal ingeschreven Kamer van Koophandel-vestigingen binnen een
+              concern.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Aantal Organisaties behorende tot hetzelfde
+                Concern
+          - name: SIZCMKB
+            data_type: TINYINT
+            description:
+              Door Company.info gegenereerd veld waarmee typering van bedrijf
+              wordt aangemaakt gebaseerd op aantal medewerkers.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Typering van organisatie binnen officiele indeling
+                van bedrijven op basis van aantal medewerkers
+          - name: GW_KWHITEC
+            data_type: TINYINT
+            description:
+              Het aantal kantoormedewerkers en daarmee het aantal geautomatiseerde
+              werkplekken.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicatie van het aantal kantoormedewerkers
+                (geautomatiseerde werkplekken) in een concern
+          - name: GW_KBLUEC
+            data_type: TINYINT
+            description:
+              Indicatie van het aantal productiemedewerkers (al het werk dat
+              niet achter een bureau plaatsvindt) in een concern.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicatie van het aantal productiemedewerkers
+                (al het werk dat niet achter een bureau plaatsvindt) in een concern.
+          - name: GW_KMOBTLC
+            data_type: TINYINT
+            description: Indicatie van het aantal mobiele telefoons in een concern.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicatie van het aantal mobiele telefoons
+                in een concern
+          - name: TRDKAM_CO
+            data_type: TINYINT
+            description:
+              Door Company.info gegenereerde indeling dat aangeeft wat de ontwikkeling
+              van een bedrijf is qua aantallen medewerkers over de laatste 3 jaren.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Ontiwkkeling in concerngrootte over de afgelopen
+                jaren
+          - name: SELLIPC
+            data_type: TINYINT
+            description: IP-adres aanwezig.
+            meta:
+              source_data_type: TI
+              source_functional_description: IP-adres aanwezig
+          - name: CINLDRZCIR
+            data_type: TINYINT
+            description:
+              "Geeft aan of een organisatie circulaire strategie\xC3\xABn toepast\
+              \ in de bedrijfsvoering. Gebaseerd op gewogen keywords via webcrawling."
+            meta:
+              source_data_type: TI
+              source_functional_description: Duurzaamheid Circulair
+          - name: CINCDRZCIR
+            data_type: TINYINT
+            description:
+              "Organisatie maakt gebruik van circulaire strategie\xC3\xABn in\
+              \ de bedrijfsvoering volgens de R-ladder van RVO. Gebaseerd op gewogen keywords\
+              \ via webcrawling."
+            meta:
+              source_data_type: TI
+              source_functional_description: Soort Duurzaamheid Circulair
+          - name: SELLLNKI
+            data_type: TINYINT
+            description:
+              Selecteer bedrijven die volgens Company.info geschikt zijn om te
+              koppelen met LinkedIn Ads op basis van bedrijfsnaam, URL en actief LinkedIN
+              profiel.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Bedrijfsnaam, URL en een gecrawled LinkedIn
+                account zijn aanwezig, wat een koppeling met LinkedIn Ads mogelijk maakt.
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: Instellingen
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Instellingen/*.jsonl.gz
+          options:
+            format: json
+            compression: gzip
+            # skip_leading_rows: 1
+            # field_delimiter: "|"
+            ignore_unknown_values: true # Ignores extra columns in the file that are not defined in the table schema.
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Instellingen
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOKEY
+            data_type: STRING
+            description:
+              Unieke sleutel die aan ieder bedrijf gekoppeld waarmee organisaties
+              in de Company.info database geidentificeerd kunnen worden
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel
+          - name: SIZOKEY_MD
+            data_type: STRING
+            description: Unieke sleutel van de moeder van een organisatie.
+            meta:
+              source_data_type: C
+              source_functional_description: Sizokey van Moeder van de organisatie
+          - name: SIZOKEY_UP
+            data_type: STRING
+            description:
+              Verwijzing naar het unieke nummer van de bovenste instelling in
+              de organisatieboom, op basis van de door Company.info vastgestelde concernverbinding
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel van het concern
+          - name: SIZOLOCKEY
+            data_type: STRING
+            description:
+              "Unieke locatie key: combinatie van sizokey van ultimate parent
+              en KIX code."
+            meta:
+              source_data_type: C
+              source_functional_description:
+                "Unieke locatie key: combinatie van Sizokey
+                van Ultimate Parent en KIX code"
+          - name: SIZOLOCIDM
+            data_type: STRING
+            description:
+              Het resultaat van de keuze tussen locatie ID en locatie ID match
+              op basis van de bronnen Kadaster (BAG), EAN en UPC.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Het resultaat van de keuze tussen LocatieID
+                en LocatieIDMatch op basis van de bronnen BAG, EAN en UPC.
+          - name: SIZOKIX
+            data_type: STRING
+            description: Postcode huisnummer combinatie.
+            meta:
+              source_data_type: C
+              source_functional_description: Postcode en Huisnummer
+          - name: SIZOPCD4
+            data_type: SMALLINT
+            description:
+              De eerste 4 cijfers van de postcode dient als sleutel naar regiokenmerken
+              als provincie en gemeente.
+            meta:
+              source_data_type: SI
+              source_functional_description: 4 Positie Postcode
+          - name: BAGOPNDID
+            data_type: STRING
+            description: Uniek pand ID afkomstig uit de Kadaster data.
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel naar het pand
+          - name: SIZOKVK12
+            data_type: STRING
+            description: 12-cijferig Kamer van Koophandel nummer.
+            meta:
+              source_data_type: C
+              source_functional_description: Oude 12-cijferige Kamer van Koophandel Nummer
+          - name: SIZOKVK
+            data_type: STRING
+            description: 8 cijferig Kamer van Koophandel nummer.
+            meta:
+              source_data_type: C
+              source_functional_description: Kamer van Koophandel Nummer
+          - name: SIZORSIN
+            data_type: STRING
+            description:
+              "Rechtspersonen en Samenwerkingsverbanden Informatienummer\xC2\_\
+              voor bv\xE2\u20AC\u2122s, verenigingen, stichtingen, vof\xE2\u20AC\u2122s\
+              \ en maatschappen (eenmanszaken niet)."
+            meta:
+              source_data_type: C
+              source_functional_description:
+                "Rechtspersonen en Samenwerkingsverbanden Informatienummer\xC2\
+                \_voor bv\xE2\u20AC\u2122s, verenigingen, stichtingen, vof\xE2\u20AC\u2122\
+                s en maatschappen (eenmanszaken niet)"
+          - name: SIZOVES
+            data_type: STRING
+            description: Uniek nummer per vestiging.
+            meta:
+              source_data_type: C
+              source_functional_description: Vestigingsnummer
+          - name: SIZONM
+            data_type: STRING
+            description: De naam die Company.info adviseert om te gebruiken in de marktbewerking.
+            meta:
+              source_data_type: C
+              source_functional_description: Organisatienaam
+          - name: SIZOSTN
+            data_type: STRING
+            description: Venootschapsnaam zoals deze bij de Kamer van Koophandel is ingeschreven.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Naam van organisatie zoals die in de statuten
+                staat vermeld.
+          - name: SIZOHN1
+            data_type: STRING
+            description:
+              Additionele namen van de organisatie hetzij afkomstig uit het handelsregister
+              van de KvK hetzij apart door Company.info en andere leveranciers, verzameld
+              zijn.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Naam waaronder de insttelling aan het handelsverkeer
+                deelneemt
+          - name: SIZOHN2
+            data_type: STRING
+            description:
+              Additionele namen van de organisatie hetzij afkomstig uit het handelsregister
+              van de KvK hetzij apart door Company.info en andere leveranciers, verzameld
+              zijn.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Naam waaronder de insttelling aan het handelsverkeer
+                deelneemt
+          - name: SIZOHN3
+            data_type: STRING
+            description:
+              Additionele namen van de organisatie hetzij afkomstig uit het handelsregister
+              van de KvK hetzij apart door Company.info en andere leveranciers, verzameld
+              zijn.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Naam waaronder de insttelling aan het handelsverkeer
+                deelneemt
+          - name: SIZONM_UP
+            data_type: STRING
+            description: Naam van de moedermaatschappij.
+            meta:
+              source_data_type: C
+              source_functional_description: De naam van de uiteindelijk moedermaatschappij
+          - name: SIZOADR
+            data_type: STRING
+            description: Adres waar organisatie gevestigd is.
+            meta:
+              source_data_type: C
+              source_functional_description: Adres
+          - name: SIZOSTR
+            data_type: STRING
+            description: Straat waar de organisatie gevestigd is.
+            meta:
+              source_data_type: C
+              source_functional_description: Straat
+          - name: SIZOHNR
+            data_type: INTEGER
+            description: Huisnummer van het organisatie waar het gevestigd is.
+            meta:
+              source_data_type: I
+              source_functional_description: Huisnummer
+          - name: SIZOTHN
+            data_type: STRING
+            description: Toevoeging behorend bij het huisnummer.
+            meta:
+              source_data_type: C
+              source_functional_description: Toevoeging
+          - name: SIZOPCD
+            data_type: STRING
+            description: Postcode waar de organisatie gevestigd.
+            meta:
+              source_data_type: C
+              source_functional_description: Postcode
+          - name: SIZOPLT
+            data_type: STRING
+            description: Plaats waar de organisatie gevestigd is.
+            meta:
+              source_data_type: C
+              source_functional_description: Plaats
+          - name: SIZOCADR
+            data_type: STRING
+            description: Zoals geregistreerd in het handelsregister van de Kamer van Koophandel.
+            meta:
+              source_data_type: C
+              source_functional_description: Zoals geregistreerd bij het Handelsregister
+          - name: SIZOCSTR
+            data_type: STRING
+            description: Zoals geregistreerd in het handelsregister van de Kamer van Koophandel.
+            meta:
+              source_data_type: C
+              source_functional_description: Zoals geregistreerd bij het Handelsregister
+          - name: SIZOCHNR
+            data_type: INTEGER
+            description: Zoals geregistreerd in het handelsregister van de Kamer van Koophandel.
+            meta:
+              source_data_type: I
+              source_functional_description: Zoals geregistreerd bij het Handelsregister
+          - name: SIZOCTHN
+            data_type: STRING
+            description: Zoals geregistreerd in het handelsregister van de Kamer van Koophandel.
+            meta:
+              source_data_type: C
+              source_functional_description: Zoals geregistreerd bij het Handelsregister
+          - name: SIZOCPCD
+            data_type: STRING
+            description: Zoals geregistreerd in het handelsregister van de Kamer van Koophandel.
+            meta:
+              source_data_type: C
+              source_functional_description: Zoals geregistreerd bij het Handelsregister
+          - name: SIZOCPLT
+            data_type: STRING
+            description: Zoals geregistreerd in het handelsregister van de Kamer van Koophandel.
+            meta:
+              source_data_type: C
+              source_functional_description: Zoals geregistreerd bij het Handelsregister
+          - name: SIZOPBADR
+            data_type: STRING
+            description: Postbus adres.
+            meta:
+              source_data_type: C
+              source_functional_description: Postbus Adres
+          - name: SIZOPBPB
+            data_type: STRING
+            description: Postbus adres postbus.
+            meta:
+              source_data_type: C
+              source_functional_description: Postbus adres van de instelling
+          - name: SIZOPBNR
+            data_type: INTEGER
+            description: Postbus nummer.
+            meta:
+              source_data_type: I
+              source_functional_description: Postbus Nummer
+          - name: SIZOPBPCD
+            data_type: STRING
+            description: Postbus postcode.
+            meta:
+              source_data_type: C
+              source_functional_description: Postbus Postcode
+          - name: SIZOPBPLT
+            data_type: STRING
+            description: Postbus plaats.
+            meta:
+              source_data_type: C
+              source_functional_description: Postbus Plaats
+          - name: SIZOTEL
+            data_type: STRING
+            description:
+              Het door Company.info vastgestelde telefoonnummer welke het best
+              te gebruiken is om contact op te nemen.
+            meta:
+              source_data_type: C
+              source_functional_description: Telefoonnummer
+          - name: SIZTTEL
+            data_type: STRING
+            description:
+              Het best te gebruiken telefoonnummer maar dan opgemaakt als telefoonnummer
+              (koppelteken toegevoegd).
+            meta:
+              source_data_type: C
+              source_functional_description: Telefoonnummer
+          - name: SIZOTELV
+            data_type: STRING
+            description:
+              Het door Company.info vastgestelde vast telefoonnummer welke het
+              best te gebruiken is om contact op te nemen.
+            meta:
+              source_data_type: C
+              source_functional_description: Vaste telefoonnummer
+          - name: SIZTTELV
+            data_type: STRING
+            description:
+              Het best te gebruiken vaste telefoonnummer maar dan opgemaakt als
+              telefoonnummer (koppelteken toegevoegd).
+            meta:
+              source_data_type: C
+              source_functional_description: Vaste telefoonnummer
+          - name: SIZOTELM
+            data_type: STRING
+            description:
+              Het door Company.info vastgestelde mobiele telefoonnummer welke
+              het best te gebruiken is om contact op te nemen.
+            meta:
+              source_data_type: C
+              source_functional_description: Mobiele telefoonnummer
+          - name: SIZTTELM
+            data_type: STRING
+            description:
+              Het best te gebruiken mobiele telefoonnummer maar dan opgemaakt
+              als telefoonnummer (koppelteken toegevoegd).
+            meta:
+              source_data_type: C
+              source_functional_description: Mobiele telefoonnummer
+          - name: SELLOPH
+            data_type: TINYINT
+            description: Indicator dat aangeeft dat een bedrijf is opgeheven.
+            meta:
+              source_data_type: TI
+              source_functional_description: Selectieveld waarbij 1= Organisatie is opgeheven
+          - name: SELLADRFT
+            data_type: TINYINT
+            description: Vestigingsadres Foutief.
+            meta:
+              source_data_type: TI
+              source_functional_description: Selectieveld waarbij 1= Organisatie heeft Adres (componenten) niet volledig
+          - name: SELLMLST
+            data_type: TINYINT
+            description:
+              Deze indicator is afkomstig van de Kamer van Koophandel waar bedrijven
+              aangeven hebben dat ze niet per post benaderd willen worden.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Selectieveld waarbij 1= Organisatie heeft KVK
+                Non Mail indicator
+          - name: SELKJURENT
+            data_type: TINYINT
+            description:
+              Selectieveld om bedrijven die Company.info als juridische entiteit
+              ziet, te kunnen selecteren of uit te sluiten.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                "Selectieveld waarbij 1= indicator Lege BV
+                : opzichzelfstaande inschrijvingen met specifieke branchecodes en max 2awp"
+          - name: SELLBDM
+            data_type: TINYINT
+            description: Deze bedrijven zijn beschikbaar voor direct mail.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Selectieveld waarbij 1= Organisatie heeft Adres
+                kan en mag geleverd worden voor direct mail
+          - name: SELLBTM
+            data_type: TINYINT
+            description: Deze bedrijen zijn beschikbaar voor telemarketing
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Selectieveld waarbij 1= Organisatie heeft Telefoonnummer
+                kan en mag geleverd worden voor telemarketing (excl BMNR)
+          - name: SELLECA
+            data_type: TINYINT
+            description:
+              "Indicator die aangeeft dat bedrijven actief\xC2\_aan het economisch\xC2\
+              \_verkeer deelnemen, gebaseerd op waarneming van de Kamer van Koophandel."
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                "Indicator die aangeeft dat bedrijven actief\xC2\
+                \_aan het economisch\xC2\_verkeer deelnemen, gebaseerd op waarneming van\
+                \ de Kamer van Koophandel."
+          - name: SELLIMP
+            data_type: TINYINT
+            description:
+              Indicator die aangeeft of een bedrijf import activiteiten onderneemt,
+              gebaseerd op waarneming van de Kamer van Koophandel.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicator die aangeeft of een bedrijf die import
+                activiteiten onderneemt
+          - name: SELLEXP
+            data_type: TINYINT
+            description:
+              Indicator die aangeeft of een bedrijf export activiteiten onderneemt,
+              gebaseerd op waarneming van de Kamer van Koophandel.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicator die aangeeft of een bedrijf die export
+                activiteiten onderneemt
+          - name: SIZLBMN
+            data_type: TINYINT
+            description: De rechtsvorm heeft betrekking op natuurlijk persoon.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Selectieveld waarbij 1= Maatschap, VOF, Eenmanszaak
+                of Commanditaire Vennootschap
+          - name: SIZLIO
+            data_type: TINYINT
+            description:
+              Selectie veld om bedrijven in oprichting te selecteren of uit te
+              sluiten.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Selectieveld waarbij 1= organisatie is in oprichting
+                (obv bedrijfsnaam)
+          - name: SIZCBYZTYP
+            data_type: TINYINT
+            description:
+              Door Company.info gecodeerde bedrijven met dezelfde naam en  adres
+              die voor verwarring zorgen zoals personeels vereniging, ouderraad, vrienden
+              van stichtingen.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                kvk-inschrijvingen die aanvullend op een bedrijf
+                zijn en door overeenkomst in naam verward kunnen worden met het bedrijf
+                zoals ouderraden en personneelsverenigingen
+          - name: SIZLHFDGBR
+            data_type: TINYINT
+            description:
+              Door Company.info gekozen bedrijf dat volgens Company.info het
+              best kan worden benader als je 1 bedrijf binnen het pand wil benaderen.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                De instellingen die meeste vierkante meters
+                inneemt in een bedrijfspand
+          - name: SIZOCILINK
+            data_type: STRING
+            description: Link Company.info bedrijfsprofiel.
+            meta:
+              source_data_type: C
+              source_functional_description: Link Company.Info bedrijfsprofiel
+          - name: SIZWAM
+            data_type: INTEGER
+            description: Aantal medewerkers van de instelling volgens Company.info.
+            meta:
+              source_data_type: I
+              source_functional_description: Aantal medewerkers organisatie
+          - name: SIZKAM
+            data_type: TINYINT
+            description:
+              Aantal medewerkers van de instelling volgens Company.info in klasses
+              weergegeven.
+            meta:
+              source_data_type: TI
+              source_functional_description: Klasse Aantal medewerkers organisatie
+          - name: SIZOSBI
+            data_type: STRING
+            description:
+              Standaard Bedrijfs Indeling, verkregen wanneer een bedrijf zich
+              inschrijft in het handelsregister van de Kamer van Koophandel.
+            meta:
+              source_data_type: C
+              source_functional_description: Branche codering
+          - name: SIZOSBI2
+            data_type: STRING
+            description:
+              De eerste 2 cijfers van de Standaard Bedrijfs Indeling, verkregen
+              wanneer een bedrijf zich inschrijft in het Handelsregister van de Kamer van
+              Koophandel. Er zijn ongeveer 90 verschillende SBI2 coderingen.
+            meta:
+              source_data_type: C
+              source_functional_description: Branche codering 2 cijferig
+          - name: SIZOSBISEG
+            data_type: TINYINT
+            description:
+              Indikking van de standaard Kamer van Koophandel bedrijfsindeling
+              naar 20 hoofdgroepen.
+            meta:
+              source_data_type: TI
+              source_functional_description: Branche codering Segment
+          - name: SIZONACE
+            data_type: STRING
+            description:
+              "De\xC2\_NACE-code\xC2\_is een code die door de\xC2\_Europese Unie\xC2\
+              \_en haar lidstaten toegekend wordt aan een bepaalde klasse van\xC2\_economische\
+              \ activiteiten\xC2\_(al dan niet commercieel)."
+            meta:
+              source_data_type: C
+              source_functional_description: Europese branche codering
+          - name: SIZCHNV
+            data_type: TINYINT
+            description: De door Company.info ontwikkelde indicator hoofd- en nevenvestiging
+            meta:
+              source_data_type: TI
+              source_functional_description: Hoofd Nevenvestiging Indicator
+          - name: SIZCRV
+            data_type: TINYINT
+            description: De rechtsvorm waarin de de organisatie wordt gedreven.
+            meta:
+              source_data_type: TI
+              source_functional_description: Rechtsvorm
+          - name: SIZKRV
+            data_type: TINYINT
+            description: In 14 groepen geclusterde rechtsvormen voor rapportages en analyses.
+            meta:
+              source_data_type: TI
+              source_functional_description: Klasse Rechtsvorm
+          - name: SIZDOPR
+            data_type: TIMESTAMP
+            description: Oprichtingsdatum organisatie.
+            meta:
+              source_data_type: DA
+              source_functional_description: Oprichtingsdatum instelling
+          - name: SIZWOPRJR
+            data_type: SMALLINT
+            description: Oprichtingsjaar organistatie.
+            meta:
+              source_data_type: SI
+              source_functional_description: Oprichtingsjaar instelling
+          - name: SIZTOPRDAT
+            data_type: STRING
+            description: Oprichtingsdatum organisatie.
+            meta:
+              source_data_type: C
+              source_functional_description: Oprichtingsdatum instelling
+          - name: SIZWLFT
+            data_type: SMALLINT
+            description: Leeftijd organisatie.
+            meta:
+              source_data_type: SI
+              source_functional_description: Leeftijd instelling
+          - name: SIZKLFT
+            data_type: TINYINT
+            description: Leeftijd van de organisatie is ingedeeld in klasses.
+            meta:
+              source_data_type: TI
+              source_functional_description: Klasse indeling leeftijd instelling
+          - name: SIZWFIL
+            data_type: SMALLINT
+            description: Aantal Filialen.
+            meta:
+              source_data_type: SI
+              source_functional_description: Aantal Filialen
+          - name: SIZCBNC1
+            data_type: TINYINT
+            description: Bankrelatie.
+            meta:
+              source_data_type: TI
+              source_functional_description: Bankrelatie 1
+          - name: SIZKBNC1
+            data_type: SMALLINT
+            description: Groepering van de bankgroepen in de meest voorkomende banken.
+            meta:
+              source_data_type: SI
+              source_functional_description: Klasse Bankrelatie (incl 'Overig')
+          - name: SIZOBTW
+            data_type: STRING
+            description: Btw-nummer.
+            meta:
+              source_data_type: C
+              source_functional_description: BTW Nummer
+          - name: SIZPMARBR
+            data_type: STRING
+            description:
+              Veld dat aangeeft wat de gemiddelde bruto marge is in de sector
+              waarin het bedrijf actief is.
+            meta:
+              source_data_type: D
+              source_functional_description:
+                Veld dat aangeeft wat de gemiddelde bruto marge
+                is in de sector waarin het bedrijf actief is
+          - name: SIZKMARBR
+            data_type: TINYINT
+            description:
+              Veld dat aangeeft wat de gemiddelde bruto marge is in de sector
+              waarin het bedrijf actief is.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Veld dat aangeeft wat de gemiddelde bruto marge
+                is in de sector waarin het bedrijf actief is
+          - name: SIZPCLOBA
+            data_type: STRING
+            description: De mate waarin een bedrijf de IT activiteiten in de cloud heeft.
+            meta:
+              source_data_type: D
+              source_functional_description:
+                Veld dat aangeeft in welke mate een bedrijf
+                de IT activiteiten in de cloud heeft
+          - name: SIZKCLOBA
+            data_type: TINYINT
+            description: De mate waarin een bedrijf de IT activiteiten in de cloud heeft.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Veld dat aangeeft in welke mate een bedrijf
+                de IT activiteiten in de cloud heeft
+          - name: SIZLINT
+            data_type: TINYINT
+            description:
+              De door Company.info ontwikkelde indicator dat aangeeft of de organisatie
+              internationaal actief is op basis van naam.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Inidicator van internationale bedrijven op
+                basis van bedrijfsnaam
+          - name: SELLBRV
+            data_type: TINYINT
+            description:
+              Indicator of bedrijf een buitenlandse rechtsvorm heeft en daarmee
+              gevestigd is in het buitenland.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Inidicator van internationale bedrijven op
+                basis van buitenlandse rechtvorm
+          - name: SIZOURL
+            data_type: STRING
+            description: Het webadres dat door Graydon wordt aangeleverd.
+            meta:
+              source_data_type: C
+              source_functional_description: Webadres
+          - name: SIZCKVKDIS
+            data_type: STRING
+            description: Kamer van Koophandel districtscode.
+            meta:
+              source_data_type: C
+              source_functional_description: KvK Districtscode
+          - name: SIZCTYPOVE
+            data_type: TINYINT
+            description: Type overheidsinstellingen.
+            meta:
+              source_data_type: TI
+              source_functional_description: Company.info indeling voor overheidsinstellingen
+          - name: SIZCTYPOND
+            data_type: TINYINT
+            description: Type onderwijsinstellingen.
+            meta:
+              source_data_type: TI
+              source_functional_description: Company.info indeling voor onderwijsinstellingen
+          - name: SIZOFR_FRM
+            data_type: STRING
+            description:
+              Op basis van diverse bronnen heeft Company.info een lijst aangelegd
+              met franchiseformules.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                De Franchiseformule die de Sizokey mogelijk
+                voert
+          - name: SIZCFR_SRT
+            data_type: TINYINT
+            description:
+              Op basis van de naam van de organisatie in combinatie met andere
+              informatie wordt bepaald om welke franchise formule het waarschijnlijk zou
+              gaan.
+            meta:
+              source_data_type: TI
+              source_functional_description: Het meest waarschijnlijke Franchiserelatie
+          - name: SIZCFR_GEV
+            data_type: TINYINT
+            description:
+              Op basis van concernstructuur wordt bepaald of het een franchisenemer
+              betreft.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                De mate waarin de Sizokey de Franchisegever
+                zou kunnen zijn
+          - name: SIZCFR_NEM
+            data_type: TINYINT
+            description:
+              Op basis van de naam van de organisatie in combinatie met andere
+              informatie wordt de mate van waarschijnlijkheid dat het een franchisenemer
+              betreft, bepaald. De indeling naar franchisenemers wordt maandelijks geupdate.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                De mate waarin de Sizokey een Franchisenemer
+                zou kunnen zijn
+          - name: SIZCFR_REL
+            data_type: TINYINT
+            description: Onderscheid tussen franchise gever en franchise nemer.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Onderscheid tussen franchise gever en franchise
+                nemer
+          - name: SIZLMDMU_L
+            data_type: TINYINT
+            description: Op deze benaderbare concern locatie worden beslissingen genomen.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Selectieveld waarbij 1= de instelling is gevestigd
+                op de marketable locatie
+          - name: SIZLMDMU_C
+            data_type: TINYINT
+            description:
+              "In totaal zijn er 2.4 mln bedrijven ingeschreven bij de Kamer\
+              \ van Koophandel. Ongeveer 1.2 mln bedrijven nemen beslissingen. Overige bedrijven\
+              \ zijn holdings, fiscale bv\xC3\xA2\xE2\u201A\xAC\xE2\u201E\xA2s etc. Op basis\
+              \ van van een aantal criteria bijvoorbeeld auto's op naam, factuurstromen,\
+              \ vacatures, functies die daaraan gekoppeld zijn wordt bepaald dat er activiteiten\
+              \ plaatsvinden en er beslissingen in het algemeen gemaakt worden."
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Selectieveld waarbij 1= de instelling is de
+                marketable DMU
+          - name: SIZOSKDMUL
+            data_type: STRING
+            description:
+              Geeft weer welk bedrijfsonderdeel waarschijnlijk de beslissingen
+              neemt voor deze locatie.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Doorverwijzing naar de SizoKey van de Marketable
+                Location
+          - name: SIZOSKDMUC
+            data_type: STRING
+            description:
+              Geeft weer welk bedrijfsonderdeel waarschijnlijk de beslissingen
+              neemt voor dit concern.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Doorverwijzing naar de SizoKey van de Marketable
+                DMU
+          - name: SIZCBESLV
+            data_type: TINYINT
+            description:
+              Geeft de soort besluitvorming (centraal of decentraal) van de organisatie
+              weer.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Geeft de soort besluitvorming van de organisatie
+                weer
+          - name: SIZLBDMU_L
+            data_type: TINYINT
+            description: Er vindt besluitvorming plaats op de locatie.
+            meta:
+              source_data_type: TI
+              source_functional_description: Er vindt besluitvorming plaats op de locatie
+          - name: SIZOCONTLR
+            data_type: TINYINT
+            description:
+              De door Company.info gekozen best benaderbare instelling binnen
+              een concern
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                De door Company.info gekozen best benaderbare
+                instelling binnen een concern
+          - name: SIZOLOCTLR
+            data_type: TINYINT
+            description:
+              De door Company.info gekozen best benaderbare instelling op een
+              concernlocatie
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                De door Company.info gekozen best benaderbare
+                instelling op een concernlocatie
+          - name: SIZWHINIVO
+            data_type: TINYINT
+            description: In welke laag in de concernboom bevind dit bedrijfsonderdeel zich.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Hierarchisch Niveau van Organisatie Binnen
+                Concern
+          - name: SIZCCOREL
+            data_type: TINYINT
+            description:
+              Typering van plaats van organisatie binnen concern (dochter, moeder
+              of ultimate parent).
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Typering van plaats van organisatie binnen
+                concern
+          - name: SIZOSTART
+            data_type: STRING
+            description: De datum (JJJJMM) waarop de organisatie is gestart.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                De datum (JJJJMM) waarop de organisatie is
+                gestart
+          - name: SIZCSTART
+            data_type: TINYINT
+            description: Geeft het type starter weer (zelfstandig, concern of concernonderdeel).
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Geeft het type starter weer (zelfstandig, concern
+                of concernonderdeel)
+          - name: SIZCZZP
+            data_type: TINYINT
+            description:
+              Door Company.info ontwikkelde indicator dat aangeeft dat het waarschijnlijk
+              een ZZP'er betreft.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Selectieveld waarbij 1= Organisatie waarschijnlijk
+                ZPP'er
+          - name: SIZCZZPTYP
+            data_type: TINYINT
+            description:
+              De ZZP'ers zijn onderverdeeld in kenmerken (kunde, kennis, creatie,
+              handel, locatiegebonden en administratief) die iets zeggen over de grondslag
+              van hun ZZP zijn.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Onderverdeling van de ZZP naar een aantal typeringen
+                o.b.v. de SBI-code
+          - name: SIZDVRH
+            data_type: TIMESTAMP
+            description: Datum laatste verhuizing organisatie.
+            meta:
+              source_data_type: DA
+              source_functional_description: Datum laatste verhuizing instelling
+          - name: SIZTVRHDAT
+            data_type: STRING
+            description: Datum laatste verhuizing organisatie.
+            meta:
+              source_data_type: C
+              source_functional_description: Datum laatste verhuizing instelling
+          - name: SIZDNMW
+            data_type: TIMESTAMP
+            description: Datum laatste gesignaleerde naamwijziging.
+            meta:
+              source_data_type: DA
+              source_functional_description: Datum laatste gesignaleerde naamwijziging
+          - name: SIZTNMWDAT
+            data_type: STRING
+            description: Datum laatste gesignaleerde naamwijziging.
+            meta:
+              source_data_type: C
+              source_functional_description: Datum laatste gesignaleerde naamwijziging
+          - name: SIZOBMKEY
+            data_type: STRING
+            description: Veld waarmee de weergave van de concernboom kan worden opgebouwd.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Veld waarmee de weergave van de concernboom
+                kan worden opgebouwd
+          - name: SIZRSORTC
+            data_type: INTEGER
+            description:
+              Volgorde van weergave van organisaties om een concernboom logisch
+              weer te geven.
+            meta:
+              source_data_type: I
+              source_functional_description:
+                Volgorde van weergave van instellingen om een
+                concernboom logisch weer te geven
+          - name: SIZWBOOM
+            data_type: STRING
+            description: Rapportageveld t.b.v. het weergeven van een concernboom.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Rapportageveld t.b.v. het weergeven van een
+                concernboom
+          - name: CRECKREDWA
+            data_type: TINYINT
+            description:
+              Deze indicator geeft inzicht in de mate waarin de organisatie binnen
+              de gestelde termijn haar facturen voldoet. De informatie is gebaseerd op de
+              verwerking van betalingservaringen van een groot aantal bedrijven in Nederland.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicatie van de mate van kredietwaardigheid
+                gebaseerd op kredietinformatie van Creditsafe
+          - name: SIZLVERRV
+            data_type: TINYINT
+            description: Verandering rechtsvorm.
+            meta:
+              source_data_type: TI
+              source_functional_description: Verandering Rechtsvorm
+          - name: SIZCVERADR
+            data_type: TINYINT
+            description: Verandering adres.
+            meta:
+              source_data_type: TI
+              source_functional_description: Verandering Adres
+          - name: SELLIP
+            data_type: TINYINT
+            description: IP-adres aanwezig.
+            meta:
+              source_data_type: TI
+              source_functional_description: IP-adres aanwezig
+          - name: SELLSUBSDE
+            data_type: TINYINT
+            description: Organisaties die een SDE subsidie toegekend gekregen hebben.
+            meta:
+              source_data_type: TI
+              source_functional_description: Subsidie SDE
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: Locaties
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Locaties/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Locaties
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOLOCKEY
+            data_type: STRING
+            description:
+              "Unieke locatie key: combinatie van sizokey van ultimate parent
+              en KIX code."
+            meta:
+              source_data_type: C
+              source_functional_description:
+                "Unieke locatie key: combinatie van Sizokey
+                van Ultimate Parent en KIX code"
+          - name: SIZOKEY_UP
+            data_type: STRING
+            description:
+              Verwijzing naar het unieke nummer van de bovenste instelling in
+              de organisatieboom, op basis van de door Company.info vastgestelde concernverbinding
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel van het concern
+          - name: SIZOSBIL
+            data_type: STRING
+            description:
+              De SBI-code die het meest typerend is voor alle concernonderdelen
+              op een locatie.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                De SBI-code die het meest typerend is voor
+                alle concernonderdelen op een locatie
+          - name: SIZOSBI2L
+            data_type: STRING
+            description:
+              De 2-cijerige SBI-code die het meest typerend is voor alle concernonderdelen
+              op een locatie
+            meta:
+              source_data_type: C
+              source_functional_description:
+                De 2-cijerige SBI-code die het meest typerend
+                is voor alle concernonderdelen op een locatie
+          - name: SIZOSBISEL
+            data_type: TINYINT
+            description:
+              De SBI-code die het meest typerend is voor alle concernonderdelen
+              op een locatie.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                De SBI-code die het meest typerend is voor
+                alle concernonderdelen op een locatie
+          - name: SIZWAM_LOC
+            data_type: INTEGER
+            description:
+              Gesommeerd aantal medewerkers van organisaties behorende tot hetzelfde
+              concern gevestigd op dezelfde KIX-code.
+            meta:
+              source_data_type: I
+              source_functional_description:
+                Gesommeerd aantal medewerkers van organisaties
+                behorende tot hetzelfde concern gevestigd op dezelfde kix-code
+          - name: SIZKAM_LOC
+            data_type: TINYINT
+            description:
+              Gesommeerd aantal medewerkers van organisaties behorende tot hetzelfde
+              concern gevestigd op dezelfde KIX-code.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Gesommeerd aantal medewerkers van organisaties
+                behorende tot hetzelfde concern gevestigd op dezelfde kix-code
+          - name: SIZWAI_LOC
+            data_type: SMALLINT
+            description: Gesomeerd aantal instellingen van een concern op een KIX-code.
+            meta:
+              source_data_type: SI
+              source_functional_description:
+                Gesomeerd aantal instellingen van een concern
+                op een kix-code
+          - name: SIZWLFTL
+            data_type: SMALLINT
+            description: Leeftijd instelling.
+            meta:
+              source_data_type: SI
+              source_functional_description: Leeftijd instelling
+          - name: SIZKLFTL
+            data_type: TINYINT
+            description: Klasse indeling leeftijd instelling.
+            meta:
+              source_data_type: TI
+              source_functional_description: Klasse indeling leeftijd instelling
+          - name: SIZWASBI2L
+            data_type: TINYINT
+            description:
+              "Het aantal verschillende tweecijferige branche codes van een concern\
+              \ op \xC3\xA9\xC3\xA9n locatie."
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                "Het aantal verschillende tweecijferige branche\
+                \ codes van een concern op \xC3\xA9\xC3\xA9n locatie"
+          - name: SIZPMARBRL
+            data_type: STRING
+            description:
+              Veld dat aangeeft wat de gemiddelde bruto marge is in de sector
+              waarin het bedrijf actief is.
+            meta:
+              source_data_type: D
+              source_functional_description:
+                Veld dat aangeeft wat de gemiddelde bruto marge
+                is in de sector waarin het bedrijf actief is
+          - name: SIZKMARBRL
+            data_type: TINYINT
+            description:
+              Veld dat aangeeft wat de gemiddelde bruto marge is in de sector
+              waarin het bedrijf actief is.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Veld dat aangeeft wat de gemiddelde bruto marge
+                is in de sector waarin het bedrijf actief is
+          - name: SIZPCLOBAL
+            data_type: STRING
+            description:
+              Veld dat aangeeft in welke mate een bedrijf de IT activiteiten
+              in de cloud heeft.
+            meta:
+              source_data_type: D
+              source_functional_description:
+                Veld dat aangeeft in welke mate een bedrijf
+                de IT activiteiten in de cloud heeft
+          - name: SIZKCLOBAL
+            data_type: TINYINT
+            description:
+              Veld dat aangeeft in welke mate een bedrijf de IT activiteiten
+              in de cloud heeft.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Veld dat aangeeft in welke mate een bedrijf
+                de IT activiteiten in de cloud heeft
+          - name: SIZLONDWEL
+            data_type: TINYINT
+            description:
+              indicator die aangeeft welk percentage van de medewerkers van een
+              locatie mobiel is.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                indicator die aangeeft welk percentage van
+                de medewerkers van een locatie mobiel is?
+          - name: SIZLCUSTRL
+            data_type: TINYINT
+            description:
+              Veld dat aangeeft in welke mate een bedrijf bezig is met online
+              marketing.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Veld dat aangeeft in welke mate een bedrijf
+                bezig is met online marketing
+          - name: GW_KWHITEL
+            data_type: TINYINT
+            description:
+              Indicatie van het aantal kantoormedewerkers (geautomatiseerde werkplekken)
+              op een locatie.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicatie van het aantal kantoormedewerkers
+                (geautomatiseerde werkplekken) op een locatie
+          - name: GW_KBLUEL
+            data_type: TINYINT
+            description:
+              Indicatie van het aantal productiemedewerkers (al het werk dat
+              niet achter een bureau plaatsvindt) op een locatie of concern.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicatie van het aantal productiemedewerkers
+                (al het werk dat niet achter een bureau plaatsvindt) op een locatie of concern.
+          - name: GW_KMOBTLL
+            data_type: TINYINT
+            description: Indicatie van het aantal mobiele telefoons op een locatie.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicatie van het aantal mobiele telefoons
+                op een locatie.
+          - name: GW_KJVGASL
+            data_type: TINYINT
+            description: Indicatie van het jaarverbruik gas op een locatie
+            meta:
+              source_data_type: TI
+              source_functional_description: Indicatie van het jaarverbruik gas op een locatie
+          - name: GW_KJVELEL
+            data_type: TINYINT
+            description: Indicatie van het jaarverbruik elektriciteit op een locatie
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicatie van het jaarverbruik elektriciteit
+                op een locatie
+          - name: SELLIPL
+            data_type: TINYINT
+            description: IP-adres aanwezig.
+            meta:
+              source_data_type: TI
+              source_functional_description: IP-adres aanwezig
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: SizoKeys_Opgeheven
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_SizoKeys_Opgeheven/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            max_bad_records: 1
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_SizoKeys_Opgeheven
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOKEY
+            data_type: STRING
+            description:
+              Unieke sleutel die aan ieder bedrijf gekoppeld waarmee organisaties
+              in de Company.info database geidentificeerd kunnen worden
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel
+          - name: SELLOPH
+            data_type: TINYINT
+            description: Indicator dat aangeeft dat een bedrijf is opgeheven.
+            meta:
+              source_data_type: TI
+              source_functional_description: Selectieveld waarbij 1= Organisatie is opgeheven
+          - name: SELCOPH
+            data_type: TINYINT
+            description: De reden van de opheffing.
+            meta:
+              source_data_type: TI
+              source_functional_description: Type Opheffing
+          - name: SIZDOPH
+            data_type: STRING
+            description: De datum waarop de opheffing is geregisteerd.
+            meta:
+              source_data_type: DA
+              source_functional_description: Datum Opheffing
+          - name: SIZTOPHDAT
+            data_type: STRING
+            description: De datum waarop de opheffing is geregistreerd in tekstopmaak.
+            meta:
+              source_data_type: C
+              source_functional_description: Datum Opheffing
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: Telefoonnummers
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Telefoonnummers/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Telefoonnummers
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOTEL
+            data_type: STRING
+            description:
+              Het door Company.info vastgestelde telefoonnummer welke het best
+              te gebruiken is om contact op te nemen.
+            meta:
+              source_data_type: C
+              source_functional_description: Telefoonnummer
+          - name: SPOTPROV
+            data_type: STRING
+            description: De provider waarnaar de portering is uitgevoerd.
+            meta:
+              source_data_type: DT
+              source_functional_description: De provider waarnaar de portering is uitgevoerd.
+          - name: SPOTKWRTL
+            data_type: STRING
+            description:
+              In welk kwartaal van welk jaar de portering van het beste, bekende
+              telefoonnummer heeft plaatsgevonden.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                In welk kwartaal van welk jaar de portering
+                van het beste, bekende telefoonnummer heeft plaatsgevonden.
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: View_Webdata_Keywords_Concern
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_View_Webdata_Keywords_Concern/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            max_bad_records: 1
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_View_Webdata_Keywords_Concern
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOKEY_UP
+            data_type: STRING
+            description:
+              Verwijzing naar het unieke nummer van de bovenste instelling in
+              de organisatieboom, op basis van de door Company.info vastgestelde concernverbinding
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel van het concern
+          - name: WDILBETACH
+            data_type: TINYINT
+            description:
+              Er wordt gebruik gemaakt van een website met de mogelijkheid tot
+              betaling achteraf.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                de mogelijkheid tot betaling achteraf
+          - name: WDILFACEBO
+            data_type: TINYINT
+            description: Op de website staat een link naar Facebook.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                een link naar Facebook
+          - name: WDILINSTGR
+            data_type: TINYINT
+            description: Op de website staat een link naar Instagram.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                een link naar Instagram
+          - name: WDILLINKIN
+            data_type: TINYINT
+            description: Op de website staat een link naar LinkedIn.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                een link naar LinkedIN
+          - name: WDILPINTER
+            data_type: TINYINT
+            description: Op de website staat een link naar Pinterest.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                een link naar Pinterest
+          - name: WDILTWITTE
+            data_type: TINYINT
+            description: Op de website staat een link naar Twitter.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                een link naar Twitter
+          - name: WDILTHUISW
+            data_type: TINYINT
+            description: Op de website staat een link naar een webshop.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website waar
+                aankopen kunnen worden gedaan
+          - name: WDILYOUTUB
+            data_type: TINYINT
+            description: Op de website staat een link naar Youtube.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                de link naar Youtube
+          - name: WDILFAMBED
+            data_type: TINYINT
+            description: Op de website wordt vermeld dat het een familiebedrijf betreft.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                kenbmerken van een familiebedrijf
+          - name: WDILWEBSHO
+            data_type: TINYINT
+            description: Op de website kunnen aankopen worden gedaan.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website die
+                te kenmerken is als een webshop
+          - name: WDILDRZDRZ
+            data_type: TINYINT
+            description: Op de website wordt gerefereerd aan duurzaamheid.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website die
+                refereert aan duurzaamheid
+          - name: WDILDRZISO
+            data_type: TINYINT
+            description: Op de website wordt gerefereerd naar een ISO normering.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website die
+                refereert aan ISO normering
+          - name: WDILDRZMVO
+            data_type: TINYINT
+            description:
+              Op de website wordt gerefereerd naar maatschappelijk verantwoord
+              ondernemen.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website die
+                refereert aan maatschappelijk verantwoord ondernemen
+          - name: WDILDRZSPO
+            data_type: TINYINT
+            description: Op de website wordt gerefereerd naar sponsoractiviteiten.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website die
+                refereert aan sponsoractiviteiten
+          - name: WDILDRZMVS
+            data_type: TINYINT
+            description: Op de website wordt gerefereerd naar een MVO verslag.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website die
+                refereert aan een MVO verslaglegging
+          - name: WDILPAKBEZ
+            data_type: TINYINT
+            description: Op de website wordt aangegeven dat er paketten worden bezorgd.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website die
+                aangeeft dat er paketten worden bezorgd
+          - name: WDILBTW
+            data_type: TINYINT
+            description: Op de website staat een btw-nummer.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website waarop
+                een BTW nummer is gevonden
+          - name: WDILIBAN
+            data_type: TINYINT
+            description: Op de website staat een IBAN nummer.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website waarop
+                een IBAN nummer is gevonden
+          - name: WDILMVOPYR
+            data_type: TINYINT
+            description:
+              Door Company.info wordt, op basis van de  informatie op de website,
+              vastgesteld in welke mate een bedrijf maatschappelijk verantwoord onderneemt.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Door SIZO, op basis van de website vastgesteld
+                oordeeld over de mate waarin een bedrijf maatschapelijk verantwoord onderneemt
+          - name: WDILADWORD
+            data_type: TINYINT
+            description: Er wordt gebruik gemaakt van een website met adwords.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                adwords
+          - name: WDILEMAIL
+            data_type: TINYINT
+            description: Er wordt gebruik gemaakt van een website met -email.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                email
+          - name: WDILAPPAND
+            data_type: TINYINT
+            description: Er wordt gebruik gemaakt van een website met een Android app.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                een Android app
+          - name: WDILAPPAPP
+            data_type: TINYINT
+            description: Er wordt gebruik gemaakt van een website met een Apple app.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                een Apple app
+          - name: WDILAPPBLB
+            data_type: TINYINT
+            description: Er wordt gebruik gemaakt van een website met een Blackberry app.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                een Blackberry app
+          - name: WDILAPPWIN
+            data_type: TINYINT
+            description:
+              Er wordt gebruik gemaakt van een website met een Windows phone
+              app.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                een  Windows Phone app
+          - name: WDILCONINF
+            data_type: TINYINT
+            description: Er wordt gebruik gemaakt van een website met contactinformatie.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                contactinformatie
+          - name: WDILCONTUS
+            data_type: TINYINT
+            description:
+              Er wordt gebruik gemaakt van een website met de mogelijkheid tot
+              het opnemen van contact.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                de mogelijkheid tot het opnemen van contact
+          - name: WDILLOGPAG
+            data_type: TINYINT
+            description:
+              Er wordt gebruik gemaakt van een website met de mogelijkheid tot
+              login.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                de mogelijkheid tot login
+          - name: WDILMOBPLF
+            data_type: TINYINT
+            description: Er wordt gebruik gemaakt van een website met  mobile platform.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met  mobile
+                platform
+          - name: WDILORGDAT
+            data_type: TINYINT
+            description: Er wordt gebruik gemaakt van een website met organic data.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                organic data
+          - name: WDILSERSEC
+            data_type: TINYINT
+            description:
+              Er wordt gebruik gemaakt van een website met op een beveiligde
+              server.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Er wordt gebruik gemaakt van een website met
+                op een beveiligde server
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: Voorspelmodellen_Locatie
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Voorspelmodellen_Locatie/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            max_bad_records: 1
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Voorspelmodellen_Locatie
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOLOCKEY
+            data_type: STRING
+            description:
+              "Unieke locatie key: combinatie van sizokey van ultimate parent
+              en KIX code."
+            meta:
+              source_data_type: C
+              source_functional_description:
+                "Unieke locatie key: combinatie van Sizokey
+                van Ultimate Parent en KIX code"
+          - name: SIZCBGT
+            data_type: TINYINT
+            description:
+              Door Company.info vastgestelde indeling van organisaties in 8 gedragsclusters
+              o.b.v. diverse kenmerken
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Door Company.info vastgestelde indeling van
+                organisaties o.b.v. diverse gedragskenmerken
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: Labels
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Labels/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Labels
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: identifier
+            data_type: STRING
+            description: Company Info table or file
+          - name: veldnaam
+            data_type: STRING
+            description: Field or column name
+          - name: SIZCLABGR
+            data_type: INTEGER
+            description: Category of the label
+          - name: volgorde
+            data_type: INTEGER
+            description: Order of the label category
+          - name: SIZOVOLG
+            data_type: INTEGER
+            description: Order of the label description
+          - name: SIZWLAB
+            data_type: STRING
+            description: Label code
+          - name: SIZTLAB
+            data_type: STRING
+            description: Description of the label in Dutch
+          - name: SIZTLABENG
+            data_type: STRING
+            description: Description of the label in English
+          - name: CRUD
+            data_type: STRING
+            description: ""
+      - name: Info_Postcode4
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Info_Postcode4/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            max_bad_records: 1
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Info_Postcode4
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOPCD4
+            data_type: SMALLINT
+            description:
+              De eerste 4 cijfers van de postcode dient als sleutel naar regiokenmerken
+              als provincie en gemeente.
+            meta:
+              source_data_type: SI
+              source_functional_description: 4 Positie Postcode
+          - name: SIZOPCD3
+            data_type: SMALLINT
+            description: 3 positie postcode.
+            meta:
+              source_data_type: SI
+              source_functional_description: 3 Positie Postcode
+          - name: SIZOPCD2
+            data_type: TINYINT
+            description: 2 positie postcode.
+            meta:
+              source_data_type: TI
+              source_functional_description: 2 Positie Postcode
+          - name: SIZOPCD1
+            data_type: TINYINT
+            description: 1 positie postcode.
+            meta:
+              source_data_type: TI
+              source_functional_description: 1 Positie Postcode
+          - name: SIZCGMC
+            data_type: SMALLINT
+            description: Gemeentecode.
+            meta:
+              source_data_type: SI
+              source_functional_description: Gemeentecode
+          - name: SIZCPROV
+            data_type: TINYINT
+            description: Provinciecode.
+            meta:
+              source_data_type: TI
+              source_functional_description: Provinciecode
+          - name: SIZWPROV
+            data_type: STRING
+            description: Provincie.
+            meta:
+              source_data_type: C
+              source_functional_description: Provincie
+          - name: SIZOPLT
+            data_type: STRING
+            description: Plaats waar de organisatie gevestigd is.
+            meta:
+              source_data_type: C
+              source_functional_description: Plaats
+          - name: SIZOPLTU
+            data_type: STRING
+            description: Plaats aangevuld met gemeente info bij plaatsen met dezelfde naam.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                Plaats aangevuld met gemeenteinfo bij plaatsen
+                met dezelfde naam
+          - name: SIZLPBS
+            data_type: TINYINT
+            description: Indicator dat de postcode uitsluitend voor postbussen wordt gebruikt.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Indicator dat de postcode uitsluitend voor
+                postbussen wordt gebruikt
+          - name: SIZCVAKREG
+            data_type: TINYINT
+            description: De vakantieregio waarin de organisatie is gevestigd.
+            meta:
+              source_data_type: TI
+              source_functional_description: De vakantieregio waarin de organisatie is gevestigd
+          - name: SIZCVREGIO
+            data_type: TINYINT
+            description: De veiligheidsregio waarin de organisatie is gevestigd.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                De veiligheidsregio waarin de organisatie is
+                gevestigd
+          - name: SIZOLATIT
+            data_type: STRING
+            description: "GPS co\xC3\xB6rdinaat breedtegraad."
+            meta:
+              source_data_type: D
+              source_functional_description: "GPS Co\xC3\xB6rdinaat Breedtegraad"
+          - name: SIZOLONGIT
+            data_type: STRING
+            description: "GPS co\xC3\xB6rdinaat lengte breedtegraad."
+            meta:
+              source_data_type: D
+              source_functional_description: "GPS Co\xC3\xB6rdinaat Lengtegraad"
+          - name: SIZOGEO
+            data_type: STRING
+            description: Geografisch punt
+            meta:
+              source_data_type: G
+              source_functional_description: Geografisch punt
+          - name: SIZOGEOTXT
+            data_type: STRING
+            description: Geografisch punt in tekst format
+            meta:
+              source_data_type: C
+              source_functional_description: Geografisch punt in tekst format
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: Contactpersonen
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Contactpersonen/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true # Ignores extra columns in the file that are not defined in the table schema. NB: the order of columns still matters.
+            max_bad_records: 1
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Contactpersonen
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOKEY
+            data_type: STRING
+            description:
+              Unieke sleutel die aan ieder bedrijf gekoppeld waarmee organisaties
+              in de Company.info database geidentificeerd kunnen worden
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel
+          - name: SIZOCPKEY
+            data_type: STRING
+            description: Unieke sleutel contactpersoon.
+            meta:
+              source_data_type: C
+              source_functional_description: Unieke sleutel
+          - name: SIZCPFNC
+            data_type: TINYINT
+            description:
+              Het betreffen functies die een contactpersoon heeft. Dit betekent
+              dat je bijvoorbeeld alleen financieel directeuren kunt selecteren.
+            meta:
+              source_data_type: TI
+              source_functional_description: De functietitel van de contactpersoon
+          - name: SIZOPSEX
+            data_type: STRING
+            description: Geslacht.
+            meta:
+              source_data_type: C
+              source_functional_description: Geslacht
+          - name: SIZOPTIT
+            data_type: STRING
+            description: Titel.
+            meta:
+              source_data_type: C
+              source_functional_description: Titel
+          - name: SIZOPVL
+            data_type: STRING
+            description: Voorletters.
+            meta:
+              source_data_type: C
+              source_functional_description: Voorletters
+          - name: SIZOPTVG
+            data_type: STRING
+            description: Tussenvoegsel.
+            meta:
+              source_data_type: C
+              source_functional_description: Tussenvoegsel
+          - name: SIZOPNM
+            data_type: STRING
+            description: Achternaam.
+            meta:
+              source_data_type: C
+              source_functional_description: Achternaam
+          - name: SIZOPTVGNM
+            data_type: STRING
+            description: Tussenvoegsel + achternaam.
+            meta:
+              source_data_type: C
+              source_functional_description: Tussenvoegsel + Achternaam
+          - name: SIZLPBRKND
+            data_type: TINYINT
+            description: Contactpersoon van een concernonderdeel op dezelfde locatie.
+            meta:
+              source_data_type: TI
+              source_functional_description: Berekend Contactpersoon
+          - name: SIZLCP
+            data_type: TINYINT
+            description: Hoofd contactpersoon.
+            meta:
+              source_data_type: TI
+              source_functional_description: Hoofd Contactpersoon
+          - name: SIZCPTBV
+            data_type: TINYINT
+            description:
+              Indicator die aangeeft of een contactpersoon bij de Kamer van Koophandel
+              geregistreerd staat als tekenbevoegd.
+            meta:
+              source_data_type: TI
+              source_functional_description: Tekenbevoegdheid
+          - name: SIZLPERSGG
+            data_type: TINYINT
+            description: Veld die weergeeft of dit record mogelijk perssonsgegevens bevat.
+            meta:
+              source_data_type: TI
+              source_functional_description: Bevat persoonsgegevens
+          - name: CRUD
+            data_type: STRING
+          - name: GEBOORTEDATUM
+            data_type: STRING
+            description: Geboortedatum contactpersoon.
+            meta:
+              source_data_type: C
+              source_functional_description: Geboortedatum contactpersoon
+
+      - name: Info_Postcode4_Afstanden
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Info_Postcode4_Afstanden/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            max_bad_records: 1
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")}}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Info_Postcode4_Afstanden
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOPCD4VA
+            data_type: STRING
+            description:
+              Postcode4 van wordt gebruikt om de afstand tussen 2 postcodegebieden
+              te bepalen.
+            meta:
+              source_data_type: C
+              source_functional_description: Postcode4 van
+          - name: SIZOPCD4NA
+            data_type: STRING
+            description:
+              Postcode4 naar wordt gebruikt om de afstand tussen 2 postcodegebieden
+              te bepalen.
+            meta:
+              source_data_type: C
+              source_functional_description: Postcode4 naar
+          - name: SIZWAFST
+            data_type: STRING
+            description: Afstand in kilometers.
+            meta:
+              source_data_type: D
+              source_functional_description: Afstand in kilometers
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: Bedrijfsterreinen
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Bedrijfsterreinen/*.jsonl.gz
+          options:
+            format: json
+            compression: gzip
+            # skip_leading_rows: 1
+            # field_delimiter: "|"
+            ignore_unknown_values: true
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Bedrijfsterreinen
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: SIZOPCD
+            data_type: STRING
+            description: Postcode waar de organisatie gevestigd.
+            meta:
+              source_data_type: C
+              source_functional_description: Postcode
+          - name: SIZOPLANNM
+            data_type: STRING
+            description:
+              "Kleinste vorm van een bedrijventerrein. Voorbeeld: Bedrijventerrein
+              kern Amsterdam-Westpoort bestaat uit onder andere bedrijventerreinen: Afrikahaven,
+              Atlaspark en Sloterdijk."
+            meta:
+              source_data_type: C
+              source_functional_description:
+                "Kleinste vorm van een bedrijventerrein. Voorbeeld:
+                Bedrijventerrein kern Amsterdam-Westpoort bestaat uit onder andere bedrijventerreinen:
+                Afrikahaven, Atlaspark, Sloterdijk etc."
+          - name: SIZOKERNNM
+            data_type: STRING
+            description:
+              De overkoepelende naam voor een verzameling kleinere bedrijventerreinen
+              binnen een bepaald postcodegebied.
+            meta:
+              source_data_type: C
+              source_functional_description:
+                De overkoepelende naam voor een verzameling
+                kleinere bedrijventerreinen binnen een bepaald postcodegebied.
+          - name: SIZOBTRVNR
+            data_type: TINYINT
+            description: Volgnummer die weergeeft welk bedrijfsterrein Company.info hanteert.
+            meta:
+              source_data_type: TI
+              source_functional_description:
+                Volgnummer dien weergeeft welk bedrijfsterrein
+                Company.info hanteert als een postcode aan meerdere bedrijventerreinen is
+                toegekend
+          - name: CRUD
+            data_type: STRING
+            description: ""
+            meta:
+              source_data_type: ""
+              source_functional_description: ""
+      - name: Branches
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Branches/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "|"
+            ignore_unknown_values: true
+            hive_partition_uri_prefix: |
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Branches
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: "SIZOKEY"
+            data_type: STRING
+          - name: "KVK_hoofd_SBI_code"
+            data_type: STRING
+          - name: "KVK_hoofd_SBI_code_omschrijving"
+            data_type: STRING
+          - name: "KvK_neven_1_SBI_code"
+            data_type: STRING
+          - name: "KvK_neven_1_SBI_omschrijving"
+            data_type: STRING
+          - name: "KvK_neven_2_SBI_code"
+            data_type: STRING
+          - name: "KvK_neven_2_SBI_omschrijving"
+            data_type: STRING
+          - name: "KvK_neven_3_SBI_code"
+            data_type: STRING
+          - name: "KvK_neven_3_SBI_omschrijving"
+            data_type: STRING
+          - name: "Company_info1_code"
+            data_type: STRING
+          - name: "Company_info1_omschrijving"
+            data_type: STRING
+          - name: "Company_info2_code"
+            data_type: STRING
+          - name: "Company_info2_omschrijving"
+            data_type: STRING
+      - name: Keyword_Categories
+        description: (not set)
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Keyword_Categories/*.csv.gz
+          options:
+            format: csv
+            compression: gzip
+            skip_leading_rows: 1
+            field_delimiter: "\t" # tab character
+            ignore_unknown_values: true
+            hive_partition_uri_prefix:
+              gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set")
+              }}-raw-goanywhere/company_info/nl/SLI10539_TBL_3867_DMP_Keyword_Categories
+          partitions:
+            - name: dt
+              data_type: DATE
+        columns:
+          - name: "KlantKey"
+            data_type: STRING
+          - name: "SIZOKEY"
+            data_type: STRING
+          - name: "SIZOLOCKEY"
+            data_type: STRING
+          - name: "Afhalen"
+            data_type: STRING
+          - name: "Bezorgen"
+            data_type: STRING
+          - name: "Dark_Kitchen"
+            data_type: STRING
+          - name: "Platformen"
+            data_type: STRING
+          - name: "Terras"
+            data_type: STRING
+          - name: "Uitsluiten"
+            data_type: STRING

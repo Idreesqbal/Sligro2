@@ -1,0 +1,41 @@
+models:
+  - name: base_article_data_supplier
+    description: Base model for the data quality process for the information that rpe_suppliers deliver for Article
+    columns:
+      - name: article_id
+        description: The unique identifier for each article in the database.
+        data_type: string
+        quote: true
+      - name: article_ownership_NL
+        description: Indicates the ownership of the article in the Netherlands.
+        data_type: string
+        quote: true
+      - name: article_ownership_BE
+        description: Indicates the ownership of the article in Belgium.
+        data_type: string
+        quote: true
+      - name: unit
+        description: The unit is the responsible team within the IAM organization
+        data_type: string
+        quote: true
+      - name: supplier_id
+        description: The unique identifier for the supplier of the information about the article.
+        data_type: string
+        quote: true
+      - name: supplier_name
+        description: The name of the supplierof the information about the article.
+        data_type: string
+        quote: true
+      - name: supplier_gln
+        description: The Global Location Number (GLN) of the supplier. This is a unique identifier used in the supply chain to identify the supplier's location.
+        data_type: string
+        quote: true
+      - name: subscription_name
+        data_type: string
+        quote: true
+      - name: message_id
+        data_type: string
+        quote: true
+      - name: publish_time
+        data_type: timestamp
+        quote: true

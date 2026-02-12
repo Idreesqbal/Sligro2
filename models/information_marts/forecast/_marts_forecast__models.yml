@@ -1,0 +1,221 @@
+version: 2
+
+models:
+  - name: im_forecast__demand_forecast
+    description: Expectation of future demand for an article at a specific site and optionally a customer. Table contains history in SCD2.
+    contract:
+      enforced: true
+    columns:
+      - name: pk_demand_forecast_code
+        data_type: string
+        description: A historical unique identifier for each forecast record.
+        data_tests:
+          - not_null
+          - unique
+      - name: fk_demand_forecast_code
+        data_type: string
+        description: A identifier for each forecast record.
+        data_tests:
+          - not_null
+      - name: fk_promotion_code
+        data_type: string
+        description: Foreign key to promotion.
+      - name: fk_article_code
+        data_type: string
+        description: A reference to the specific article being forecasted.
+        data_tests:
+          - not_null
+          # - relationships:
+          #     to: ref('im_article__article')
+          #     field: pk_article_code
+      - name: fk_site_code
+        data_type: string
+        description: A reference to the site for which the forecast is made.
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('im_site__site')
+              field: pk_site_code
+      - name: fk_customer_code
+        data_type: string
+        description: A reference to the customer for which the forecast is made.
+        data_tests:
+          - relationships:
+              to: ref('im_customer__customer')
+              field: customer_code
+              where: fk_customer_code != 'OTHER_CLIENTS'
+      - name: start_date
+        data_type: date
+        description: The start date of the forecast period, indicating when the forecast is expected to begin.
+        data_tests:
+          - not_null
+      - name: end_date
+        data_type: date
+        description: The end date of the forecast period, indicating when the forecast is expected to conclude.
+        data_tests:
+          - not_null
+      - name: trend
+        data_type: numeric
+        description: The identified slope in the forecast data. Shows the direction and rate of change in demand over time.
+      - name: base_forecast
+        data_type: integer
+        description: The initial forecast value before any adjustments.
+      - name: event_forecast
+        data_type: integer
+        description: Adjustments made to the forecast based on specific events.
+      - name: confirmed_extra
+        data_type: integer
+        description: Additional confirmed quantities not included in the standard forecast.
+      - name: total_forecast
+        data_type: integer
+        description: Total combined forecast. Combinations of base, event, and confirmed extra forecasts.
+      - name: aggregated_forecast_indicator
+        data_type: boolean
+        description: Indicates if the forecast is based on aggregated client data or not.
+      - name: seasonal_significance
+        data_type: string
+        description: The significance level of seasonality in the forecast.
+      - name: seasonal_adjustment
+        data_type: string
+        description: The adjustment factor applied for seasonality.
+      - name: seasonal_method
+        data_type: string
+        description: The method used for seasonal adjustment (e.g., additive, multiplicative).
+      - name: seasonal_years_to_use
+        data_type: string
+        description: The number of years of historical data used for seasonal adjustments.
+      - name: seasonal_excluded_months
+        data_type: string
+        description: Specific months excluded from the seasonal analysis.
+      - name: seasonal_warm_weather_buffer
+        data_type: string
+        description: Buffer adjustments for warm weather conditions.
+      - name: seasonal_applied_pattern
+        data_type: string
+        description: The pattern applied for seasonal adjustments.
+      - name: valid_from
+        data_type: timestamp
+        description: Timestamp from when the record is valid in the source system.
+      - name: valid_to
+        data_type: timestamp
+        description: Timestamp from when the record is no longer valid in the source system.
+      - name: record_source
+        data_type: string
+        description: The source system from which the record originated.
+  - name: im_forecast__exception
+    description: Table storing information about demand forecast exceptions. Contains history in SCD2.
+    contract:
+      enforced: true
+    columns:
+      - name: pk_exception_code
+        data_type: string
+        description: A historical unique identifier for each exception record.
+        tests:
+          - unique
+          - not_null
+      - name: fk_exception_code
+        data_type: string
+        description: An identifier for each exception record.
+        tests:
+          - not_null
+      - name: fk_demand_forecast_code
+        data_type: string
+        description: Foreign key linking to the demand forecast.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('im_forecast__demand_forecast')
+              field: fk_demand_forecast_code
+      - name: exception_type
+        data_type: string
+        description: The type of demand forecast exception.
+      - name: description
+        data_type: string
+        description: A short description of the demand forecast exception.
+      - name: exception_quantity
+        data_type: string
+        description: Amount of the exception, representing how much the forecasted value deviated from the actual value
+      - name: valid_from
+        data_type: timestamp
+        description: The starting date of the period during which the exception occurred.
+        tests:
+          - not_null
+      - name: valid_to
+        data_type: timestamp
+        description: The ending date of the period during which the exception occurred.
+      - name: record_source
+        data_type: string
+        description: The source system from which the record originated.
+  - name: im_forecast__purchase_forecast
+    description: Expectation of future purchases for an article at a specific site and optionally a customer. Table contains history in SCD2.
+    columns:
+      - name: pk_purchase_forecast_code
+        data_type: STRING
+        description: Primary key for the purchase forecast record, concatenated from purchase forecast business key and validity dates.
+        tests:
+          - unique
+          - not_null
+      - name: fk_purchase_forecast_code
+        data_type: STRING
+        description: Foreign key referencing the purchase forecast business key.
+        tests:
+          - not_null
+      - name: fk_article_code
+        data_type: STRING
+        description: Foreign key referencing the article business key.
+        tests:
+          - not_null
+          # - relationships:
+          #     to: ref('im_article__article')
+          #     field: pk_article_code
+      - name: fk_site_code
+        data_type: STRING
+        description: Foreign key referencing the site business key.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('im_site__site')
+              field: pk_site_code
+      - name: fk_demand_forecast_code
+        data_type: STRING
+        description: Foreign key referencing the demand forecast business key.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('im_forecast__demand_forecast')
+              field: fk_demand_forecast_code
+      - name: fk_supply_information_code
+        data_type: STRING
+        description: Foreign key for supply information (currently 'MISSING').
+      - name: fk_stock_reorder_code
+        data_type: STRING
+        description: Foreign key for stock reorder information (currently 'MISSING').
+      - name: planned_purchase_date
+        data_type: DATE
+        description: The planned date of the purchase.
+        tests:
+          - not_null
+      - name: planned_purchase_quantity
+        data_type: INTEGER
+        description: The quantity of the planned purchase.
+        tests:
+          - not_null
+      - name: planned_order_placement_date
+        data_type: DATE
+        description: The date on which the purchase forecast is planned to be placed.
+      - name: expected_delivery_date
+        data_type: DATE
+        description: The date on which the purchase forecast is expected to be delivered.
+      - name: valid_from
+        data_type: DATETIME
+        description: The start datetime of the record's validity.
+        tests:
+          - not_null
+      - name: valid_to
+        data_type: DATETIME
+        description: The end datetime of the record's validity.
+      - name: record_source
+        data_type: STRING
+        description: The source system or origin of the record.
+        tests:
+          - not_null

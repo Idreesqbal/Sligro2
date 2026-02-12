@@ -1,0 +1,88 @@
+version: 2
+
+sources:
+  - name: bigquery_information_schema
+    database: '{{ env_var("DBT_DATA_WAREHOUSE_PROJECT_ID", "not_set") }}'
+    schema: "region-europe-west4.INFORMATION_SCHEMA"
+
+    tables:
+      - name: JOBS
+        description: >
+          Contains metadata about BigQuery jobs, including details such as creation time, job status, execution metrics, and error information.
+          For more detailed information, refer to the official BigQuery documentation:
+          https://cloud.google.com/bigquery/docs/information-schema-jobs
+        columns:
+          - name: creation_time
+            description: The time when the job was created.
+          - name: project_id
+            description: The ID of the project where the job was created.
+          - name: project_number
+            description: The number of the project where the job was created.
+          - name: user_email
+            description: The email address of the user who created the job.
+          - name: job_id
+            description: The ID of the job.
+          - name: job_type
+            description: The type of the job.
+          - name: statement_type
+            description: The type of the statement in the job.
+          - name: priority
+            description: The priority of the job.
+          - name: start_time
+            description: The time when the job was started.
+          - name: end_time
+            description: The time when the job was ended.
+          - name: query
+            description: The query that was executed.
+          - name: state
+            description: The state of the job.
+          - name: reservation_id
+            description: The ID of the reservation where the job was executed.
+          - name: total_bytes_processed
+            description: The total number of bytes processed by the job.
+          - name: total_slot_ms
+            description: The total number of slot milliseconds used by the job.
+          - name: error_result
+            description: The error result of the job.
+          - name: cache_hit
+            description: Whether the job hit the cache.
+          - name: destination_table
+            description: The table where the job was executed.
+          - name: referenced_tables
+            description: The tables that were referenced by the job.
+          - name: labels
+            description: The labels of the job.
+          - name: timeline
+            description: The timeline of the job.
+          - name: job_stages
+            description: The stages of the job.
+          - name: total_bytes_billed
+            description: The total number of bytes billed for the job.
+          - name: transaction_id
+            description: The ID of the transaction where the job was executed.
+          - name: parent_job_id
+            description: The ID of the parent job where the job was executed.
+          - name: session_info
+            description: The session information of the job.
+          - name: dml_statistics
+            description: The statistics of the DML statements in the job.
+          - name: total_modified_partitions
+            description: The total number of modified partitions in the job.
+          - name: bi_engine_statistics
+            description: The statistics of the BI Engine in the job.
+          - name: query_info
+            description: The information about the query in the job.
+          - name: transferred_bytes
+            description: The total number of bytes transferred in the job.
+          - name: materialized_view_statistics
+            description: The statistics of the materialized views in the job.
+          - name: edition
+            description: The edition of the job.
+          - name: job_creation_reason
+            description: The reason for the creation of the job.
+          - name: query_dialect
+            description: The dialect of the query in the job.
+          - name: metadata_cache_statistics
+            description: The statistics of the metadata cache in the job.
+          - name: search_statistics
+            description: The statistics of the search in the job.

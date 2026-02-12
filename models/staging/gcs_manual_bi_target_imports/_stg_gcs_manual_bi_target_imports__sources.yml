@@ -1,0 +1,134 @@
+version: 2
+sources:
+  - name: gcs_manual_bi_target_imports
+    schema: "{{ target.schema }}_external_gcs_manual_bi_target_imports"
+    tables:
+      - name: budget_cashandcarry
+        description: Weekly budget data for cash and carry stores
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-kpi-targets-dropzone/budget_cashandcarry.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+        columns:
+          - name: distribution_channel
+            data_type: STRING
+            description: Distribution channel
+          - name: business_unit
+            data_type: STRING
+            description: The business unit for the distribution channel
+          - name: year
+            data_type: INTEGER
+            description: Year the budget applies to
+          - name: weeknumber
+            data_type: INTEGER
+            description: Weeknumber the budget applies to
+          - name: week_budget_cashandcarry
+            data_type: NUMERIC
+            description: The budget for the cash and carry stores in the given week
+          - name: week_budget_cashandcarry_cumulative
+            data_type: NUMERIC
+            description: The cumulative budget for the cash and carry stores up to the given week
+      - name: budget_cashandcarry_foodprof
+        description: Weekly budget data for cash and carry stores foodprof
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-kpi-targets-dropzone/budget_cashandcarry_foodprof.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+        columns:
+          - name: distribution_channel
+            data_type: STRING
+            description: Distribution channel
+          - name: business_unit
+            data_type: STRING
+            description: The business unit for the distribution channel
+          - name: year
+            data_type: INTEGER
+            description: Year the budget applies to
+          - name: weeknumber
+            data_type: INTEGER
+            description: Weeknumber the budget applies to
+          - name: week_budget_cashandcarry
+            data_type: NUMERIC
+            description: The budget for the cash and carry stores in the given week
+          - name: week_budget_cashandcarry_cumulative
+            data_type: NUMERIC
+            description: The cumulative budget for the cash and carry stores up to the given week
+      - name: budget_cashandcarry_mkb
+        description: Weekly budget data for cash and carry stores mkb
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-kpi-targets-dropzone/budget_cashandcarry_mkb.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+        columns:
+          - name: distribution_channel
+            data_type: STRING
+            description: Distribution channel
+          - name: business_unit
+            data_type: STRING
+            description: The business unit for the distribution channel
+          - name: year
+            data_type: INTEGER
+            description: Year the budget applies to
+          - name: weeknumber
+            data_type: INTEGER
+            description: Weeknumber the budget applies to
+          - name: week_budget_cashandcarry
+            data_type: NUMERIC
+            description: The budget for the cash and carry stores in the given week
+          - name: week_budget_cashandcarry_cumulative
+            data_type: NUMERIC
+            description: The cumulative budget for the cash and carry stores up to the given week
+      - name: budget_month_cashandcarry
+        description: Monthly budget data for cash and carry stores
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-kpi-targets-dropzone/budget_month_cashandcarry.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+        columns:
+          - name: distribution_channel
+            data_type: STRING
+            description: Distribution channel
+          - name: business_unit
+            data_type: STRING
+            description: The business unit for the distribution channel
+          - name: year
+            data_type: INTEGER
+            description: Year the budget applies to
+          - name: monthnumber
+            data_type: INTEGER
+            description: Monthnumber the budget applies to
+          - name: month_budget_cashandcarry
+            data_type: NUMERIC
+            description: The budget for the cash and carry stores in the given month
+          - name: month_budget_cashandcarry_cumulative
+            data_type: NUMERIC
+            description: The cumulative budget for the cash and carry stores up to the given month
+      - name: dt_promo_targets
+        description: Promo targets for the brochures
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-kpi-targets-dropzone/dt_promo_targets.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+        columns:
+          - name: brochure_description
+            data_type: STRING
+            description: Description number of the brochure
+          - name: brochure_target
+            data_type: INTEGER
+            description: Sales target for the brochure
+          - name: business_unit
+            data_type: STRING
+            description: The business unit for the distribution channel
+          - name: year
+            data_type: INTEGER
+            description: Year the brochure target applies to

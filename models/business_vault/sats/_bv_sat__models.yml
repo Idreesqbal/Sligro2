@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: bv_sat__carrier_contacts
+    description: "This satellite is sourced from rv_sat__supplier_contacts The source is filtered to only load supplier that acts as a carrier."
+    config:
+      apply_source_filter: true
+      unique_key: ["carrier_hk", "load_datetime"]
+    label:
+      source: rv_supplier
+    columns:
+      - name: carrier_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_sat__carrier_finance
+    description: "This satellite is sourced from rv_sat__supplier_finance. The source is filtered to only load supplier that acts as a carrier."
+    config:
+      apply_source_filter: true
+      unique_key: ["carrier_hk", "load_datetime"]
+    label:
+      source: rv_supplier
+    columns:
+      - name: carrier_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_sat__carrier_general_info
+    description: "This satellite is sourced from rv_sat__supplier_general_info. The source is filtered to only load supplier that acts as a carrier."
+    config:
+      apply_source_filter: true
+      unique_key: ["carrier_hk", "load_datetime"]
+    label:
+      source: rv_supplier
+    columns:
+      - name: carrier_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_sat__supplier_general_info
+    description: "This satellite is sourced from rv_sat__supplier_general_info and stg_as400__levicctb01. Based on the suppliers in the staging table, the indicator if a supplier is intercompany, is added "
+    config:
+      apply_source_filter: true
+      unique_key: ["supplier_hk", "load_datetime"]
+    label:
+      source: rv_supplier
+    columns:
+      - name: supplier_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+  - name: bv_sat__purchase_invoice_header
+    description: "This bv is created to capture the most active row from the sat"

@@ -1,0 +1,130 @@
+version: 2
+
+models:
+  - name: im_stock__collection_area
+    description: >
+      The collection area refers to a designated section where products are gathered or collected for various purposes. Examples of purposes are:
+      Packaging = are the articles picked by single piece or are all the articles picked by bulk. This is important for the pickers to know if they
+      need to pick by truck or not. You want to store all the bulk products together so that everything picked by truck can be picked in the same area.
+      Article type = DKW articles don't need to be stored with frozen articles for example. Special area's: Articles meant for folder or events
+    columns:
+      - name: pk_collection_area_code
+        tests:
+          - unique
+          - not_null
+        description: The Area code is the unique business key within the Collection area sub-entity. The value of the column contains a unique code for every collection area stored within the entity. The code is based on a combination of Site code with the area code.
+      - name: fk_site_code
+        description: A reference to the PK Site code column in the entity Site.
+      - name: dc_code
+        description: The code for the DC as part of CDC.
+      - name: area_code
+        description: The code for a collection area.
+      - name: area_description
+        description: Description of the collection area.
+      - name: brochure_indicator
+        description: "Indicator if the area is a collection area for brochure articles. This indicates if a collection area is exclusive for itens in promotion."
+      - name: environment
+        description: "The type of environment that is maintained for the articles in this location. Examples: Dry area, refrigerator, etc"
+      - name: event_indicator
+        description: "Indicator if the area is a collection area for one or multiple events. Events are conferences, festivals, etc. These collection areas accommodate containers, for example."
+      - name: event_return_indicator
+        description: "Indicator if the area is a collection area for return articles from an event. Events are conferences, festivals, etc. These collection areas accommodate returns from events - containers with articles that were not used in the event, for example."
+
+  - name: im_stock__stock
+    description: >
+      The stock entity stores information about the quantity of inventory at a stock location at a specific point in time.
+    columns:
+      - name: pk_stock_code
+        tests:
+          - not_null
+          - unique
+        description: Unique key within the stock sub-entity. Contains a unique code for every combination of date, stock location code and article.
+      - name: fk_stock_location_code
+        description: A reference to the stock_location_code in the sub entity stock location.
+      - name: fk_article_code
+        description: A reference to the article code column in the entity article.
+      - name: stock_quantity
+        description: The number of items that are stored at this particular date / location.
+      - name: stock_weight
+        description: The total weight of items stored at this particular date / location.
+      - name: stock_type
+        description: "Stock type: 'P' for Pick, 'B' for Bulk. Empty for ZB."
+      - name: brochure_indicator
+        description: ""
+      - name: tht_datetime
+        description: "The best before date of the stock. This is only filled for CDC and BS."
+      - name: owner
+        description: "The owner of the stock."
+      - name: datetime
+        description: "The date of the stock registration."
+
+  - name: im_stock__location
+    description: >
+      The stock location entity stores information about the physical location and characteristics of a stock location and the surroundings.
+    columns:
+      - name: pk_stock_location_code
+        tests:
+          - unique
+          - not_null
+        description: >
+          The Stock location code is the unique business-key within the Stock entity. The value of the column contains a unique code for every stock location stored within the entity. The code is based on a combination of codes and differs per site:
+          CDC: Sitecode + areacode + (Shelf - Layer - Compartment - Location)
+          BS: Sitecode + areacode + (Aisle - Layer - Compartment - Location)
+          ZB: Sitecode + point of sale
+      - name: fk_area_code
+        description: A reference to the PK Area code column in the sub-entity Collection area.
+      - name: aisle
+        description: The aisle (schap) is a numeric identification of which aisle holds the stock location. Only applies to BS.
+      - name: shelf
+        description: The shelf is a horizontal structure within a storage unit where items are placed. Only applies to CDC.
+      - name: compartment
+        description: The compartment is a description of a subdivided section within a shelf. Does not apply to ZB.
+      - name: layer
+        description: The layer is a horizontal division within a storage unit that spans the entire width or length of the unit and is used to describe the different levels within the shelf. Does not apply to ZB.
+      - name: location
+        description: The location refers to a specific point where items are stored in a warehouse. Does not apply to ZB.
+      - name: point_of_sale
+        description: The point of sales refers to the specific area within a retail establishment where products are displayed and transactions with customers take place. It serves as the point of interaction between the customer and the seller. Only applies to ZB.
+      - name: location_number
+        description: A concatenation of aisle, compartment, layer, location.
+      - name: shelf_layout
+        description: The shelf layout refers to the construction and overall configuration of shelves within the warehouse.
+      - name: container_type
+        description: Container types refers to the various types of storage units used to hold and organize articles. Examples are pallets, bins, crates, etc.
+      - name: capacity
+        description: The capacity stand for the maximum amount of articles that a storage location can hold.
+      - name: unit
+        description: A unit refers to a standardised quantity used to quantify and express the quantity of articles. Example units of measurement include length, width, height, weight, and volume.
+      - name: sprinkler_indicator
+        description: Indicates if a stock location has a sprinkler for safety measures.
+      - name: sort_to_light_indicator
+        description: Indicates if a stock location can be used for sort to light methods.
+
+  - name: im_stock__transactions
+    description: >
+      In the stock transactions entity, all mutations to the stock per stock location are recorded. Each mutation must specify a mutation reason to
+      indicate the reason for the modification.
+    columns:
+      - name: pk_transaction_code
+        description: The transaction code is the unique key within the stock transactions sub-entity. The value of the column contains a unique code for every combination of date, stock location code, article and mutation code.
+        tests:
+          - unique
+          - not_null
+      - name: fk_stock_location_code
+        description: A reference to the PK Stock location code column in the sub entity Stock Location.
+      - name: fk_article_code
+        description: A reference to the PK Article code column in the entity Article.
+      - name: fk_sales_order_code
+        description: A reference to the PK Sales order code column in the entity Sales order.
+      - name: mutation_code
+        description: A unique code that refers to a reason for mutation of the stock value.
+      - name: mutation_description
+        description: A description for the reason of mutation in the stock number.
+      - name: transaction_date
+        description: The date and time that a change/transaction occurred for this stock location.
+        tests:
+          - not_null
+      - name: transaction_quantity
+        description: The number of items that were added or moved at this stock location during the transaction/change.
+      - name: transaction_weight
+        description: The weight that was added or moved from the artikel in this stock location during the transaction/change.

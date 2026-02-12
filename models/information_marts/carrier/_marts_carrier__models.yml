@@ -1,0 +1,79 @@
+version: 2
+
+models:
+  - name: im_carrier__carrier
+    description: "The carrier table contains general information of carriers which covers name, bank info, website, and vat number."
+    columns:
+      - name: pk_carrier_code
+        description: "The carrier number recorded in the system"
+        tests:
+          - unique
+          - not_null
+      - name: carrier_name
+        description: "The name of carrier"
+      - name: chamber_of_commerce_registration_number
+        description: "A unique identifier assigned to businesses or entities that are registered with a Chamber of Commerce (KvK number in Dutch)"
+      - name: vat_number
+        description: "A unique identifier assigned to businesses for tax purposes"
+      - name: bank_account_number
+        description: "The IBAN or bank account number of the carrier"
+      - name: bic_swift_code
+        description: "The BIC- / SWIFT code for the carrier"
+      - name: payment_currency
+        description: "The currency used to conduct or settle the financial transaction"
+      - name: website
+        description: "The URL of the carrier company website"
+      - name: status
+        description: "The carrier's status as set in the AS400 supplier data. Value 1 = valid, 3 = invalid"
+
+  - name: im_carrier__address
+    description: "This table contains list of carrier's addresses. Only general adress is used from the AS400 supplier table."
+    columns:
+      - name: pk_carrier_address_code
+        description: "Unique identifier for the carrier address table"
+        tests:
+          - unique
+          - not_null
+      - name: fk_carrier_code
+        description: "A reference to the PK Carrier code attribute in the carrier table"
+        tests:
+          - not_null
+      - name: address_type
+        description: "The address type indicates the purpose that relevant for the address. Example: General address, mailbox address, etc"
+        tests:
+          - not_null
+      - name: postal_code
+        description: "The postal code of the address"
+      - name: country
+        description: "The country in which the address is located"
+      - name: address
+        description: "The street name and number"
+      - name: city
+        description: "The city in which the address is located"
+
+  - name: im_carrier__contact_person
+    description: "This table contains list of carrier's contact persons"
+    columns:
+      - name: pk_carrier_contact_person_code
+        description: "Unique identifier for the carrier contact person table"
+        tests:
+          - unique
+          - not_null
+      - name: fk_carrier_address_code
+        description: "A reference to the Primary Key (PK) column in the carrier address table"
+        tests:
+          - not_null
+      - name: fk_carrier_code
+        description: "A reference to the PK Carrier code attribute in the carrier table"
+        tests:
+          - not_null
+      - name: contact_type
+        description: "The contact type indicates the purpose relevant to the point of contact. Example: General contact, Key Account Manager, Order communication, Billing, etc."
+        tests:
+          - not_null
+      - name: contact_name
+        description: "The name of the contact person. This could also be replaced or combined with name of the department"
+      - name: phone_number
+        description: "The phone number of the contact person"
+      - name: email_address
+        description: "The email address of the contact person"

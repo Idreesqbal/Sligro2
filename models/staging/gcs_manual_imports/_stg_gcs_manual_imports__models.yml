@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: stg_gcs_manual_imports__calendar_national_holiday
+
+  - name: stg_gcs_manual_imports__company_SBI_category_segment_mapping
+    config:
+      tags: "company_reference"
+    columns:
+      - name: sbi_code
+        tests:
+          - unique
+          - not_null

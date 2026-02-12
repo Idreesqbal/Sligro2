@@ -1,0 +1,94 @@
+version: 2
+
+models:
+  - name: im_purchase_invoice__header
+    description: "The header summarizes key details of the purchase invoice, including the purchase invoice code, date, supplier information, tax details, and total amount."
+    config:
+      materialized: table
+      contraints:
+        primary_key: pk_purchase_invoice_code
+    columns:
+      - name: pk_purchase_invoice_code
+        description: "The unique invoice code/number."
+        tests:
+          - not_null
+      - name: fk_supplier_code
+        description: "The supplier code used to link to the supplier entity."
+      - name: fk_legal_entity_code
+        description: "The code for the Sligro legal entity to which the invoice is addressed."
+      - name: fk_currency_code
+        description: "The currency in which the purchase has been made."
+      - name: supplier_vat_number
+        description: "The supplier's VAT number that they provided on this invoice."
+      - name: supplier_bankaccount_number
+        description: "The supplier's bank account number that they provided on this invoice."
+      - name: status
+        description: "The current status on the invoice (e.g. concept, evaluation, approval, rejected, processed)."
+      - name: purchase_invoice_type
+        description: "The invoice type which can be PO debet factuur / credit factuur."
+      - name: payment_terms
+        description: "The terms dictating by when the invoice must be paid and whether any discount will be applied when paid within X days."
+      - name: created_date
+        description: "The date on which the invoice was created."
+      - name: received_date
+        description: "The date on which the invoice was received."
+      - name: approval_date
+        description: "Date of journal entry for invoice control"
+      - name: due_date
+        description: "The date on which the payment must ultimately be made."
+      - name: supplier_invoice_code
+        description: "The invoice code used by the supplier. Therefore not meaningful in Sligro's systems but only in communication towards the supplier."
+      - name: financial_year
+        description: "The financial year in which the invoice is booked. By default this will be determined by the 'Date received' date unless that financial year/period is already closed then it will go into the next open one."
+      - name: financial_period
+        description: "The financial period in which the invoice is booked. By default this will be determined by the 'Date received' date unless that financial year/period is already closed then it will go into the next open one."
+      - name: total_amount_including_vat
+        description: "The total amount charged to Sligro on the invoice."
+      - name: total_amount_excluding_vat
+        description: "The amount charged without the VAT."
+      - name: vat_amount
+        description: "The total VAT amount on the invoice."
+      - name: deductables
+        description: "Any additional deductables (discounts) that are provided to the supplier."
+      - name: packaging_value
+        description: "The total packaging value (emballage) for articles on the invoice."
+
+  - name: im_purchase_invoice__line
+    description: "Each line item lists the product bought at a supplier, including description, quantity, price, applicable discounts, taxes, and the total cost for that item."
+    columns:
+      - name: pk_purchase_invoice_line_code
+        description: "The unique code for a purchase invoice line."
+        tests:
+          - not_null
+      - name: fk_purchase_invoice_code
+        description: "A foreign key referencing the purchase invoice."
+      - name: fk_purchase_order_line_code
+        description: "The code linking to the purchase order for which the invoice was received (if applicable)."
+      - name: fk_cost_centre_code
+        description: "The code linking to the cost centre to which the invoice has been assigned."
+      - name: fk_article_code
+        description: "The code used to reference the article data. Only applies to tradeable items."
+      - name: fk_general_ledger_code
+        description: "The code used to reference the general ledger code on which the article is booked. Only applies to non-tradeable items."
+      - name: quantity
+        description: "The quantity for which the article has been registered on the invoice."
+      - name: unit_of_measure
+        description: "The unit of measure in which the article was ordered."
+      - name: article_description
+        description: "Op basis van EAN code wordt deze opgehaald uit het Sligro artikelbestand."
+      - name: vat_rate
+        description: "The VAT rate applied to this line."
+      - name: total_amount
+        description: "The total price for the articles on the line including VAT, deductables, surcharges etc."
+      - name: goods_amount
+        description: "The price of the articles without the VAT."
+      - name: deductables
+        description: "Any additional deductables (discounts) that are provided to the supplier for this specific invoice line."
+      - name: surcharges
+        description: "Any additional surcharges that are provided to the supplier for this specific invoice line."
+      - name: vat_amount
+        description: "The amount charged for the VAT."
+      - name: packaging_amount
+        description: "The packaging value (emballage) for this invoice line."
+      - name: packaging_compensation_amount
+        description: "The value for 'vergoeding beheer extra retouremballage (vbr) for the invoice line."

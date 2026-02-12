@@ -1,0 +1,119 @@
+version: 2
+
+models:
+  - name: im_calendar__date
+    description: >
+      The date mart contains a single record for every date (one row by day) based on ISO standard, and also additional details about each date.
+    columns:
+      - name: pk_calendar_date_code
+        description: Refers to the ongoing calendar date
+        tests:
+          - unique
+          - not_null
+      - name: day
+        description: Day of the week (e.g., Monday, Tuesday, etc.).
+      - name: day_name_short
+        description: Short day name of the week (e.g., Mon, Tue, etc.).
+      - name: day_of_month
+        description: Day of the month (1-31).
+      - name: first_day_of_the_week
+        description: Refers to the day that is considered the beginning of a standard (ISO based) week in a calendar system.
+      - name: day_of_week
+        description: Refers to numeric value in a week
+      - name: day_of_year
+        description: Refers to the numerical designation assigned to a specific day within a calendar year.(1-365)
+      - name: weekday_weekend_indicator
+        description: Flag indicating whether the day is a weekday or a weekend.
+      - name: week_start_date
+        description: Start date of the week based on ISO standard. Week starts on Monday.
+      - name: week_end_date
+        description: End date of the week based on ISO standard. Week ends on Sunday.
+      - name: week_number
+        description: Number of the week within the year based on ISO standard. Can be used for management Reports.
+      - name: month
+        description: Numeric representation of the month (1-12). Can be used for management Reports.
+      - name: month_name
+        description: Full name of the month.
+      - name: month_name_short
+        description: Short name of the month.
+      - name: quarter_number
+        description: Numeric representation of the quarter (1-4).
+      - name: year
+        description: The year of the date. Can be used for management Reports.
+      - name: year_of_week
+        description: The year where the week_number belongs to. Can be used for management Reports.
+      - name: last_day_of_month_indicator
+        description: Flag indicating whether the date is the last day of the month.
+      - name: four_week_period
+        description: The four week period number of the date. A year has 13 periods. Can be used for management Reports.
+      - name: financial_year
+        description: Refer to a 12-month period that organizations use for financial reporting and budgeting purposes
+      - name: financial_period
+        description: Refer to a month period that organizations use for financial reporting and budgeting purposes.
+      - name: financial_week
+        description: The financial week 1 always starts on January 1st. The financial week 1 may contain >7 days long if the first week of January belongs to the previous year. The week number calculation is based on ISO.
+      - name: quarter_name
+        description: Name of the quarter.
+      - name: week_complete_indicator
+        description: This indicator would be a binary value that indicates whether a week is complete or not. If a week is complete, the indicator would be set to True; otherwise, it would be set to False.
+      - name: week_year
+        description: Combination of [year_of_week]-[week_number] based on ISO
+      - name: month_year
+        description: Combination of [year]-[month]
+      - name: quarter_year
+        description: Combination of [year]-[quarter_name]
+      - name: four_week_period_year
+        description: Combination of [year_of_week]-[four_week_period]
+      - name: last_complete_week_indicator
+        description: Indicator if the date is in the last complete week range.
+      - name: last_complete_month_indicator
+        description: Indicator if the date is in the last complete month range.
+      - name: last_complete_quarter_indicator
+        description: Indicator if the date is in the last complete quarter range.
+      - name: last_complete_period_indicator
+        description: Indicator if the date is in the last complete period range.
+  - name: im_calendar__national_holiday
+    description: >
+      The national holiday mart contains a single record for every date where holidays (public holiday / school holiday) are occured.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - fk_calendar_date_code
+            - holiday_name
+            - holiday_type
+            - country_region
+            - country
+    columns:
+      - name: pk_calendar_national_holiday_code
+        description: Unique identifier. Primary key for the calendar national holiday table.
+        tests:
+          - unique
+          - not_null
+      - name: fk_calendar_date_code
+        description: Reference to primary key calendar date in the calendar date table.
+        tests:
+          - not_null
+      - name: holiday_name
+        description: The name or description of the holiday (e.g., Christmas, New Year's Day, Easter).
+        tests:
+          - not_null
+      - name: holiday_type
+        description: The type or category of the holiday (e.g., Religion, Cultural,  Father's day, Mother's day, etc).
+        tests:
+          - not_null
+      - name: holiday_start_date
+        description: The start date of the holiday
+        tests:
+          - not_null
+      - name: holiday_end_date
+        description: The end date of the holiday
+        tests:
+          - not_null
+      - name: country_region
+        description: Identifying the region where the holiday is observed (if applicable, especially for countries with diverse holiday observance)
+        tests:
+          - not_null
+      - name: country
+        description: Country ISO Code identifying the country where the holiday is observed (if applicable, especially for multinational organizations).
+        tests:
+          - not_null

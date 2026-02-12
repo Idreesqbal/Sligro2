@@ -1,0 +1,736 @@
+version: 2
+
+models:
+  - name: im_company_reference__company
+    description: "The company mart contains general information of company and additional details, such as business activities and type."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - pk_company_reference_code
+            - fk_company_reference_code_ultimate_parent
+    config:
+      tags: "company_reference"
+    columns:
+      - name: pk_company_reference_code
+        description: "Unique company identifier. Primary key company reference table."
+        tests:
+          - unique
+          - not_null
+
+      - name: fk_company_reference_parent_code
+        description: "Unique identifier for parent company. When not applicable, this field is equal to company_reference_code. The foreign key is refer to pk_company_reference_code."
+
+      - name: fk_company_reference_code_ultimate_parent
+        description: "Unique identifier for highest entity in concern (ultimate parent). When not applicable, this field is equal to company_reference_code."
+
+      - name: fk_company_reference_property_features_code
+        description: "This location ID is used to join with the property features table "
+
+      - name: fk_company_reference_location_code
+        description: "This code is a combination of the company_reference_code_ultimate_parent and postal_code_6_digit. Companies belonging to the same concern and located on the same location have the same value."
+
+      - name: postal_code_4_digit
+        description: "4-digit postal code as registered in Chamber of Commerce"
+
+      - name: coc_number
+        description: "Chamber of Commerce (KvK) number"
+
+      - name: branch_number
+        description: "Together with the Chamber of commerce number, this number identifies a company location (in Dutch: vestigingsnummer). One Chamber of Commerce number can have multiple branch numbers (e.g. different locations of a restaurant chain)."
+
+      - name: company_name
+        description: "Registered name in the Chamber of Commerce. This is the statutory name or the trade name."
+
+      - name: statutory_name
+        description: "Not every company has a statutory name."
+
+      - name: trade_name_1
+        description: "The first trade name as egistered in the Chamber of Commerce"
+
+      - name: trade_name_2
+        description: "The second trade name as registered in the Chamber of Commerce"
+
+      - name: trade_name_3
+        description: "The third trade name as registered in the Chamber of Commerce"
+
+      - name: company_reference_ultimate_parent_name
+        description: "Company name of highest entity in concern (ultimate parent)."
+
+      - name: address
+        description: "Address as registered in Chamber of Commerce."
+
+      - name: street_name
+        description: "Street name as registered in Chamber of Commerce."
+
+      - name: house_number
+        description: "House number as registered in Chamber of Commerce."
+
+      - name: house_number_addition
+        description: "House number addition as registered in Chamber of Commerce."
+
+      - name: postal_code_6_digit
+        description: "Postal code as registered in Chamber of Commerce."
+
+      - name: city
+        description: "City as registered in Chamber of Commerce."
+
+      - name: correspondence_address
+        description: "Postal address as registered in Chamber of Commerce"
+
+      - name: correspondence_street_name
+        description: "Street name of the postal address as registered in Chamber of Commerce"
+
+      - name: correspondence_house_number
+        description: "House number of the postal address as registered in Chamber of Commerce"
+
+      - name: correspondence_house_number_addition
+        description: "House number addition of the postal address as registered in Chamber of Commerce"
+
+      - name: correspondence_postal_code
+        description: "Postal code of the postal address as registered in Chamber of Commerce"
+
+      - name: correspondence_city
+        description: "City of the postal address as registered in Chamber of Commerce"
+
+      - name: mailbox_address
+        description: "Mailbox address as registered in Chamber of Commerce"
+
+      - name: mailbox_postal_code
+        description: "Postal code of the mailbox address as registered in Chamber of Commerce"
+
+      - name: mailbox_city
+        description: "City of the mailbox address as registered in Chamber of Commerce"
+
+      - name: company_info_phone_number
+        description: "Phone number as determined by company info."
+
+      - name: phone_number
+        description: "Phone number as determined by company info (hyphen included)."
+
+      - name: business_address_incorrect_indicator
+        description: "Indicates whether a business address is incorrect."
+
+      - name: mailstop_indicator
+        description: "Non-mailing indicator as registered in the Chamber of Commerce."
+
+      - name: direct_mail_indicator
+        description: "Available for Direct Mail"
+
+      - name: telemarketing_indicator
+        description: "Available for telemarketing (BMNR not yet applied)"
+
+      - name: natural_person_indicator
+        description: "Natural person"
+
+      - name: in_formation_indicator
+        description: "Indicates whether the company is still in formation"
+
+      - name: special_business_type
+        description: "Description of the special business type"
+
+      - name: main_user_of_building_indicator
+        description: "Indicates whether the company is the main user of the building. 1 = yes."
+
+      - name: company_info_url
+        description: "URL to company info portal with information about the company"
+
+      - name: number_of_employees
+        description: "Number of employees as registered in the Chamber of Commerce"
+
+      - name: number_of_employees_class
+        description: "Class of the number of employees of the company  as registered in the Chamber of Commerce"
+
+      - name: sbi_code
+        description: "Code that indicates in which branch a company is active. Lowest level within SBI segment. "
+
+      - name: sbi_description
+        description: "Indicates in which branch a company is active. Lowest level within SBI segment. "
+
+      - name: sbi_code_2_digit
+        description: "Code that indicates in which branch a company is active. Subcategory within SBI segment."
+
+      - name: sbi_code_2_digit_description
+        description: "Indicates in which branch a company is active"
+
+      - name: sbi_code_segment
+        description: "Code that indicates in which branch a company is active"
+
+      - name: sbi_segment_description
+        description: "Indicates in which branch a company is active"
+
+      - name: category_code
+        description: "A unique code used by Sligro to categorize customers. Sourced from internal SBI code mapping."
+
+      - name: category_description
+        description: "Description of the Category code. Sourced from internal SBI code mapping."
+
+      - name: segment_code
+        description: "A unique code used by Sligro to represent a higher-level grouping that includes multiple related categories. Sourced from internal SBI code mapping."
+
+      - name: segment_description
+        description: "Description of the segment code. Sourced from internal SBI code mapping."
+
+      - name: main_branch_type
+        description: "Indicates whether the company is a main or branch office"
+
+      - name: legal_form
+        description: "Legal form of the company"
+
+      - name: establishment_date
+        description: "Establishment date"
+
+      - name: year_of_establishment
+        description: "Establishment year"
+
+      - name: company_age
+        description: "Age of the company."
+
+      - name: company_age_class
+        description: "Age class of the company"
+
+      - name: vat_number
+        description: "VAT (btw) number"
+
+      - name: company_url
+        description: "URL of the company website."
+
+      - name: franchise_formula
+        description: "Possible franchise name."
+
+      - name: franchise_type
+        description: "Possible franchise relationship"
+
+      - name: marketable_location_indicator
+        description: "Indicates whether the company is located at the same location as the decision-making unit."
+
+      - name: marketable_dmu_indicator
+        description: "Indicates whether the company is the decision-making unit within a concern."
+
+      - name: fk_company_reference_code_marketable_location
+        description: "Company_reference_code of the decision making unit of the location."
+
+      - name: fk_company_reference_marketable_dmu
+        description: "Company_reference_code of the decision making unit within the concern."
+
+      - name: decision_making_on_location_indicator
+        description: "Indicates if there is decision-making on the location."
+
+      - name: best_approachable_in_concern_indicator
+        description: "Best approachable company within a concern."
+
+      - name: best_approachable_on_location_indicator
+        description: "Best approachable company on location."
+
+      - name: hierarchical_level_within_concern
+        description: "Indicates in which level within the concern this company is."
+
+      - name: concern_relationship
+        description: "Description of the relationship/level in the concern"
+
+      - name: year_started
+        description: "The year in which the company started"
+
+      - name: month_started
+        description: "The month in which the company started"
+
+      - name: code_freelance
+        description: "Freelance description"
+
+      - name: code_freelance_type
+        description: "Type of freelance description (if applicable)"
+
+      - name: moved_date
+        description: "Date of last detected relocation (if applicable)"
+
+      - name: name_changed_date
+        description: "Date of last detected name change (if applicable)"
+
+      - name: coc_main_sbi_code
+        description: "Main SBI code as registered in chamber of Commerce"
+
+      - name: coc_main_sbi_description
+        description: "Description of the main SBI code as registered in Chamber of Commerce"
+
+      - name: coc_secondary_sbi_code_1
+        description: "Sub SBI code as registered in Chamber of Commerce"
+
+      - name: coc_secondary_sbi_code_1_description
+        description: "Description of the sub SBI code as registered in Chamber of Commerce"
+
+      - name: coc_secondary_sbi_code_2
+        description: "Sub SBI code as registered in Chamber of Commerce"
+
+      - name: coc_secondary_sbi_code_2_description
+        description: "Description of the sub SBI code as registered in Chamber of Commerce"
+
+      - name: coc_secondary_sbi_code_3
+        description: "Sub SBI code as registered in Chamber of Commerce"
+
+      - name: coc_secondary_sbi_code_3_description
+        description: "Description of the sub SBI code as registered in Chamber of Commerce"
+
+      - name: company_info_sbi_code_1
+        description: "SBI code assigned by company info based on company description."
+
+      - name: company_info_sbi_code_1_description
+        description: "Description of SBI code assigned by company info based on company description."
+
+      - name: company_info_sbi_code_2
+        description: "SBI code assigned by company info based on company description."
+
+      - name: company_info_sbi_code_2_description
+        description: "Description of SBI code assigned by company info based on company description."
+
+      - name: webcrawling_takeaway_indicator
+        description: "Based on webcrawling. Indicates if the website mentions that take away is possible."
+
+      - name: webcrawling_delivery_indicator
+        description: "Based on webcrawling. Indicates if the website mentions that delivery is possible."
+
+      - name: webcrawling_dark_kitchen_indicator
+        description: "Based on webcrawling. Indicates whether the company looks like a dark kitchen. "
+
+      - name: webcrawling_platform_indicator
+        description: "Based on webcrawling. Indicates whether the website mentions a delivery platforms (e.g. Uber Eats, Thuisbezorgd etc.)"
+
+      - name: webcrawling_terrace_indicator
+        description: "Based on webcrawling. Indicates if the company's website indicates that a terrace is present."
+
+      - name: holiday_region
+        description: "Indicates in which holiday region the company is located."
+
+      - name: discontinuation_indicator
+        description: "Indicates whether a company is discontinued"
+
+      - name: discontinuation_type
+        description: "The reason a company has been discontinued"
+
+      - name: discontinuation_date
+        description: "The date a company has been discontinued"
+
+  - name: im_company_reference__property_features
+    description: "The buildings and property features as registered in Basisregistratie Adressen en Gebouwen (BAG)"
+    config:
+      tags: "company_reference"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - pk_company_reference_property_features_code
+            - building_code
+    columns:
+      - name: pk_company_reference_property_features_code
+        description: "Unique property property features identifier. Used to join the company table with the property features table. Postal code + 5-digit house number + house number addition"
+        tests:
+          - unique
+          - not_null
+
+      - name: building_code
+        description: "Unique identifier for building (i.e. Pand ID)"
+
+      - name: surface
+        description: "Number of square meters of the object within a building"
+
+      - name: surface_class
+        description: "Class of the number of square meters of the object within a building"
+
+      - name: main_function_building
+        description: "The main function of the building"
+
+      - name: meeting_function_indicator
+        description: "The building has, among other things, a meeting function"
+
+      - name: cell_function_indicator
+        description: "The building has, among other things, a cell function"
+
+      - name: healthcare_function_indicator
+        description: "The building has, among other things, a healthcare function"
+
+      - name: industrial_function_indicator
+        description: "The building has, among other things, an industrial function"
+
+      - name: office_function_indicator
+        description: "The building has, among other things, an office function"
+
+      - name: lodging_function_indicator
+        description: "The building has, among other things, a lodging function"
+
+      - name: educational_function_indicator
+        description: "The building has, among other things, an educational function"
+
+      - name: sports_function_indicator
+        description: "The building has, among other things, a sports function"
+
+      - name: shopping_function_indicator
+        description: "The building has, among other things, a shopping function"
+
+      - name: residential_function_indicator
+        description: "The building has, among other things, a residential function"
+
+      - name: other_function_indicator
+        description: "The building has another usage function"
+
+      - name: building_status
+        description: "Status of the building"
+
+      - name: location_type
+        description: "Type of location"
+
+      - name: number_of_concerns_property_class
+        description: "The class of number of concerns established in the property"
+
+      - name: number_of_concerns_property
+        description: "The number of concerns established in the property"
+
+      - name: house_type
+        description: "The house type"
+
+      - name: ownership_type
+        description: "Indicates whether the company is the owner or tentant of the building"
+
+      - name: woz_value
+        description: "The WOZ value (WOZ waarde) of the building. The official assessed value of a property in the Netherlands, determined annually by the municipality. It reflects the estimated market value of the property as of January 1st of the previous year and is used for tax and administrative purposes."
+
+      - name: energy_label
+        description: "The energy label of the building"
+
+      - name: shared_company_building_type
+        description: "The type of shared building (if applicable)"
+
+      - name: outside_area_surface
+        description: "Surface area of the garden or estate associated with the property"
+
+      - name: coordinate_latitude
+        description: "GPS coordinate latitude of the company"
+
+      - name: coordinate_longitude
+        description: "GPS coordinate latitude of the company"
+
+      - name: coordinate
+        description: "Combination of the GPS coordinate latitude and GPS coordinatie longitude of the company"
+
+  - name: im_company_reference__commercial_area
+    description: "Commercial area name based on 6-digit postal code"
+    config:
+      tags: "company_reference"
+    columns:
+      - name: pk_company_reference_commercial_area_code
+        description: "Unique identifier. Primary key for commercial area table."
+        tests:
+          - unique
+          - not_null
+
+      - name: postal_code_4_digit
+        description: "4 digit postal code of the commercial area"
+        tests:
+          - not_null
+
+      - name: postal_code_6_digit
+        description: "6 digit postal code of the commercial area"
+        tests:
+          - not_null
+
+      - name: industrial_estate_name
+        description: "Smallest form of an industrial estate (e.g. industrial estate Amsterdam-Westpoort consists of industrial estates: Afrikahaven, Atlaspark, Sloterdijk etc.)"
+        tests:
+          - not_null
+
+      - name: industrial_estate_group_name
+        description: "The umbrella name for a collection of smaller industrial estates within a certain postal code area"
+
+  - name: im_company_reference__contact_person
+    description: "A point of contact to companies listed in the company reference data."
+    config:
+      tags: "company_reference"
+    columns:
+      - name: pk_company_reference_contact_person_code
+        description: "Unique contact person identifier. Primary key company reference contact person table."
+        tests:
+          - unique
+          - not_null
+      - name: fk_company_reference_code
+        description: "Unique company identifier. Primary key company reference table."
+        tests:
+          - not_null
+
+      - name: function_description
+        description: "Function of contact person"
+
+      - name: gender
+        description: "Contact person gender"
+
+      - name: title
+        description: "Contact person title"
+
+      - name: initials
+        description: "Contact person initials"
+
+      - name: prefix
+        description: "Contact person prefix (if applicable)"
+
+      - name: surname
+        description: "Contact person surname"
+
+      - name: prefix_with_surname
+        description: "Combination of prefix (if applicable) and surname of the contact person"
+
+      - name: main_contact_person_indicator
+        description: "Indicates whether this contact person is the main contact person for the company"
+
+      - name: date_of_birth
+        description: "Date of birth of contact person"
+
+      - name: age
+        description: "Age of contact person"
+
+  - name: im_company_reference__customer_match
+    description: "Results of matching between Sligro customer and a company based on the Company Info analysis."
+    config:
+      tags:
+        - "company_reference"
+        - "company_reference_matching"
+    columns:
+      - name: pk_company_reference_customer_match_code
+        description: "Primary key consiting of company reference code and customer code"
+        tests:
+          - unique
+          - not_null
+      - name: fk_company_reference_code
+        description: "Unique company identifier (Sizokey). Foreign key used to match this data with the company table."
+        tests:
+          - not_null
+
+      - name: fk_customer_code
+        description: "Combination of customer number and registration date. Foreign key used to match this data with the customer table."
+
+      - name: customer_registration_date
+        description: "The date a customer has been registered at Sligro"
+
+      - name: discontinuation_indicator
+        description: "Indicates whether a company is discontinued (in dutch: opheffingsindicator)"
+
+      - name: discontinuation_date
+        description: "The date a company has been discontinued"
+
+      - name: name_based_score
+        description: "Company info matching score. Indicates the similarity between a Sligro customer name and company name as in Chamber of Commerce"
+
+      - name: address_based_score
+        description: "Company info matching score. Indicates the similarity between a Sligro customer address and company address as in Chamber of Commerce"
+
+      - name: coc_based_score
+        description: "Company info matching score. Indicates the similarity between a Sligro Chamber of Commerce number and Chamber of Commerce number"
+
+      - name: phone_based_score
+        description: "Company info matching score. Indicates the similarity between a Sligro phone number and company phone number as in Chamber of Commerce"
+
+      - name: canceled_score
+        description: "Company info matching score. Indicates whether the company is still registered in Chamber of Commerce"
+
+      - name: total_score
+        description: "Company Info total matching score. Indicates the certainty of the match between a Sligro customer and a company."
+
+      - name: matching_date
+        description: "The matching table date file of the latest matched between a customer with a company."
+
+      - name: first_matching_date
+        description: The first date that the company was matched to the customer by company info
+
+      - name: last_matching_date
+        description: The most recent date that the company was matched to the customer by company info
+
+      - name: recent_match_indicator
+        description: Indicates whether this company is matched to the customer in the most recent company info file
+
+  - name: im_company_reference__concern
+    description: "The concern mart represents the company SBI/business as a whole (Concern)"
+    config:
+      tags: "company_reference"
+    columns:
+      - name: pk_company_reference_code_ultimate_parent
+        description: "Unique identifier for highest entity in concern (ultimate parent)."
+        tests:
+          - unique
+          - not_null
+
+      - name: sbi_code_concern
+        description: "The SBI code that is most typical for the concern."
+
+      - name: sbi_concern_description
+        description: "The description of the SBI code that is most typical for the concern "
+
+      - name: sbi_code_2_digit_concern
+        description: "The 2-digit SBI code that is most typical for the concern."
+
+      - name: sbi_code_2_digit_concern_description
+        description: "The description of the 2-digit SBI code that is most typical for the concern"
+
+      - name: sbi_code_segment_concern
+        description: "The SBI segment code that is most typical for the concern."
+
+      - name: sbi_segment_concern_description
+        description: "The SBI segment description that is most typical for the concern"
+
+      - name: category_code
+        description: "A unique code used by Sligro to categorize customers. Sourced from internal SBI code mapping."
+
+      - name: category_description
+        description: "Description of the Category code. Sourced from internal SBI code mapping."
+
+      - name: segment_code
+        description: "A unique code used by Sligro to represent a higher-level grouping that includes multiple related categories. Sourced from internal SBI code mapping."
+
+      - name: segment_description
+        description: "Description of the segment code. Sourced from internal SBI code mapping."
+
+      - name: number_of_employees_concern
+        description: "Total number of employees within the  concern in the Netherlands"
+
+      - name: number_of_employees_concern_class
+        description: "Class of total number of employees within the concern in the Netherlands"
+
+      - name: number_of_companies_concern
+        description: "Number of companies belonging to the same concern"
+
+      - name: number_of_locations_concern
+        description: "Number of unique postal codes from where a group carries out activities."
+
+      - name: company_age_concern
+        description: "Age of the oldest company within the concern."
+
+      - name: company_age_class_concern
+        description: "Age class of the oldest company within the concern"
+
+      - name: number_of_unique_sbi_2_digit_concern
+        description: "The number of unique two-digit SBI codes that are present within the concern."
+
+      - name: sales_area
+        description: "Description of the region in which the company is operating"
+
+      - name: csr_pyramid
+        description: "The type of Corporate Social Responsibility (CSR) a company communicates on its website"
+
+      - name: white_collar_class_concern
+        description: "Indicates the number of office employees (automated workplaces) within a concern"
+
+      - name: blue_collar_class_concern
+        description: "Indicates the number of production employees (all work that does not take place behind a desk) within a concern"
+
+      - name: is_suitable_for_linkedin_ads_indicator
+        description: "Company name, URL and a crawled LinkedIn account are present, which enables a connection with LinkedIn Ads"
+
+      - name: facebook_indicator
+        description: "Facebook account is listed on the website of the company"
+
+      - name: instagram_indicator
+        description: "Instagram account is listed on the website of the company"
+
+      - name: linkedin_indicator
+        description: "LinkedIn account is listed on the website of the company"
+
+      - name: is_webshop_indicator
+        description: "Company uses a website that allows digital transactions"
+
+      - name: discontinuation_indicator
+        description: "Indicates whether the concern is discontinued"
+
+      - name: discontinuation_type
+        description: "The reason the concern has been discontinued"
+
+      - name: discontinuation_date
+        description: "The date a concern has been discontinued"
+
+  - name: im_company_reference__location
+    description: "Result from the Company Info analysis based on multiple businesses that belong to the same company group and are located in the same postal code."
+    config:
+      tags: "company_reference"
+    columns:
+      - name: pk_company_reference_location_code
+        description: "This code is a combination of the company_reference_code_ultimate_parent and postal code"
+        tests:
+          - unique
+          - not_null
+
+      - name: fk_company_reference_code_ultimate_parent
+        description: "Unique identifier for highest entity in concern (ultimate parent). When not applicable, this field is equal to company_reference_code."
+        tests:
+          - not_null
+
+      - name: postal_code_4_digit
+        description: "The 4-digit postal code of the location"
+
+      - name: postal_code_6_digit
+        description: "The 6-digit postal code of the location"
+
+      - name: sbi_code_location
+        description: "The SBI code that is most typical for all companies on a location that belong to the same concern."
+
+      - name: sbi_description
+        description: "The description of the SBI code that is most typical for all companies on a location that belong to the same concern"
+
+      - name: sbi_code_2_digit_location
+        description: "The 2-digit SBI code that is most typical for all companies on a location that belong to the same concern."
+
+      - name: sbi_2_digit_description
+        description: "The description of the 2-digit SBI code that is most typical for all companies on a location that belong to the same concern"
+
+      - name: sbi_code_segment_location
+        description: "The SBI segment that is most typical for all companies on a location that belong to the same concern."
+
+      - name: sbi_code_segment_location_description
+        description: "The description of the SBI code that is most typical for all companies on a location that belong to the same concern"
+
+      - name: number_of_employees_location
+        description: "The number of employees belonging to the same concern on the location"
+
+      - name: number_of_employees_class
+        description: "Class of the number of employees belonging to the same concern on the location"
+
+      - name: number_of_companies_location
+        description: "Summed number of companies belonging to the same concern on a location."
+
+      - name: company_age_location
+        description: "Age of the oldest company on the location."
+
+      - name: age_class
+        description: "Age class of the oldest company on the location"
+
+      - name: number_of_unique_sbi_2_digit_location
+        description: "The number of unique two-digit SBI codes that are present on the location from companies belonging to the same concern."
+
+      - name: white_collar_class
+        description: "Indicates the number of office employees (automated workplaces) on a location"
+
+      - name: blue_collar_class
+        description: "Indicates the number of production employees (all work that does not take place behind a desk) on a location"
+
+      - name: annual_gas_consumption
+        description: "Indication of the annual gas consumption class at a location"
+
+      - name: annual_electric_consumption
+        description: "Indication of the annual electricity consumption class at a location"
+
+      - name: location_prediction
+        description: "Prediction of type of business behavior the company on the location"
+
+  - name: im_company_reference__postal_code_distance
+    description: "The postal code distance mart provides information on the distance (in kilometers) between two 4-digit postal codes"
+    config:
+      tags: "company_reference"
+    columns:
+      - name: pk_postal_code_distance
+        description: "Unique identifier. Primary key postal code distance table."
+        tests:
+          - unique
+          - not_null
+      - name: postal_code_from_4_digit
+        description: "The 4-digit postal code from which the distance is calculated"
+        tests:
+          - not_null
+
+      - name: postal_code_to_4_digit
+        description: "The 4-digit postal code as to which the distance is calculated"
+        tests:
+          - not_null
+
+      - name: distance_in_km
+        description: "Distance between 2 postal codes"

@@ -1,0 +1,122 @@
+version: 2
+
+models:
+  - name: ref__calendar
+    columns:
+      - name: calendar_date_nk
+        description: "The natural key for the calendar entity, which is the date itself"
+      - name: record_source
+        description: "The string to represent the record source"
+      - name: load_datetime
+        description: "The timestamp when the data is loaded into the staging table"
+      - name: prior_date_day
+        description: "The date - 1 day"
+      - name: next_date_day
+        description: "The date + 1 day"
+      - name: prior_year_date_day
+        description: "The date - 1 year"
+      - name: prior_year_over_year_date_day
+        description: "The date - 364 day"
+      - name: day_of_week
+        description: "Extract the day number within the week, which the week starts on Sunday"
+      - name: day_of_week_iso
+        description: "Extract the day number within the week, which the week starts on Monday. Based on ISO standard"
+      - name: day_of_week_name
+        description: "Extracts name of weekday from date"
+      - name: day_of_week_name_short
+        description: "Extracts short name of weekday from date"
+      - name: day_of_month
+        description: "Extracts day of the month from date"
+      - name: day_of_year
+        description: "Extracts day of the year from a date"
+      - name: week_start_date
+        description: "The week starting date using standard (US) format. Week starting Sunday"
+      - name: first_day_of_week_name
+        description: "The first day of the week using standard (US) format, which is Sunday"
+      - name: week_end_date
+        description: "The week ending date using standard (US) format. Week ending Saturday"
+      - name: prior_year_week_start_date
+        description: "The week starting date using standard (US) format of prior_year_over_year_date_day"
+      - name: prior_year_week_end_date
+        description: "The week ending date using standard (US) format of prior_year_over_year_date_day"
+      - name: week_of_year
+        description: "The week of the year using standard (US) format, i.e. week starting Sunday and ending Saturday."
+      - name: iso_week_start_date
+        description: "The week starting date using ISO standard. Week starting Monday"
+      - name: iso_first_day_of_week_name
+        description: "The first day of the week using ISO standard, which is Monday"
+      - name: iso_week_end_date
+        description: "The week ending date using ISO standard. Week ending Sunday"
+      - name: prior_year_iso_week_start_date
+        description: "The week starting date using ISO standard of prior_year_over_year_date_day"
+      - name: prior_year_iso_week_end_date
+        description: "The week ending date using ISO standard of prior_year_over_year_date_day"
+      - name: iso_week_of_year
+        description: "The week of the year using ISO standard, i.e. week starting Monday and ending Sunday."
+      - name: prior_year_week_of_year
+        description: "The week of the year using standard (US) format of prior_year_over_year_date_day"
+      - name: prior_year_iso_week_of_year
+        description: "The week of the year using ISO standard of prior_year_over_year_date_day"
+      - name: month_of_year
+        description: "Extracts the month number of the date"
+      - name: month_name
+        description: "Extracts the month name of the date"
+      - name: month_name_short
+        description: "Extracts the month short name of the date"
+      - name: month_start_date
+        description: "The start date of the date's month"
+      - name: month_end_date
+        description: "The end date of the date's month"
+      - name: prior_year_month_start_date
+        description: "The start date of the prior_year_date_day's month"
+      - name: prior_year_month_end_date
+        description: "The end date of the prior_year_date_day's month"
+      - name: quarter_of_year
+        description: "Extracts the quarter of the date (1-4)"
+      - name: quarter_start_date
+        description: "The start date of the quarter_of_year"
+      - name: quarter_end_date
+        description: "The end date of the quarter_of_year"
+      - name: year_number
+        description: "Extracts the year of the date"
+      - name: year_start_date
+        description: "The start date of the date's year"
+      - name: year_end_date
+        description: "The end date of the date's year"
+      - name: iso_four_week_period
+        description: "The four week period number of the date. A year has 13 periods"
+      - name: year_of_week
+        description: "The year where the date's week number belongs to"
+      - name: iso_year_of_week
+        description: "The year where the date's ISO week number belongs to"
+      - name: last_day_of_month_indicator
+        description: "The indicator whether the date is equal to its month_end_date"
+      - name: iso_weekday_weekend_indicator
+        description: "The indicator whether the date falls in the weekday or weekend"
+
+  - name: ref__vat_amount
+
+  - name: ref__vat_description
+
+  - name: ref__customer_6_to_7_digits
+
+  - name: ref__company_reference_labels
+    config:
+      tags: "company_reference"
+
+  - name: ref__company_sbi_category_segment_mapping
+    config:
+      tags: "company_reference"
+    columns:
+      - name: sbi_code
+        description: Code that indicates in which branch a company is active. Lowest level within sbi segment.
+      - name: sbi_description
+        description: Description that indicates in which branch a company is active. Lowest level within sbi segment.
+      - name: category_code
+        description: A unique code used by Sligro to categorize customers.
+      - name: category_description
+        description: Description of the Category code.
+      - name: segment_code
+        description: A unique code used by Sligro to represent a higher-level grouping that includes multiple related categories.
+      - name: segment_description
+        description: Description of the segment code

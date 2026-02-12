@@ -1,0 +1,134 @@
+version: 2
+
+models:
+  - name: base_stg_company_info__bag
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__bag
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__bag_pand
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__bag_pand
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__bedrijfsterreinen
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__bedrijfsterreinen
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__branches
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__branches
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__concerns
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__concerns
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__contactpersonen
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__contactpersonen
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__instellingen
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__instellingen
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__keyword_categories
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__keyword_categories
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__labels
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__labels
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__locaties
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__locaties
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__matching_table
+    config:
+      tags:
+        - "company_reference"
+        - "company_reference_matching"
+
+  - name: stg_company_info__matching_table
+    config:
+      tags:
+        - "company_reference"
+        - "company_reference_matching"
+
+  - name: base_stg_company_info__postcode4
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__postcode4
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__postcode4_afstanden
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__postcode4_afstanden
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__sizokeys_opgeheven
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__sizokeys_opgeheven
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__view_webdata_keywords_concern
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__view_webdata_keywords_concern
+    config:
+      tags: "company_reference"
+
+  - name: base_stg_company_info__voorspelmodellen_locatie
+    config:
+      tags: "company_reference"
+
+  - name: stg_company_info__voorspelmodellen_locatie
+    config:
+      tags: "company_reference"

@@ -1,0 +1,42 @@
+{%- set yaml_metadata -%}
+source_model: "stg_as400__lvinkcpf"
+src_pk: "SUPPLIER_HK"
+src_hashdiff: "HASHDIFF"
+src_payload:
+    - "ACCMC1"
+    - "ACCMC2"
+    - "ACCMC3"
+    - "ACCMC4"
+    - "ACCMC5"
+    - "CNTPC1"
+    - "CNTPC2"
+    - "CNTPC3"
+    - "EMALC2"
+    - "EMALC3"
+    - "EMALC4"
+    - "EMALC5"
+    - "FOMSC1"
+    - "FOMSC2"
+    - "FOMSC3"
+    - "FXNRC2"
+    - "FXNRC3"
+    - "FXNRC4"
+    - "LVADC2"
+    - "LVADC3"
+    - "LVPKC2"
+    - "LVWPC2"
+    - "MBNRC2"
+    - "TLNRC2"
+    - "TLNRC3"
+    - "TLNRC4"
+    - "TLNRC5"
+    - "WEBSC2"
+    - "START_DATETIME"
+    - "END_DATETIME"
+src_ldts: "LOAD_DATETIME"
+src_source: "RECORD_SOURCE"
+{%- endset -%}
+
+{% set metadata_dict = fromyaml(yaml_metadata) %}
+
+{{ automate_dv.sat(**metadata_dict) }}

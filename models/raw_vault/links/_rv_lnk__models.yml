@@ -1,0 +1,79 @@
+version: 2
+
+models:
+  - name: rv_hlnk__trade_item_hierarchy
+
+  - name: rv_lnk__article__location__supplier
+
+  - name: rv_lnk__article__stock
+
+  - name: rv_lnk__article_group__supplier__employee
+
+  - name: rv_lnk__article__trade_item
+
+  - name: rv_lnk__article__rpe_supplier
+
+  - name: rv_lnk__collection_area__site
+
+  - name: rv_lnk__forecast__purchase_planning
+
+  - name: rv_lnk__forecast__customer
+
+  - name: rv_lnk__article__data_supplier
+
+  - name: rv_lnk__promotion_article
+
+  - name: rv_lnk__supplier__employee
+
+  - name: rv_lnk__supplier__carrier
+
+  - name: rv_lnk__supplier__stock
+
+  - name: rv_lnk__stock__stock_location
+
+  - name: rv_lnk__site__collection_area__stock_location
+    label:
+      source: AS400
+    columns:
+      - name: SITE_COLLECTION_AREA_STOCK_LOCATION_HK
+        tests:
+          - not_null
+          - unique
+
+  - name: rv_hlnk__goods_received__article
+
+  - name: rv_hlnk__goods_received__article__pallet
+
+  - name: rv_lnk__goods_received__purchase_order__site__supplier
+
+  - name: rv_lnk__company_reference_building_address
+    config:
+      tags: "company_reference"
+
+  - name: rv_lnk__company_reference_address
+    config:
+      tags: "company_reference"
+
+  - name: rv_lnk__company_reference_customer_matching
+    config:
+      tags:
+        - "company_reference"
+        - "company_reference_matching"
+
+  - name: rv_lnk__company_reference_location
+    config:
+      tags: "company_reference"
+
+  - name: rv_lnk__postcode_distance
+    config:
+      tags: "company_reference"
+
+  - name: rv_hlnk__company_reference_hierarchy
+    config:
+      tags: "company_reference"
+
+  - name: rv_lnk__carrier__site
+
+  - name: rv_lnk__company_reference_building
+    config:
+      tags: "company_reference"

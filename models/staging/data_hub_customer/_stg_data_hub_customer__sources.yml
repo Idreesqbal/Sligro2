@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: data_hubs_to_dwh_landing_zone
+    database: sfg-data-lake-prod-happ
+    config:
+      freshness:
+        warn_after:
+          count: 25
+          period: hour
+        filter: event_datetime >= CURRENT_TIMESTAMP - INTERVAL 48 HOUR
+      loaded_at_field: event_datetime
+    tables:
+      - name: raw_customer_v1
+        schema: raw_customer_v1
+        description: Customer Data Hub
+        columns:
+          - name: event_datetime
+            description: The datetime of when the article event was received by the data hub
+          - name: event_type
+            description: The type of event considered ('created', 'updated' or 'deleted')

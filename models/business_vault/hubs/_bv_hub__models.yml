@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: bv_hub__purchase_order
+
+  - name: bv_hub__goods_received
+
+  - name: bv_hub__customer
+
+  - name: bv_hub__customer_address
+
+  - name: bv_hub__customer_contact_person

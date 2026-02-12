@@ -1,0 +1,76 @@
+version: 2
+
+sources:
+  - name: looker_meta_data
+    database: "{{ env_var('DBT_DATA_LAKE_DATABASE', 'not_set') }}"
+    schema: "sfg_raw_bigquery_cost_monitoring"
+
+    tables:
+      - name: looker_system_activity__history
+        description: >
+          Contains metadata about Looker system activity history data, including details such as creation time,
+          job status, execution metrics. For more detailed information, refer to the official Looker documentation:
+          https://cloud.google.com/looker/docs/reference/looker-api/latest/methods/Query/run_inline_query
+        columns:
+          - name: look_id
+            description: The ID of the look
+          - name: look_title
+            description: The title of the look
+          - name: query_id
+            description: The ID of the looker query
+          - name: query_model
+            description: The model of the query
+          - name: query_created_date
+            description: The date when the query was created
+          - name: dashboard_id
+            description: The ID of the Looker dashboard
+          - name: dashboard_is_legacy
+            description: Whether the dashboard is legacy
+          - name: dashboard_title
+            description: The title of the Looker dashboard
+          - name: user_email
+            description: The email of the user who created the Looker query
+          - name: user_name
+            description: The name of the user who created the Looker query
+          - name: query_formatted_pivots
+            description: The formatted pivots of the Looker query
+          - name: dashboard_creator_name
+            description: The name of the creator of the Looker dashboard
+          - name: history_cache
+            description: A flag indicating whether the query result was served from cache
+          - name: history_completed_date
+            description: The date when the query was completed
+          - name: history_connection_name
+            description: The name of the connection used to run the query
+          - name: history_created_time
+            description: The time when the history record was created
+          - name: query_view
+            description: The view of the query
+          - name: query_created_time
+            description: The time when the query was created
+          - name: history_runtime
+            description: The runtime of the query in seconds
+          - name: history_most_recent_run_at_time
+            description: The time when the query was most recently run
+          - name: history_most_recent_length
+            description: The length of the query
+          - name: history_message
+            description: The message of the query
+          - name: history_status
+            description: The status of the query
+          - name: inserted_date
+            description: The ingestion date of the row to the BigQuery table
+
+      - name: looker_system_activity__query_metrics
+        description: >
+          Contains data that maps Looker queries to their corresponding BigQuery jobs,
+          enabling tracking and analysis of query execution and resource usage
+        columns:
+          - name: query_created_time
+            description: The time when the query was created.
+          - name: query_metrics_bigquery_job_id
+            description: The ID of the BigQuery job associated with the query.
+          - name: query_id
+            description: The ID of the query.
+          - name: inserted_date
+            description: The date when the row was inserted to the BigQuery table (ingestion date)

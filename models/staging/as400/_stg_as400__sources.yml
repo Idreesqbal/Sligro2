@@ -1,0 +1,4260 @@
+version: 2
+
+sources:
+  - name: sligro60_db260_centraal
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    config:
+      freshness:
+        warn_after:
+          count: 7 # fivetran syncs this table every 6 hours
+          period: hour
+        filter: _fivetran_synced > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1
+          DAY)
+      loaded_at_field: _fivetran_synced
+    tables:
+      - name: artikel_magazijn_locatie
+        description: Article locations in stores for CDC
+        columns:
+          - name: ARTIKEL_ID
+            description: "ARTICLE_ID"
+          - name: LOCATIE_SOORT
+            description: "LOCATION_TYPE"
+          - name: DC_ID
+            description: "DC_ID"
+          - name: DC_AREA_ID
+            description: "DC_AREA_ID"
+          - name: DC_GANG_NR
+            description: "DC_GANG_NO"
+          - name: DC_VAK_NR
+            description: "DC_VAK_NR"
+          - name: DC_LAAG_NR
+            description: "DC_LOW_NO"
+          - name: DC_PLAATS_NR
+            description: "DC_PLACE_NO"
+          - name: OPSLAG_METHODE_ID
+            description: "STORAGE_METHOD_ID"
+          - name: PTL_VERHUIZING
+            description: "PTL_MOVING"
+          - name: MIN_LOCATIE_AANTAL
+            description: "MIN_LOCATION_QUANTITY"
+          - name: MAX_LOCATIE_AANTAL
+            description: "MAX_LOCATION_NUMBER"
+          - name: TOEGEVOEGD_DOOR
+            description: "ADDED BY"
+          - name: TOEGEVOEGD_DATUM
+            description: "ADDED_DATE"
+          - name: GEWIJZIGD_DOOR
+            description: "CHANGED BY"
+          - name: GEWIJZIGD_DATUM
+            description: "MODIFIED_DATE"
+          - name: MUTATIE_TELLER
+            description: "MUTATION_COUNT"
+
+      - name: rel_voorraad_beheerder_artikel_groep
+        config:
+          freshness: null
+        columns:
+          - name: ID
+            description: "ID Primary Key"
+          - name: ARTIKEL_GROEP_ID
+            description: "item_group_id"
+          - name: LEVERANCIER_ID
+            description: "supplier_id"
+          - name: VOORRAAD_BEHEERDER_ID
+            description: "inventory_manager_id"
+          - name: TOEGEVOEGD_DOOR
+            description: "added_by"
+          - name: TOEGEVOEGD_DATUM
+            description: "added_date"
+          - name: GEWIJZIGD_DOOR
+            description: "changed by"
+          - name: GEWIJZIGD_DATUM
+            description: "modified_date"
+          - name: MUTATIE_TELLER
+            description: "mutation_counter"
+
+      - name: prijs_groep
+        config:
+          freshness: null
+        description: "Price Group"
+        columns:
+          - name: calculatie_afronding
+            description: "Calculation Rounding"
+          - name: calculatie_consument_afronding
+            description: "Consumer Price Calculation Rounding"
+          - name: consument_prijs_basis_prijs_groep_id
+            description: "Consumer Price Base Price Group ID"
+          - name: consument_prijs_leidend
+            description: "Consumer Price Leading"
+          - name: consument_prijs_prijs_code_opslag_percentage
+            description: "Consumer Price Code Markup Percentage"
+          - name: consument_prijs_vast_opslag_percentage
+            description: "Consumer Price Fixed Markup Percentage"
+          - name: gewijzigd_datum
+            description: "Date Modified"
+          - name: gewijzigd_door
+            description: "Modified By"
+          - name: hoofd_kantoor_id
+            description: "Head Office ID"
+          - name: ingang_nieuw_prijs
+            description: "New Price Effective Date"
+          - name: klant_specifiek
+            description: "Customer Specific"
+          - name: mutatie_teller
+            description: "Mutation Counter"
+          - name: nul_prijs_toestaan
+            description: "Allow Zero Price"
+          - name: prijs_basis
+            description: "Price Basis"
+          - name: prijs_bevestigen
+            description: "Price Confirmation"
+          - name: prijs_groep_id
+            description: "Price Group ID"
+          - name: prijs_groep_oms
+            description: "Price Group Description"
+          - name: prijs_groep_soort
+            description: "Price Group Type"
+          - name: termijn_prijs
+            description: "Term Price"
+          - name: toegevoegd_datum
+            description: "Date Added"
+          - name: toegevoegd_door
+            description: "Added By"
+          - name: vast_prijs
+            description: "Fixed Price"
+          - name: volgorde
+            description: "Order"
+
+  - name: sligro60_db260_financien
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    tables:
+      - name: leverancier_intercompany
+        description: Information about intercompany suppiers
+        columns:
+          - name: leverancier_id
+            description: "The unique supplier code in the as400"
+          - name: fis_crediteur_nr
+            description: "The financial credit number"
+          - name: filiaal_nummer_hoofdkantoor
+            description: "The site code of the headoffice related to the intercompany supplier"
+          - name: toegevoegd_datum
+            description: "The date of adding to the table"
+          - name: toegevoegd_door
+            description: "The person who added the record"
+          - name: verstuur_email
+            description: "Unknown"
+          - name: eliminatie_boeking_aanmaken
+            description: "Indicator if a elimination booking needs to be created"
+          - name: leverancier_status
+            description: "the status of the intercompany supplier"
+
+  - name: sligro60_slgfilelib_slgfilelib
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    config:
+      freshness:
+        warn_after:
+          count: 7 # fivetran syncs this table every 6 hours
+          period: hour
+        filter: _fivetran_synced > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1
+          DAY)
+      loaded_at_field: _fivetran_synced
+    tables:
+      - name: arbvrcpf
+        description: "article bulk locations"
+        columns:
+          - name: arnrc1
+            description: "article number"
+          - name: cydxc1
+            description: "mutation date"
+          - name: dckdc1
+            description: "dc code"
+          - name: eidec1
+            description: "end date"
+          - name: fanrc1
+            description: "invoice number"
+          - name: finrc1
+            description: "site number"
+          - name: foejc1
+            description: "folder year"
+          - name: fokdc1
+            description: "folder code"
+          - name: fonrc1
+            description: "folder number"
+          - name: godec1
+            description: "goods receipt date"
+          - name: godfc1
+            description: "goods receipt definitive"
+          - name: gotdc1
+            description: "goods receipt time"
+          - name: gousc1
+            description: "goods receipt user"
+          - name: ionrc1
+            description: "purchase order number"
+          - name: klnrc1
+            description: "customer number"
+          - name: loknc1
+            description: "location"
+          - name: opdec1
+            description: "registration date"
+          - name: optdc1
+            description: "registration time"
+          - name: panrc1
+            description: "pallet number"
+          - name: plaac3
+            description: "original number of packages on a pallet"
+          - name: prtyc1
+            description: "priority"
+          - name: rtdec1
+            description: "return note date"
+          - name: s021c1
+            description: "pallet status"
+          - name: thdec1
+            description: "best before date"
+          - name: timxc1
+            description: "mutation time"
+          - name: update_ident
+            description: "field update / access identifier"
+          - name: userc1
+            description: "user"
+          - name: usrxc1
+            description: "last mutation user"
+          - name: vedec2
+            description: "request date"
+          - name: vetdc2
+            description: "request time"
+          - name: veusc1
+            description: "request user id"
+          - name: wnnrc1
+            description: "employee number"
+          - name: wyejc1
+            description: "wine year"
+
+      - name: bsta2cpf
+        description: "Extension table for bstalgpf, contains additional attributes"
+        columns:
+          - name: fokdc1
+            description: "Promotion code, foreign key to the Promotion entity"
+          - name: finac1
+            description: "Aflever vestiging"
+          - name: ictpc1
+            description: "IC type"
+          - name: ionrc1
+            description: "6-digit purchase order number"
+          - name: ornrc4
+            description: "Legacy order number (usually empty)"
+          - name: ornrc5
+            description: "10-digit purchase order number"
+          - name: safrc1
+            description: "Safr code"
+          - name: update_ident
+            description: "Field update / access identifier"
+
+      - name: artikcpf
+        description: Articles information, including stock location, for CDC
+        columns:
+          - name: S013C1
+            description: "Item status"
+          - name: ARNRC1
+            description: "Article number"
+          - name: LVNRC1
+            description: "Supplier number"
+          - name: ARGRC1
+            description: "Item group"
+          - name: VPOMC1
+            description: "Packaging"
+          - name: LKNMC1
+            description: "Shortened supplier name"
+          - name: IVAAC1
+            description: "Package contents"
+          - name: DCAAC2
+            description: "Decimals"
+          - name: ODAAC1
+            description: "Outer carton"
+          - name: PTAAC1
+            description: "Number of packages on a pallet"
+          - name: PLAAC1
+            description: "Number of packages on a pallet layer"
+          - name: ASKDC1
+            description: "Item type"
+          - name: AROMC1
+            description: "Item description"
+          - name: INPRC1
+            description: "Purchase price"
+          - name: BSDDC1
+            description: "Order day"
+          - name: BTKDC1
+            description: "VAT code"
+          - name: AREAC1
+            description: "Area"
+          - name: GANGC1
+            description: "Warehouse corridor"
+          - name: ANDVC1
+            description: "Number of days of desired stock"
+          - name: VRKLC1
+            description: "Item sales location"
+          - name: ETIKC1
+            description: "Label"
+          - name: GEWIC1
+            description: "Average weight"
+          - name: VOLMC1
+            description: "Volume"
+          - name: OGKDC1
+            description: "Order size code"
+          - name: APPRC1
+            description: "Price-a (reserve)"
+          - name: XCPRC1
+            description: "X-colli price"
+          - name: VRKDC1
+            description: "Stock code"
+          - name: DPKDC1
+            description: "Change decentralized price"
+          - name: HAKDC1
+            description: "Main/action article"
+          - name: BOKDC1
+            description: "Code bonus"
+          - name: MTGTC1
+            description: "Mate"
+          - name: KLOMC1
+            description: "Colour"
+          - name: AS01C1
+            description: "Release assortment code"
+          - name: AS02C1
+            description: "Direct import"
+          - name: AS03C1
+            description: "Assortment code Den Bosch"
+          - name: AS04C1
+            description: "Assortment code Leidschendam"
+          - name: AS05C1
+            description: "Assortment code VanderVelde"
+          - name: AS06C1
+            description: "Assortment code Helmond"
+          - name: AS07C1
+            description: "Item is included for customer"
+          - name: AS08C1
+            description: "Assortment code RVC Nijkerk"
+          - name: AS09C1
+            description: "Assortment code Weert"
+          - name: AS10C1
+            description: "Assortment code Tiel"
+          - name: AS11C1
+            description: "Assortment code Tilburg"
+          - name: AS12C1
+            description: "Assortment code Emmen"
+          - name: AS13C1
+            description: "Assortment code Alkmaar"
+          - name: AS14C1
+            description: "Hoeckel assortment code"
+          - name: AS15C1
+            description: "Assortment code Sittard"
+          - name: AS16C1
+            description: "Assortment code Apeldoorn"
+          - name: AS17C1
+            description: "Assortment code Venlo"
+          - name: AS18C1
+            description: "Assortment code Doetinchem"
+          - name: AS19C1
+            description: "Assortment code Zwolle"
+          - name: AS20C1
+            description: "Assortment code Veghel"
+          - name: AS21C1
+            description: "Assortment code Heerlen"
+          - name: AS22C1
+            description: "Van Hoeckel Urgent article"
+          - name: AS23C1
+            description: "Assortment code Maastricht"
+          - name: AS24C1
+            description: "Assortment code Arnhem"
+          - name: AS25C1
+            description: "Assortment code Nijmegen"
+          - name: AS26C1
+            description: "Assortment code Rotterdam South"
+          - name: AS27C1
+            description: "Assortment CD Rotterdam Spanish polder"
+          - name: AS28C1
+            description: "Assortment code Leiden"
+          - name: AS29C1
+            description: "Assortment code Smit Vis"
+          - name: AS30C1
+            description: "Warehouse label"
+          - name: ZBPRC1
+            description: "Self-service price"
+          - name: CNPRC1
+            description: "Consumer price"
+          - name: EMPRC1
+            description: "Packaging price"
+          - name: MVAAC1
+            description: "Minimum stock"
+          - name: THTDC1
+            description: "Best before"
+          - name: AARNC1
+            description: "Promotion item number"
+          - name: BNAAC1
+            description: "Bonus"
+          - name: ZBDTC1
+            description: "Effective date of new ZB price"
+          - name: ZNPRC1
+            description: "New self-service price"
+          - name: ZVPRC1
+            description: "Previous ZB price"
+          - name: INDTC1
+            description: "Effective date of new purchase price"
+          - name: ITPRC1
+            description: "New purchase price"
+          - name: IVPRC1
+            description: "Previous purchase price"
+          - name: NCPRC1
+            description: "New consumer price"
+          - name: NAPRC1
+            description: "Not used"
+          - name: NBPRC1
+            description: "New X-colli price"
+          - name: ALCDC1
+            description: "Delivery location code"
+          - name: AWCDC1
+            description: "Assortment spy"
+          - name: CLKDC1
+            description: "Order directly in Maastricht"
+          - name: MNAAC1
+            description: "Minimum purchase"
+          - name: UPCAC1
+            description: "Not used"
+          - name: VVDTC1
+            description: "Expiration date"
+          - name: MTDTC1
+            description: "Change date"
+          - name: ED1BC1
+            description: "Order via EDI"
+          - name: ED2BC1
+            description: "Order via EDI"
+          - name: NVDTC1
+            description: "Date out of stock until"
+          - name: KDOPC1
+            description: "Storage code"
+          - name: KRKDC1
+            description: "Own brand item"
+          - name: ZP01C1
+            description: "Price price group 1"
+          - name: CP01C1
+            description: "Consumer price price group 1"
+          - name: ZN01C1
+            description: "New price price group 1"
+          - name: CN01C1
+            description: "New consumer price price group 1"
+          - name: TMKDC1
+            description: "Code printed on overview SLM115"
+          - name: AS31C1
+            description: "Assortment code Groningen"
+          - name: AS32C1
+            description: "Assortment code Eindhoven"
+          - name: AS33C1
+            description: "Assortment code Fresh Partners Elsloo"
+          - name: AS34C1
+            description: "Assortment code DC Kapelle"
+          - name: AS35C1
+            description: "Assortment DC Putten"
+          - name: SLHOC1
+            description: "Smart main group"
+          - name: SLSUC1
+            description: "Smart subgroup"
+          - name: XCAAC1
+            description: "X-colli quantity"
+          - name: SEVNC1
+            description: "Seasonal collection issue"
+          - name: RS05C1
+            description: "Not used"
+          - name: RS06C1
+            description: "Not used"
+          - name: SLPRC1
+            description: "Smart consumer price"
+          - name: CPPRC1
+            description: "Not used"
+          - name: DPPRC1
+            description: "Volume of an article"
+          - name: AS36C1
+            description: "Assortment code Drachten"
+          - name: AS37C1
+            description: "Fresh settings"
+          - name: AS38C1
+            description: "Fresh Catering"
+          - name: AS39C1
+            description: "Assortment code Rosenberg"
+          - name: AS40C1
+            description: "Assortment code Amersfoort"
+          - name: AS41C1
+            description: "Assortment code Gouda"
+          - name: AS42C1
+            description: "Assortment code Goes"
+          - name: AS43C1
+            description: "Compass"
+          - name: AS44C1
+            description: "In order set Rosenberg"
+          - name: AS45C1
+            description: "Assortment code Vlissingen"
+          - name: AS46C1
+            description: "Convert Rosenberg"
+          - name: AS47C1
+            description: "Assortment code Smeding AGF"
+          - name: AS48C1
+            description: "Assortment code Huijbregts Riel"
+          - name: AS49C1
+            description: "Assortment code Almelo"
+          - name: AS50C1
+            description: "Catalog text available"
+          - name: AS51C1
+            description: "Assortment code Fresh Partners The Hague"
+          - name: AS52C1
+            description: "Assortment code Terneuzen"
+          - name: AS53C1
+            description: "Photo available"
+          - name: AS54C1
+            description: "Item statistics"
+          - name: AS55C1
+            description: "Order set Setting"
+          - name: AS56C1
+            description: "Orderset Catering"
+          - name: AS57C1
+            description: "Assortment code Gorinchem"
+          - name: AS58C1
+            description: "ZOB article"
+          - name: AS59C1
+            description: "Order set Holiday shops"
+          - name: AS60C1
+            description: "Order set Milo"
+          - name: AS61C1
+            description: "Assortment code Fresh partner Goirle"
+          - name: AS62C1
+            description: "Item suitable for pallet order"
+          - name: AS63C1
+            description: "A pallet label is printed"
+          - name: AS64C1
+            description: "Assortment code Groningen (temporary)"
+          - name: AS65C1
+            description: "Assortment code Sligro Drachten ZB"
+          - name: AS66C1
+            description: "Assortment code Drachten RVC"
+          - name: AS67C1
+            description: "Assortment code Loek van den Elzen"
+          - name: AS68C1
+            description: "Assortment code Breda"
+          - name: AS69C1
+            description: "Assortment code Roosendaal"
+          - name: AS70C1
+            description: "Assortment code Bergen op Zoom"
+          - name: AS71C1
+            description: "Order set Home market/Super nearby"
+          - name: AS72C1
+            description: "Order set Traditional retail"
+          - name: AS73C1
+            description: "Itinerant retail"
+          - name: AS74C1
+            description: "Order set expanded Retail"
+          - name: AS75C1
+            description: "Order set Cafeteria"
+          - name: AS76C1
+            description: "Order set Restaurant"
+          - name: AS77C1
+            description: "Item is Transit item GVA"
+          - name: AS78C1
+            description: "Item is a Christmas package"
+          - name: AS79C1
+            description: "Item is included in a Christmas package"
+          - name: AS80C1
+            description: "Item is seasonal item"
+          - name: DEAFC1
+            description: "Date descending"
+          - name: PLURC1
+            description: "PLU no for scales"
+          - name: ZK01C1
+            description: "Search key 1"
+          - name: ZK02C1
+            description: "Search key 2"
+          - name: EA01C1
+            description: "EAN code 1 HE"
+          - name: EA02C1
+            description: "EAN Code 2 CE"
+          - name: INBAC1
+            description: "Bin contents"
+          - name: WIDTC1
+            description: "Purchase price change date"
+          - name: WZDTC1
+            description: "Zb price change date"
+          - name: IADEC1
+            description: "Date of item in range"
+          - name: YCPRC1
+            description: "Y-colli price"
+          - name: YNPRC1
+            description: "New Y-colli price"
+          - name: YCAAC1
+            description: "Y-pack quantity"
+          - name: KOPRC1
+            description: "Cost price"
+          - name: KVPRC1
+            description: "Previous cost"
+          - name: NKPRC1
+            description: "New cost price"
+          - name: ZP02C1
+            description: "Disposal fee"
+          - name: ZP03C1
+            description: "Price price group 3"
+          - name: ZP04C1
+            description: "To scale Vers"
+          - name: ZP05C1
+            description: "Atl. art. pallet (lev.)"
+          - name: ZP06C1
+            description: "Atl. art. pallet layer (lev)"
+          - name: ZP07C1
+            description: "Number of items on Sligro pallet"
+          - name: ZP08C1
+            description: "Number of items on Sligro Palletlaag"
+          - name: ZP09C1
+            description: "Light up in RF screen"
+          - name: ZP10C1
+            description: "Automatic credit item"
+          - name: ZP11C1
+            description: "Item assortment module code"
+          - name: ZP12C1
+            description: "VBR code"
+          - name: ZP13C1
+            description: "Not used"
+          - name: ZN02C1
+            description: "Ecological product"
+          - name: ZN03C1
+            description: "Vegetarian product"
+          - name: ZN04C1
+            description: "Halal suitability"
+          - name: ZN05C1
+            description: "Low sodium product"
+          - name: ZN06C1
+            description: "Product fat percentage"
+          - name: ZN07C1
+            description: "Genetically modified product"
+          - name: ZN08C1
+            description: "Order unit display coding"
+          - name: ZN09C1
+            description: "Save last communicated status"
+          - name: ZN10C1
+            description: "Not used"
+          - name: ZN11C1
+            description: "Not used"
+          - name: ZN12C1
+            description: "Not used"
+          - name: ZN13C1
+            description: "Not used"
+          - name: CP02C1
+            description: "Not used"
+          - name: CP03C1
+            description: "Not used"
+          - name: CP04C1
+            description: "Not used"
+          - name: CP05C1
+            description: "Not used"
+          - name: CP06C1
+            description: "Not used"
+          - name: CP07C1
+            description: "Not used"
+          - name: CP08C1
+            description: "Not used"
+          - name: CP09C1
+            description: "Not used"
+          - name: CP10C1
+            description: "Not used"
+          - name: CP11C1
+            description: "Not used"
+          - name: CP12C1
+            description: "Not used"
+          - name: CP13C1
+            description: "Not used"
+          - name: CN02C1
+            description: "Not used"
+          - name: CN03C1
+            description: "Not used"
+          - name: CN04C1
+            description: "Not used"
+          - name: CN05C1
+            description: "Not used"
+          - name: CN06C1
+            description: "Not used"
+          - name: CN07C1
+            description: "Not used"
+          - name: CN08C1
+            description: "Not used"
+          - name: CN09C1
+            description: "Not used"
+          - name: CN10C1
+            description: "Not used"
+          - name: CN11C1
+            description: "Not used"
+          - name: CN12C1
+            description: "Not used"
+          - name: CN13C1
+            description: "Not used"
+          - name: WYNWC1
+            description: "Wine appreciation"
+          - name: SLPSC1
+            description: "Type Sligro pallet"
+          - name: RS09C1
+            description: "Not used"
+          - name: RS10C1
+            description: "Not used"
+          - name: RS11C1
+            description: "Not used"
+          - name: RS12C1
+            description: "Not used"
+          - name: PRARC1
+            description: "Linked item no. price changes"
+          - name: MTE1C1
+            description: "Change date EAN code 1"
+          - name: MTE2C1
+            description: "Change date EAN code 2"
+          - name: DCKDC1
+            description: "DC code"
+          - name: RS07C1
+            description: "Not used"
+          - name: PGNRC1
+            description: "Pick corridor"
+          - name: PVNRC2
+            description: "Pick box"
+          - name: PLNRC2
+            description: "Pick low"
+          - name: PPNRC2
+            description: "Pick place"
+          - name: RS08C1
+            description: "Not used"
+          - name: BVNRC1
+            description: "Not used"
+          - name: BLNRC1
+            description: "Not used"
+          - name: RS14C1
+            description: "Not used"
+          - name: IMKDC1
+            description: "In warehouse stock"
+          - name: MGGWC1
+            description: "Weight of an item"
+          - name: SPAAC1
+            description: "Number of items on a Sligro pallet"
+          - name: SBAAC1
+            description: "Number of items per Sligro pallet layer"
+          - name: MGTXC1
+            description: "Warehouse text"
+          - name: OMOMC1
+            description: "Storage method"
+          - name: P1PRC1
+            description: "Not used"
+          - name: P2PRC1
+            description: "Not used"
+          - name: P3PRC1
+            description: "Not used"
+          - name: N1PRC1
+            description: "Not used"
+          - name: N2PRC1
+            description: "Not used"
+          - name: N3PRC1
+            description: "Not used"
+          - name: ACRFC1
+            description: "Excise reference"
+          - name: ILITC1
+            description: "Contents in litres"
+          - name: ALCPC1
+            description: "Alcohol percentage"
+          - name: VEKDC1
+            description: "Collection unit"
+          - name: CBNRC1
+            description: "Statistical number of article for export declaration"
+          - name: BD01C1
+            description: "Order day Monday"
+          - name: BD02C1
+            description: "Order day Tuesday"
+          - name: BD03C1
+            description: "Order day Wednesday"
+          - name: BD04C1
+            description: "Order day Thursday"
+          - name: BD05C1
+            description: "Order day Friday"
+          - name: AKN2C1
+            description: "Supplier item number"
+          - name: GR01C2
+            description: "Internet group level 1"
+          - name: GR03C1
+            description: "Internet group 3"
+          - name: GR04C2
+            description: "Internet group level 4"
+          - name: UPDATE_IDENT
+            description: "Field update/access identifier"
+
+      - name: dcarecpf
+        config:
+          freshness: null
+        description: Collection area information, for CDC
+        columns:
+          - name: DCKDC1
+            description: "DC code"
+          - name: AREAC1
+            description: "Area"
+          - name: COURC1
+            description: "Collect packages per hour"
+          - name: AFCOC1
+            description: "Order truncation based on package quantity"
+          - name: AFVOC1
+            description: "Truncate order by volume"
+          - name: DAOMC1
+            description: "Description DC / Area"
+          - name: AKKDC1
+            description: "Cut off order for pick to light"
+          - name: APKDC1
+            description: "Auto replenishment request Y/N/1"
+          - name: CYDXC1
+            description: "Date of change"
+          - name: USRXC1
+            description: "Gebr. last mutation"
+          - name: PLJNC1
+            description: "Pick to light Y/N/S"
+          - name: PLDRC1
+            description: "Map Pick to light"
+          - name: PIJNC1
+            description: "Pick list as order quantity > Sligro pallet"
+          - name: RFKDC1
+            description: "RF orders Y/N/S"
+          - name: OLJNC1
+            description: "Packing lists Y/N"
+          - name: LWJNC1
+            description: "Change to 900 location Y/N"
+          - name: SLJNC1
+            description: "Sort to light Y/N"
+          - name: PLVRC1
+            description: "PTL Version"
+          - name: PLZTC1
+            description: "Pallet label ZOB/Transito Y/N"
+          - name: PLRSC1
+            description: "Pallet labels RSC Y/N"
+          - name: FVJNC1
+            description: "Brochure distribution Y/N"
+          - name: FVDRC1
+            description: "Folder Brochure distribution"
+          - name: FVVRC1
+            description: "Brochure distribution version"
+          - name: BPSCC1
+            description: "Scan Bulk to Pick"
+          - name: PLBLC1
+            description: "Pick list bulk Y/N"
+          - name: MCAVC1
+            description: "Auto replenishment of PTL deficiencies"
+          - name: PLSRC2
+            description: "Type PTL"
+          - name: PLACC1
+            description: "PTL active Y/N"
+          - name: AIPCC1
+            description: "Automatically collect Pickcarts Y/N"
+          - name: UPDATE_IDENT
+            description: "Field update/access identifier"
+
+      - name: goedbwpf
+        config:
+          freshness: null
+        description: Stock mutations (transactions), for CDC
+        columns:
+          - name: AANTGB
+            description: Quantity
+          - name: ACKDGB
+            description: Excise code in/outbound
+          - name: ACRFGB
+            description: Excise reference
+          - name: AFDLGB
+            description: Dept
+          - name: ARGRGB
+            description: Article group
+          - name: ARNRGB
+            description: Article number
+          - name: AVDTGB
+            description: Date of acc. disconnect stands
+          - name: DCAAGB
+            description: Decimals (weight goods)
+          - name: DCKDGB
+            description: Distribution Center
+          - name: FIN1GB
+            description: Branch number
+          - name: KMKDGB
+            description: Characteristic of goods movement
+          - name: LVKLGB
+            description: Supplier/Customer
+          - name: LVNRGB
+            description: Supplier number
+          - name: MTDTGB
+            description: Change date
+          - name: ORNRGB
+            description: Purchase order number
+          - name: WOKDGB
+            description: Code wine other
+
+      - name: goebwdpf
+        description: Stock mutations (transactions), for BS and ZB
+        columns:
+          - name: MTDEGB
+            description: "Date of change"
+          - name: ARNRGB
+            description: "Article number"
+          - name: MUKDGB
+            description: "Mutation code"
+          - name: VRANGB
+            description: "Stock change"
+
+      - name: thtw1cpf
+        description: Stock quantities and THT (best before) dates, for Delivery services (BS)
+        columns:
+          - name: ARNRC1
+            description: "Article number"
+          - name: S021C1
+            description: "Status pallet"
+          - name: THDEC1
+            description: "Best before date on item"
+          - name: PANRC1
+            description: "Pallet number"
+          - name: PIBUC1
+            description: "Pick/Bulk"
+          - name: PLAAC3
+            description: "Quantity on pallet"
+          - name: REEAC1
+            description: "Number left"
+          - name: DCKDC1
+            description: "Assembly area"
+          - name: PGNRC1
+            description: "Warehouse location aisle number"
+          - name: PVNRC1
+            description: "Warehouse location box number"
+          - name: PLNRC2
+            description: "Warehouse location layer number"
+          - name: PPNRC1
+            description: "Warehouse location number"
+          - name: DCKDC2
+            description: "Collection area Pick"
+          - name: PGNRC2
+            description: "Pick location aisle number"
+          - name: PVNRC2
+            description: "Pick location box number"
+          - name: PLNRC3
+            description: "Pick location layer number"
+          - name: PPNRC2
+            description: "Pick location number"
+          - name: GMVWC1
+            description: "Average sales per week"
+          - name: GMVDC1
+            description: "Average sales per day"
+          - name: TOTAC0
+            description: "Total inventory"
+          - name: TOTDC0
+            description: "Total days of stock"
+          - name: TOTDC1
+            description: "Total full days stock"
+          - name: THTCC0
+            description: "Number of days before expiration (total)"
+          - name: THTCC1
+            description: "2/3 best before)"
+          - name: VDAGC0
+            description: "when last sale"
+          - name: VDAGC1
+            description: "final RDC THT date"
+          - name: VROKC0
+            description: "Is best before OK?"
+          - name: ATDOC0
+            description: "Atl. days overdue"
+          - name: TOTBC0
+            description: "Total expected breakage"
+          - name: ZBPRC0
+            description: "ZB price"
+          - name: TOTPC0
+            description: "Total break in euros"
+          - name: FINRC1
+            description: "Branch number"
+          - name: IVAAC1
+            description: "Package contents"
+          - name: VPOMC1
+            description: "Packaging"
+          - name: AROMC1
+            description: "Description"
+          - name: ARGRC1
+            description: "Article Group"
+          - name: LVNRC1
+            description: "Supplier no."
+          - name: LKNMC1
+            description: "Supplier name"
+
+      - name: thtw5cpf
+        description: Stock quantities and THT (best before) dates, for CDC
+        columns:
+          - name: ARNRC1
+            description: "Article number"
+          - name: S021C1
+            description: "Status pallet"
+          - name: THDEC1
+            description: "Best before date on item"
+          - name: PANRC1
+            description: "Pallet number"
+          - name: PIBUC1
+            description: "Pick/Bulk"
+          - name: PLAAC3
+            description: "Quantity on pallet"
+          - name: REEAC1
+            description: "Number left"
+          - name: DCKDC1
+            description: "Assembly area"
+          - name: LOKNC1
+            description: "Bulk location"
+          - name: DCKDC2
+            description: "Collection area Pick"
+          - name: PGNAC1
+            description: "Pick location aisle number"
+          - name: PVNAC1
+            description: "Pick location box number"
+          - name: PLNAC1
+            description: "Pick location layer number"
+          - name: PPNAC1
+            description: "Pick location number"
+          - name: GMVWC1
+            description: "Average sales per week"
+          - name: GMVDC1
+            description: "Average sales per day"
+          - name: TOTAC1
+            description: "Total inventory"
+          - name: TOTDC1
+            description: "Total days of stock"
+          - name: TOTDC2
+            description: "Total full days stock"
+          - name: THTAC1
+            description: "Number of days before expiration (total)"
+          - name: THTAC2
+            description: "2/3 best before)"
+          - name: VDAGC1
+            description: "when last sale"
+          - name: VDAGC2
+            description: "expiry date"
+          - name: VROKC1
+            description: "Is best before OK?"
+          - name: ATDOC1
+            description: "Atl. days overdue"
+          - name: TOTBC1
+            description: "Total expected breakage"
+          - name: ZBPRC1
+            description: "ZB price"
+          - name: TOTPC1
+            description: "Total break in euros"
+          - name: FINRC1
+            description: "Branch number"
+          - name: IVAAC1
+            description: "Package contents"
+          - name: VPOMC1
+            description: "Packaging"
+          - name: AROMC1
+            description: "Description"
+          - name: ARGRC1
+            description: "Article Group"
+          - name: LVNRC1
+            description: "Supplier no."
+          - name: LKNMC1
+            description: "Supplier name"
+
+      - name: vrdvscpf
+        description: Stock level at the end of previous calendar day (overwritten every night), for ZB
+        columns:
+          - name: FINRC1
+            description: "Branch number"
+          - name: ARNRC1
+            description: "Article number"
+          - name: VRANC1
+            description: "Stock quantity current"
+          - name: VRKGC1
+            description: "Current stock in kilos"
+          - name: VRAOC1
+            description: "Stock quantity on order"
+          - name: GLAAC1
+            description: "Delivered quantity"
+          - name: CYDXC1
+            description: "Date of change"
+          - name: USRXC1
+            description: "Gebr. last mutation"
+          - name: UPDATE_IDENT
+            description: "Field update/access identifier"
+
+      - name: yartikpf
+        config:
+          freshness: null #does not have stg or base model at all
+        description: Articles information, including stock location, for Descentral (BS and ZB)
+        columns:
+          - name: S013D1
+            description: "Item status"
+          - name: ARGRD1
+            description: "Item group"
+          - name: LVNRD1
+            description: "Supplier number"
+          - name: LKNMD1
+            description: "Shortened supplier name"
+          - name: ARNRD1
+            description: "Article number"
+          - name: IVAAD1
+            description: "Package contents"
+          - name: VPOMD1
+            description: "Packaging"
+          - name: AROMD1
+            description: "Item description"
+          - name: BTKDD1
+            description: "VAT code"
+          - name: KOPRD1
+            description: "Cost price"
+          - name: INPRD1
+            description: "Purchase price"
+          - name: ZBPRD1
+            description: "ZB price"
+          - name: EMPRD1
+            description: "Packaging price"
+          - name: CNPRD1
+            description: "Consumer price"
+          - name: XCAAD1
+            description: "X-colli quantity"
+          - name: XCPRD1
+            description: "X-colli price"
+          - name: YCAAD1
+            description: "Y-pack quantity"
+          - name: YCPRD1
+            description: "Y-colli price"
+          - name: ZP01D1
+            description: "Price group 1 sales price"
+          - name: VWBBD1
+            description: "Disposal contribution amount"
+          - name: ZP03D1
+            description: "Price group 3 sales price"
+          - name: ZP04D1
+            description: "Price group 4 sales price"
+          - name: ZP05D1
+            description: "Number of items on pallet (supplier)"
+          - name: ZP06D1
+            description: "Number of items on the pallet layer (lev)"
+          - name: ZP07D1
+            description: "Number of items on Sligro pallet"
+          - name: ZP08D1
+            description: "Number of items on Sligro Palletlaag"
+          - name: ZP09D1
+            description: "Price group 9 sales price"
+          - name: ZP10D1
+            description: "Price group 10 sales price"
+          - name: ZP11D1
+            description: "Price group 11 sales price"
+          - name: ZP12D1
+            description: "Price group 12 sales price"
+          - name: ZP13D1
+            description: "Price group 13 sales price"
+          - name: CP01D1
+            description: "Price group 1 consumer price"
+          - name: CP02D1
+            description: "Price group 2 consumer price"
+          - name: CP03D1
+            description: "Price group 3 consumer price"
+          - name: CP04D1
+            description: "Price group 4 consumer price"
+          - name: CP05D1
+            description: "Price group 5 consumer price"
+          - name: CP06D1
+            description: "Price group 6 consumer price"
+          - name: CP07D1
+            description: "Price group 7 consumer price"
+          - name: CP08D1
+            description: "Price group 8 consumer price"
+          - name: CP09D1
+            description: "Price group 9 consumer price"
+          - name: CP10D1
+            description: "Price group 10 consumer price"
+          - name: CP11D1
+            description: "Price group 11 consumer price"
+          - name: CP12D1
+            description: "Price group 12 consumer price"
+          - name: CP13D1
+            description: "Price group 13 consumer price"
+          - name: ZK01D1
+            description: "Search code 1"
+          - name: ZK02D1
+            description: "Search code 2"
+          - name: EAN1D1
+            description: "EAN code 1"
+          - name: EAN2D1
+            description: "EAN code 2"
+          - name: DCAAD1
+            description: "Decimals (weight goods)"
+          - name: GEWID1
+            description: "Average weight"
+          - name: THKDD1
+            description: "Number of days of shelf life"
+          - name: PLURD1
+            description: "PLU number (for scales)"
+          - name: ETIKD1
+            description: "Label"
+          - name: HAKDD1
+            description: "Main/action article"
+          - name: ACNRD1
+            description: "Promotional article"
+          - name: VRKLD1
+            description: "Item sales location"
+          - name: MTDTD1
+            description: "Change date"
+          - name: NVDTD1
+            description: "Out of stock until date"
+          - name: ODAAD1
+            description: "Outer carton"
+          - name: PTAAD1
+            description: "Number of packages on a pallet"
+          - name: PLAAD1
+            description: "Number of packages on a pallet layer"
+          - name: SPAAD1
+            description: "Sligro pallet quantity"
+          - name: SBAAD1
+            description: "Sligro pallet-low quantity"
+          - name: VLAAD1
+            description: "Volume in liters of a package"
+          - name: MGGWD1
+            description: "Weight in kg of a package"
+          - name: DCKDD1
+            description: "Assembly area"
+          - name: AREAD1
+            description: "Area"
+          - name: PGNRD1
+            description: "Warehouse location aisle number"
+          - name: PVNRD1
+            description: "Warehouse location box number"
+          - name: PLNRD1
+            description: "Warehouse location layer number"
+          - name: PPNRD1
+            description: "Warehouse location number"
+          - name: VEKDD1
+            description: "Collection unit"
+          - name: MGTXD1
+            description: "Warehouse text"
+          - name: ILITD1
+            description: "Contents in litres"
+          - name: ALCPD1
+            description: "Alcohol percentage"
+          - name: IAKDD1
+            description: "Code in the branch's range"
+          - name: EMKDD1
+            description: "Own brand item"
+          - name: KTKDD1
+            description: "Decentralized price changes"
+          - name: MSKDD1
+            description: "Warehouse label"
+          - name: FPKDD1
+            description: "Item is party package"
+          - name: VGNRD1
+            description: "Serial number"
+          - name: OAAND1
+            description: "Storage quantity"
+          - name: THTSD1
+            description: "Best before signaling Y/N"
+          - name: PLADD1
+            description: "Print pallet label"
+          - name: CNVKD1
+            description: "No-sale code"
+          - name: DNRSD1
+            description: "By zero reservation"
+          - name: UPDATE_IDENT
+            description: "Field update/access identifier"
+
+      - name: calendpf
+        config:
+          freshness: null
+        description: Calendar table
+        columns:
+          - name: DATEC1
+            description: Date 6 long
+          - name: DGNRC1
+            description: Day number
+          - name: DUM7C1
+            description: Dummy field for file expansion
+          - name: EEJJC1
+            description: 4 years long
+          - name: EJ53C1
+            description: Century year (53) EEYY
+          - name: FABEC1
+            description: Financial adm financial year
+          - name: FABJC1
+            description: Financial admin. financial year
+          - name: FABPC1
+            description: Financial admin period
+          - name: FOEJC1
+            description: Brochure year
+          - name: FOJJC1
+            description: Brochure year
+          - name: IFNRC1
+            description: IFA leaflet
+          - name: JAARC1
+            description: Year 2 long
+          - name: JR53C1
+            description: Year (53) JJ
+          - name: KDATC1
+            description: Date 8 long
+          - name: PERIC1
+            description: Period
+          - name: PR53C1
+            description: Period (53) 1 to 13
+          - name: SFNRC1
+            description: Sligro brochure number
+          - name: UPDATE_IDENT
+            description: Field update/access identifier
+          - name: WEEKC1
+            description: Week
+          - name: WK53C1
+            description: Week (53) 1 to 53
+
+      - name: catlvcpf
+        config:
+          freshness: null
+        description: "Category supplier"
+        columns:
+          - name: categorie
+            description: "Category"
+          - name: gewijzigd_door
+            description: "Changed by"
+          - name: gewijzigd_timestamp
+            description: "Date changed"
+          - name: leverancier_nummer
+            description: "Supplier number"
+          - name: toegevoegd_door
+            description: "Added by"
+          - name: toegevoegd_timestamp
+            description: "Date added"
+
+      - name: inklvcpf
+        config:
+          freshness: null
+        description: "Buyer per supplier with country code"
+        columns:
+          - name: gewijzigd_door
+            description: "Changed by"
+          - name: gewijzigd_timestamp
+            description: "Date changed"
+          - name: hoofdinkoper
+            description: "Head buyer"
+          - name: inkoper
+            description: "Buyer"
+          - name: landcode
+            description: "Country code"
+          - name: leverancier_nummer
+            description: "Supplier number"
+          - name: toegevoegd_door
+            description: "Added by"
+          - name: toegevoegd_timestamp
+            description: "Date added"
+
+      - name: leverpf
+        config:
+          freshness: null
+        description: "Supplier data"
+        columns:
+          - name: adifc1
+            description: "Number of days purchase invoice"
+          - name: afpcc1
+            description: "Percentage deviation receipt"
+          - name: aidec1
+            description: "Date start automatic direct debit"
+          - name: aikdc1
+            description: "Automatic direct debit"
+          - name: bknrc1
+            description: "Bank account number"
+          - name: bkonc1
+            description: "Special payment condition"
+          - name: bnfkc1
+            description: "Amount disadvantage approval"
+          - name: bsbyc1
+            description: "Order from supplier"
+          - name: btanc1
+            description: "Pay to supplier"
+          - name: btkdc1
+            description: "VAT code"
+          - name: btnrc1
+            description: "VAT number"
+          - name: bvfkc1
+            description: "Amount advantage approval"
+          - name: cbdgc1
+            description: "CBK payment days"
+          - name: cbpcc1
+            description: "SU payment discount"
+          - name: cydxc1
+            description: "Date mutation"
+          - name: dbfxc1
+            description: "Debtor administration fax number"
+          - name: dbfxc2
+            description: "Debtor administration fax number"
+          - name: dbkpc1
+            description: "Debtor administration contact"
+          - name: dbtlc1
+            description: "Debtor administration phone number"
+          - name: dbtlc2
+            description: "Debtor administration phone number"
+          - name: emalc1
+            description: "Email address"
+          - name: fkbac1
+            description: "Badge number"
+          - name: fkbac2
+            description: "Invoice controller"
+          - name: fkkdc1
+            description: "Invoice date required"
+          - name: fxnrc1
+            description: "Fax number"
+          - name: fxnrc2
+            description: "Fax number"
+          - name: grnrc1
+            description: "Giro account number"
+          - name: ikbac1
+            description: "Badge number"
+          - name: ikbac2
+            description: "Buyer"
+          - name: kakdc1
+            description: "Code for deducting extra costs"
+          - name: kwkdc1
+            description: "Quantity discount"
+          - name: lakdc1
+            description: "Country code"
+          - name: ldkdc1
+            description: "Confirm fax folder"
+          - name: lskdc1
+            description: "Supplier type"
+          - name: lvadc1
+            description: "Supplier address"
+          - name: lvadc2
+            description: "Supplier address"
+          - name: lvikc1
+            description: "Supplier clearance costs"
+          - name: lvn7c1
+            description: "Supplier name"
+          - name: lvnmc1
+            description: "Supplier name"
+          - name: lvnmc2
+            description: "Supplier number"
+          - name: lvnrc1
+            description: "Short supplier name"
+          - name: lvpkc1
+            description: "Supplier postal code"
+          - name: lvvkc1
+            description: "Supplier freight costs"
+          - name: lvwpc1
+            description: "Supplier city"
+          - name: lvwpc2
+            description: "Supplier city"
+          - name: mtcac1
+            description: "Matchcode address"
+          - name: mtcnc1
+            description: "Short name for searching"
+          - name: mtcwc1
+            description: "Short city name for searching"
+          - name: mtdtc1
+            description: "Mutation date"
+          - name: nlkdc1
+            description: "Backorder code"
+          - name: pnfkc1
+            description: "Percentage disadvantage approval"
+          - name: pvfkc1
+            description: "Percentage advantage approval"
+          - name: rmkdc1
+            description: "COD code"
+          - name: s017c1
+            description: "Supplier status"
+          - name: sldgc1
+            description: "Sligro payment days"
+          - name: slpcc1
+            description: "Sligro payment discount"
+          - name: srkdc1
+            description: "Purchase order sorting code"
+          - name: stbdc1
+            description: "Send payment specification"
+          - name: stikc1
+            description: "Code standard value purchase invoice"
+          - name: tbkdc1
+            description: "Included in OSS/Telehoeckel"
+          - name: tlnrc1
+            description: "Phone number"
+          - name: tlnrc2
+            description: "Phone number"
+          - name: tokdc1
+            description: "Add receipt GO code"
+          - name: txabc1
+            description: "Telex answer back"
+          - name: txldc1
+            description: "Country number"
+          - name: txnrc1
+            description: "Telex number"
+          - name: update_ident
+            description: "Field update / access identifier"
+          - name: usrxc1
+            description: "User last mutation"
+          - name: vbkdc1
+            description: "Credit note code"
+          - name: vertc1
+            description: "Representative"
+          - name: vktnc1
+            description: "Short phone number"
+          - name: vlkdc1
+            description: "Currency code"
+
+      - name: lvedicpf
+        config:
+          freshness: null
+        description: "Suppliers via EDI"
+        columns:
+          - name: bstmc1
+            description: "Destination (EAN-Code)"
+          - name: cydxc1
+            description: "Date mutation"
+          - name: lvnrc1
+            description: "Supplier number"
+          - name: update_ident
+            description: "Field update / access identifier"
+          - name: usrxc1
+            description: "User last mutation"
+          - name: vrobc1
+            description: "Version order message"
+
+      - name: lvfiscpf
+        config:
+          freshness: null
+        description: "FIS data"
+        columns:
+          - name: aardc1
+            description: "Nature of the payment"
+          - name: akrtc1
+            description: "Approval route"
+          - name: bclrc1
+            description: "Bank clearing code (FIS)"
+          - name: betwc1
+            description: "Payment method (FIS)"
+          - name: bibuc1
+            description: "Domestic code"
+          - name: bidac1
+            description: "Bank identification"
+          - name: blndc1
+            description: "Bank country code"
+          - name: bspic1
+            description: "Bank specific information"
+          - name: cydxc1
+            description: "Date mutation"
+          - name: eancc1
+            description: "Head office (EAN code)"
+          - name: ext1c1
+            description: "FIS extension 1"
+          - name: ext2c1
+            description: "FIS extension 2"
+          - name: ext3c1
+            description: "FIS extension 3"
+          - name: grpac1
+            description: "Group designation (FIS)"
+          - name: ibanc1
+            description: "IBAN"
+          - name: kab3c1
+            description: "Automatic direct debit/payment"
+          - name: kbpoc1
+            description: "Bank/giro code"
+          - name: krtcc1
+            description: "Discount code"
+          - name: kstcc1
+            description: "Correspondent cost code"
+          - name: landc1
+            description: "ISO country code"
+          - name: lskdc1
+            description: "Supplier type"
+          - name: lvnrc1
+            description: "Supplier number"
+          - name: lvsuc1
+            description: "Supplier number Superunie"
+          - name: nmplc1
+            description: "Bank name"
+          - name: nwb1c1
+            description: "Bank details 1"
+          - name: nwb2c1
+            description: "Bank details 2"
+          - name: nwb3c1
+            description: "Bank details 3"
+          - name: nwb4c1
+            description: "Bank details 4"
+          - name: oms3c1
+            description: "Bank account description"
+          - name: pltsc1
+            description: "Bank location"
+          - name: pspkc1
+            description: "Postcode before/after"
+          - name: pstkc1
+            description: "Foreign postcode"
+          - name: reknc2
+            description: "Bank account number"
+          - name: rnrac1
+            description: "Bank/giro number"
+          - name: rwplc1
+            description: "Postcode line number"
+          - name: selkc1
+            description: "Selection code"
+          - name: swftc1
+            description: "SWIFT bank address"
+          - name: update_ident
+            description: "Field update / access identifier"
+          - name: usrxc1
+            description: "User last mutation"
+
+      - name: lvinkcpf
+        description: "Supplier purchase data"
+        columns:
+          - name: accmc1
+            description: "Account manager"
+          - name: accmc2
+            description: "Account manager salutation"
+          - name: accmc3
+            description: "Account manager initials"
+          - name: accmc4
+            description: "Account manager first name"
+          - name: accmc5
+            description: "Account manager last name"
+          - name: cntpc1
+            description: "Contact person 1"
+          - name: cntpc2
+            description: "Contact person 2"
+          - name: cntpc3
+            description: "Contact person 3"
+          - name: cydxc1
+            description: "Date mutation"
+          - name: emalc2
+            description: "E-mail address"
+          - name: emalc3
+            description: "E-mail address"
+          - name: emalc4
+            description: "E-mail address"
+          - name: emalc5
+            description: "E-mail address"
+          - name: fomsc1
+            description: "Job description"
+          - name: fomsc2
+            description: "Job description"
+          - name: fomsc3
+            description: "Job description"
+          - name: fxnrc2
+            description: "Fax number"
+          - name: fxnrc3
+            description: "Fax number"
+          - name: fxnrc4
+            description: "Fax number"
+          - name: lvadc2
+            description: "Supplier address"
+          - name: lvadc3
+            description: "Supplier address"
+          - name: lvnrc1
+            description: "Supplier number"
+          - name: lvpkc2
+            description: "Supplier postal code"
+          - name: lvwpc2
+            description: "Supplier city"
+          - name: mbnrc2
+            description: "Mobile phone number"
+          - name: tlnrc2
+            description: "Phone number"
+          - name: tlnrc3
+            description: "Phone number"
+          - name: tlnrc4
+            description: "Phone number"
+          - name: tlnrc5
+            description: "Phone number"
+          - name: update_ident
+            description: "Field update / access identifier"
+          - name: usrxc1
+            description: "User last mutation"
+          - name: websc2
+            description: "Website"
+
+      - name: dwfkrcpf
+        description: "Invoice lines Data warehouse"
+        columns:
+          - name: acaac1
+            description: "Number of non-excise goods"
+          - name: ackbc1
+            description: "KB-bak handling code"
+          - name: ackdc1
+            description: "Excise in-/outflow code"
+          - name: acrfc1
+            description: "Excise reference"
+          - name: alcpc1
+            description: "Alcohol percentage"
+          - name: alnrc1
+            description: "Alternative article number"
+          - name: aonrc1
+            description: "Number of delivered orders"
+          - name: arnrc1
+            description: "Article number"
+          - name: brpxc1
+            description: "Gross price"
+          - name: bsaac1
+            description: "Order per"
+          - name: btkdc1
+            description: "VAT code"
+          - name: cdalc1
+            description: "Administrative delivery code"
+          - name: cdnvc1
+            description: "No-sale code"
+          - name: cnprc1
+            description: "Consumer price"
+          - name: cokdc1
+            description: "Concessionaire code"
+          - name: cretc1
+            description: "Return code"
+          - name: dcaac1
+            description: "Decimals (weighted goods)"
+          - name: dckdc1
+            description: "DC code"
+          - name: dfpxc1
+            description: "Default offered price"
+          - name: dvnmc1
+            description: "Device name"
+          - name: dwjnc1
+            description: "Included in data warehouse"
+          - name: emprc1
+            description: "Packaging price"
+          - name: fanrc1
+            description: "Invoice number"
+          - name: finrc1
+            description: "Location number"
+          - name: fkaac1
+            description: "Invoice quantity"
+          - name: fkdec1
+            description: "Invoice date"
+          - name: fksrc1
+            description: "Invoice type"
+          - name: foejc1
+            description: "Folder year"
+          - name: fokdc1
+            description: "Folder code"
+          - name: fonrc1
+            description: "Folder number"
+          - name: glaac1
+            description: "Delivered quantity"
+          - name: ilitc1
+            description: "Content in liters"
+          - name: initc1
+            description: "Enter initials"
+          - name: inprc1
+            description: "Purchase price"
+          - name: kgaac1
+            description: "Kilos delivered"
+          - name: kgbsc1
+            description: "Kilos ordered"
+          - name: klnrc9
+            description: "Customer number"
+          - name: klnuc1
+            description: "Concessionaire number"
+          - name: kopcc1
+            description: "Discount percentage"
+          - name: koprc1
+            description: "Cost price"
+          - name: lvdec1
+            description: "Delivery date"
+          - name: msorc1
+            description: "Misorder code"
+          - name: okkdc1
+            description: "Line is approved"
+          - name: osbdc1
+            description: "Storage amount"
+          - name: osbrc1
+            description: "Calculate storage"
+          - name: osjnc1
+            description: "Include in order set"
+          - name: pokdc1
+            description: "Portion weight code"
+          - name: portc1
+            description: "Portion weight"
+          - name: prnrc1
+            description: "Price number"
+          - name: psnrc1
+            description: "Post number"
+          - name: rdcdc1
+            description: "Reason code"
+          - name: rdkbc1
+            description: "Reason for inclusion in KB-bak"
+          - name: rtdec1
+            description: "Return receipt date"
+          - name: rtnrc1
+            description: "Return receipt number"
+          - name: spnrc1
+            description: "Type of price"
+          - name: volgc1
+            description: "Order of receipt"
+          - name: vzvoc1
+            description: "Collective invoice order"
+          - name: zbbxc1
+            description: "Calculated price"
+          - name: zbprc1
+            description: "Self-service price"
+
+      - name: dwfktcpf
+        description: "Invoice Totals Data Warehouse"
+        columns:
+          - name: betmc1
+            description: "Payment method"
+          - name: cydxc1
+            description: "Date of mutation"
+          - name: dvnmc1
+            description: "Device name"
+          - name: fanrc1
+            description: "Invoice number"
+          - name: finrc1
+            description: "Location number"
+          - name: fkdec1
+            description: "Invoice date"
+          - name: fkemc1
+            description: "Balance of packaging"
+          - name: fkexc1
+            description: "Invoice excluding VAT"
+          - name: fkrsc1
+            description: "Invoicer number"
+          - name: fksrc1
+            description: "Invoice type"
+          - name: fktdc1
+            description: "Invoice time"
+          - name: fktoc1
+            description: "Invoice total amount"
+          - name: fktpc1
+            description: "Invoice type"
+          - name: jnvfc1
+            description: "To collective invoice"
+          - name: klnrc9
+            description: "Customer number"
+          - name: okkdc1
+            description: "Line is approved"
+          - name: rpscc1
+            description: "Replenishment supply-chain"
+          - name: slorc1
+            description: "Type of delivery order"
+          - name: srorc1
+            description: "Type of order"
+          - name: usrxc1
+            description: "User last mutation"
+          - name: volgc1
+            description: "Order of receipt"
+
+      - name: relklcpf
+        config:
+          freshness: null #does not have stg or base model at all
+        description: "Relationship Between Customer and Sligro Customer"
+        columns:
+          - name: CYDXC1
+            description: "Mutation Date"
+          - name: DTBGC1
+            description: "Start Date"
+          - name: KKNRC1
+            description: "External Customer Relationship Number"
+          - name: KLNRC1
+            description: "Customer Number"
+          - name: RLNRC1
+            description: "Internal Customer Relationship Number"
+          - name: ROUTC1
+            description: "Route"
+          - name: UPDATE_IDENT
+            description: "Field Update / Access Identifier"
+          - name: USBGC1
+            description: "User Start Date"
+          - name: USRXC1
+            description: "User Last Mutation"
+
+      - name: rfkabcpf
+        description: "Invoice/Delivery Note Relationship"
+        columns:
+          - name: abdec1
+            description: "Delivery Note Date"
+          - name: abnrc1
+            description: "Delivery Note Number"
+          - name: btwac1
+            description: "VAT Percentage for Code A"
+          - name: btwbc1
+            description: "VAT Percentage for Code B"
+          - name: btwcc1
+            description: "VAT Percentage for Code C"
+          - name: btwdc1
+            description: "VAT Percentage for Code D"
+          - name: dattc1
+            description: "Date Added"
+          - name: datxc1
+            description: "Date Modified"
+          - name: finrc1
+            description: "Branch"
+          - name: fkbyc1
+            description: "Invoice By"
+          - name: fknlc1
+            description: "Long Invoice Number"
+          - name: fknoc1
+            description: "Original Invoice Number"
+          - name: hkvkc1
+            description: "Heineken Chamber of Commerce Number"
+          - name: hpayc1
+            description: "Heineken Payer"
+          - name: klfkc1
+            description: "Customer Invoice Number"
+          - name: klhec1
+            description: "Heineken Ship-To"
+          - name: klnrc1
+            description: "Customer Number"
+          - name: osplc1
+            description: "Order Split (Yes/No)"
+          - name: pgmtc1
+            description: "Program Added"
+          - name: pgmxc1
+            description: "Program Modified"
+          - name: skvkc1
+            description: "Sligro Chamber of Commerce Number"
+          - name: usrtc1
+            description: "User Added"
+          - name: usrxc1
+            description: "User Modified"
+
+      - name: folartpf
+        description: "Articles contained in the folder promotions"
+        columns:
+          - name: acopgu
+            description: "Number of colli points"
+          - name: apntgu
+            description: "Number of points"
+          - name: argrgu
+            description: "Article group"
+          - name: arnrgu
+            description: "Article number"
+          - name: babdgu
+            description: "Posterior contribution"
+          - name: blkdgu
+            description: "Block invoicing contract"
+          - name: bvbdgu
+            description: "Prior contribution"
+          - name: claagu
+            description: "Colli quantity"
+          - name: dtdogu
+            description: "Definitive order date"
+          - name: foejgu
+            description: "Folder year"
+          - name: fokdgu
+            description: "Folder code"
+          - name: fonrgu
+            description: "Folder number"
+          - name: intkgu
+            description: "Sign up"
+          - name: jnkdgu
+            description: "Folder article active Y/N"
+          - name: kakdgu
+            description: "Section code"
+          - name: koomgu
+            description: "Photo material"
+          - name: lcnrgu
+            description: "Site code"
+          - name: lvnrgu
+            description: "Supplier code"
+          - name: lykdgu
+            description: "Layout code"
+          - name: mtdegu
+            description: "Mutation date"
+          - name: mttdgu
+            description: "Mutation time"
+          - name: mtusgu
+            description: "Userid last mutation"
+          - name: mtwsgu
+            description: "Workstation last mutation"
+          - name: oms3gu
+            description: "Contact person"
+          - name: oms4gu
+            description: "Invoice text"
+          - name: orbvgu
+            description: "Generate order confirmation"
+          - name: pfnrgu
+            description: "Page number"
+          - name: prblgu
+            description: "Block price"
+          - name: promgu
+            description: "Promotion article"
+          - name: tmdegu
+            description: "End date deal period"
+          - name: vndegu
+            description: "Start date deal period"
+          - name: zgaagu
+            description: "Number of stamps"
+
+      - name: filialpf
+        config:
+          freshness: null
+        description: "Contains data related to site locations"
+        columns:
+          - name: adrsc1
+            description: "Address"
+          - name: finrc1
+            description: "Site number"
+          - name: finrc4
+            description: "Related site number"
+          - name: finsc1
+            description: "Site number system"
+          - name: fin1c1
+            description: "Site number for debtor administration"
+          - name: fisrc1
+            description: "Site type"
+          - name: fltyc1
+            description: "Site type"
+          - name: fxnrc1
+            description: "Fax number"
+          - name: ifjnc1
+            description: "Subscription function gold"
+          - name: naamc1
+            description: "Name"
+          - name: nfm1c1
+            description: "New site for mutations"
+          - name: nfm2c1
+            description: "New site for mutations"
+          - name: nfm3c1
+            description: "New site for mutations"
+          - name: nft1c1
+            description: "New site for transactions"
+          - name: pfnrc1
+            description: "Small site indicator"
+          - name: primc1
+            description: "Priority for sending mutations"
+          - name: pritc1
+            description: "Priority for sending transactions"
+          - name: pskdc1
+            description: "Postal code"
+          - name: retvc1
+            description: "Retail site (Y/N)"
+          - name: rpjnc1
+            description: "Advertisement sign"
+          - name: sejnc1
+            description: "Site code for shelf labels"
+          - name: srk1c1
+            description: "Sort code 1"
+          - name: srk2c1
+            description: "Sort code 2"
+          - name: srk3c1
+            description: "Sort code 3"
+          - name: srk4c1
+            description: "Sort code 4"
+          - name: srk5c1
+            description: "Sort code 5"
+          - name: s006c1
+            description: "Site number status"
+          - name: tfnrc1
+            description: "Telephone number"
+          - name: tiosc1
+            description: "Title order set"
+          - name: update_ident
+            description: "Field update / access identifier"
+          - name: vn04c1
+            description: "Shortened name"
+          - name: vn10c1
+            description: "Shortened name"
+          - name: von1c1
+            description: "Sequence number 1"
+          - name: von2c1
+            description: "Sequence number 2"
+          - name: von3c1
+            description: "Sequence number 3"
+          - name: von4c1
+            description: "Sequence number 4"
+          - name: von5c1
+            description: "Sequence number 5"
+          - name: wnplc1
+            description: "Residence"
+          - name: zmkdc1
+            description: "Search code for mutations"
+
+      - name: filia2pf
+        config:
+          freshness: null
+        description: "Site data (extension)"
+        columns:
+          - name: DTSBC1
+            description: "Date of entry Software Version-B"
+          - name: FINRC1
+            description: "Site number"
+          - name: FRMLC1
+            description: "Formula"
+          - name: LOSOC1
+            description: "Location type"
+          - name: SYNMC1
+            description: "System name"
+          - name: S006C1
+            description: "Site number status"
+          - name: TODRC1
+            description: "Added by"
+          - name: TODTC1
+            description: "Added date"
+          - name: VSDAC1
+            description: "Data Version-A"
+          - name: VSDBC1
+            description: "Data Version-B"
+          - name: VSSAC1
+            description: "Software Version-A"
+          - name: VSSBC1
+            description: "Software Version-B"
+          - name: WZDRC1
+            description: "Modified by"
+          - name: WZDTC1
+            description: "Modified date"
+
+      - name: flvzflpf
+        config:
+          freshness: null
+        description: "Folder articles collection numbers"
+        columns:
+          - name: arn1ij
+            description: "Article number"
+          - name: arnrij
+            description: "Article number of the collection article"
+          - name: foejij
+            description: "Folder year"
+          - name: fokdij
+            description: "Folder code"
+          - name: fonrij
+            description: "Folder number"
+
+      - name: folvkwpf
+        description: "Folder sales expectations"
+        columns:
+          - name: aanthy
+            description: "Quantity"
+          - name: arn1hy
+            description: "Article number"
+          - name: arnrhy
+            description: "Collection article number"
+          - name: foejhy
+            description: "Folder year"
+          - name: fokdhy
+            description: "Folder code"
+          - name: fonrhy
+            description: "Folder number"
+          - name: mtdehy
+            description: "Date mutation"
+          - name: mttdhy
+            description: "Mutation time"
+          - name: mtushy
+            description: "Last mutation userid"
+          - name: mtwshy
+            description: "Last mutation work station"
+
+      - name: folokcpf
+        description: "Online folder header"
+        columns:
+          - name: foejc1
+            description: "Folder year"
+          - name: fokdc1
+            description: "Folder type code"
+          - name: fonrc1
+            description: "Folder number"
+          - name: onalc1
+            description: "Online alias"
+          - name: onpbc1
+            description: "Publish online"
+          - name: opbdc1
+            description: "Start date publish online"
+          - name: opbtc1
+            description: "Start time publish online"
+          - name: opedc1
+            description: "End date publish online"
+          - name: opetc1
+            description: "End time publish online"
+          - name: tsmxc1
+            description: "Mutation timestamp"
+          - name: usrxc1
+            description: "Last mutation user"
+
+      - name: flkencpf
+        config:
+          freshness: null
+        description: "Folder characteristics central"
+        columns:
+          - name: folder_code
+            description: "Folder type code"
+          - name: folder_jaar
+            description: "Folder year"
+          - name: folder_nummer
+            description: "Folder number"
+          - name: gewijzigd_datum
+            description: "Date adjusted"
+          - name: gewijzigd_door
+            description: "Adjusted by"
+          - name: kenmerk_code
+            description: "Type code"
+          - name: kenmerk_waarde
+            description: "Type value"
+          - name: mutatie_teller
+            description: "Mutation counter"
+          - name: toegevoegd_datum
+            description: "Date added"
+          - name: toegevoegd_door
+            description: "Added by"
+
+      - name: folprspf
+        description: "Folder prices"
+        columns:
+          - name: aiprhv
+            description: "Different purchase price"
+          - name: arnrhv
+            description: "Article code"
+          - name: cnprhv
+            description: "Consumer price"
+          - name: foejhv
+            description: "Folder year"
+          - name: fokdhv
+            description: "Folder type code"
+          - name: fonrhv
+            description: "Folder number"
+          - name: fopehv
+            description: "Folder price per unit "
+          - name: foprhv
+            description: Folder price"
+          - name: fxpehv
+            description: "Folder x-colli price per unit"
+          - name: fypehv
+            description: "Folder y-colli price per unit"
+          - name: kobdhv
+            description: "Discount amount purchase condition"
+          - name: kopchv
+            description: "Discount percentage"
+          - name: mtdehv
+            description: "Mutation date"
+          - name: mttdhv
+            description: "Mutation time"
+          - name: mtushv
+            description: "Last mutation userid"
+          - name: mtwshv
+            description: "Last mutation work station"
+          - name: pejnhv
+            description: "Price/unit code on folder"
+          - name: xcaahv
+            description: "x-colli quantity"
+          - name: xcprhv
+            description: "x-colli price"
+          - name: ycaahv
+            description: "y-colli quantity"
+          - name: ycprhv
+            description: "y-colli price"
+
+      - name: fofilcpf
+        config:
+          freshness: null
+        description: "Folder assortment central"
+        columns:
+          - name: arnrc1
+            description: "Article code"
+          - name: askdc1
+            description: "Assortiment code"
+          - name: finrc1
+            description: "Site code"
+          - name: foejc1
+            description: "Folder year"
+          - name: fokdc1
+            description: "Folder type code"
+          - name: fonrc1
+            description: "Folder number"
+          - name: lvpfc1
+            description: "Delivery check"
+          - name: mtdec1
+            description: "Mutation date"
+          - name: mttdc1
+            description: "Mutation time"
+          - name: mtusc1
+            description: "Last mutation userid"
+          - name: mtwsc1
+            description: "Last mutation work station"
+
+      - name: folfilpf
+        config:
+          freshness: null
+        description: "Folder to site assignment"
+        columns:
+          - name: arnrgx
+            description: "Article code"
+          - name: askdgx
+            description: "Assortment code"
+          - name: finrgx
+            description: "Site code"
+          - name: foejgx
+            description: "Folder year"
+          - name: fokdgx
+            description: "Folder type code"
+          - name: fonrgx
+            description: "Folder number"
+          - name: lvpfgx
+            description: "Delivery check"
+          - name: mtdegx
+            description: "Mutation date"
+          - name: mttdgx
+            description: "Mutation time"
+          - name: mtusgx
+            description: "Last mutation userid"
+          - name: mtwsgx
+            description: "Last mutation workstation"
+
+      - name: flartxpf
+        description: "Folder article text"
+        columns:
+          - name: arnrgt
+            description: "Article code"
+          - name: foejgt
+            description: "Folder year"
+          - name: fokdgt
+            description: "Folder type code"
+          - name: fonrgt
+            description: "Folder number"
+          - name: mtdegt
+            description: "Mutation date"
+          - name: mttdgt
+            description: "Mutation time"
+          - name: mtusgt
+            description: "Last mutation userid"
+          - name: mtwsgt
+            description: "Last mutation work station"
+          - name: rgnrgt
+            description: "Line number"
+          - name: tx70gt
+            description: "Text"
+
+      - name: boekscpf
+        config:
+          freshness: null #does not have stg or base model at all
+        description: "Bookings code sub-data"
+        columns:
+          - name: bkbic1
+            description: "Calculation indication"
+          - name: bkomc1
+            description: "Booking code description"
+          - name: bksrc1
+            description: "Bookings code type"
+          - name: boenc1
+            description: "Bookings code number"
+          - name: lakdc1
+            description: "Country code"
+
+      - name: flaancpf
+        description: "Folder promotion text"
+        columns:
+          - name: arnrc1
+            description: "Article code"
+          - name: cydxc1
+            description: "Mutation date"
+          - name: foejc1
+            description: "Folder year"
+          - name: fokdc1
+            description: "Folder type code"
+          - name: fonrc1
+            description: "Folder number"
+          - name: kodec1
+            description: "Text code"
+          - name: mcprc1
+            description: "Multi-colli price"
+          - name: mctkc1
+            description: "Multi-colli text"
+          - name: mcvac1
+            description: "Promotion id"
+          - name: usrxc1
+            description: "Last mutation user"
+
+      - name: inkfktpf
+        description: "Purchase invoice lines"
+        columns:
+          - name: AANTIF
+            description: "Quantity"
+          - name: BABDIF
+            description: "Amount VAT high"
+          - name: BBBDIF
+            description: "Amount VAT low"
+          - name: BDBDIF
+            description: "Amount VAT medium"
+          - name: BIDTIF
+            description: "Date reported"
+          - name: BTKDIF
+            description: "VAT code"
+          - name: BVDTIF
+            description: "Expiration date on report"
+          - name: DCAAIF
+            description: "Decimals (weight good)"
+          - name: EMBDIF
+            description: "Total packaging"
+          - name: FGDTIF
+            description: "Invoice control approval date"
+          - name: FKAOIF
+            description: "Delivered order"
+          - name: FKBDIF
+            description: "Invoice amount"
+          - name: FKBTIF
+            description: "Invoice paid"
+          - name: FKDTIF
+            description: "Invoice date"
+          - name: FKNRIF
+            description: "Purchase invoice number"
+          - name: GRBAIF
+            description: "FIS account number"
+          - name: GRBBIF
+            description: "FIS account number"
+          - name: HFDKIF
+            description: "Head office"
+          - name: IFDTIF
+            description: "Booking date"
+          - name: IFUSIF
+            description: "User ID booking"
+          - name: INPRIF
+            description: "Purchase price"
+          - name: I2DTIF
+            description: "Date cumulative purchase statistics 2"
+          - name: JFDTIF
+            description: "Date JP invoice control"
+          - name: JIDTIF
+            description: "Date JP purchase invoice"
+          - name: JVDTIF
+            description: "Date JP expiration"
+          - name: LVNRIF
+            description: "Supplier number"
+          - name: OGDTIF
+            description: "Date overview good IO"
+          - name: OVDTIF
+            description: "Date receipt purchase invoice"
+          - name: STKDIF
+            description: "Status"
+          - name: STNRIF
+            description: "Piece number"
+          - name: STSUIF
+            description: "Piece number Superunie"
+          - name: TOIFIF
+            description: "To be checked purchase invoice"
+          - name: TOIOIF
+            description: "To be received purchase invoice"
+          - name: VABAIF
+            description: "VAT high purchase other currency"
+          - name: VABBIF
+            description: "VAT low purchase other currency"
+          - name: VABDIF
+            description: "VAT medium purchase other currency"
+          - name: VAFKIF
+            description: "Invoice amount purchase other currency"
+          - name: VAKDIF
+            description: "Currency code purchase invoice"
+          - name: VFDTIF
+            description: "Invoice due date"
+          - name: VVDTIF
+            description: "Expiration date IO"
+          - name: VVUSIF
+            description: "User ID expiration IO"
+      - name: status_omschrijving
+        description: "A lookup table created based on the description of status code for purchase invoice header"
+        columns:
+          - name: _fivetran_id
+            description: "Fivetran ID"
+          - name: last_change_user
+            description: "Name of the person changed it last time."
+          - name: field_value
+            description: "status code."
+          - name: field_name
+            description: "Name of the field in purchase invoice header."
+          - name: file_description
+            description: "Name of the entity."
+          - name: field_value_description
+            description: "Description of the status codes."
+          - name: file_name
+            description: "Name of the table in as400."
+          - name: field_description
+            description: "Dictionary of the table name."
+          - name: last_change_timestamp
+            description: "Last known timestamp since change."
+          - name: _fivetran_synced
+            description: "Last known timestamp since synced."
+          - name: _fivatran_deleted
+            description: "Boelean of deleted record"
+      - name: bstrdnpf
+        description: >
+          Purchase order reason codes (suffix BR), reflecting corrections or additions
+          applied during invoice control. Includes metadata on the origin, financial impact,
+          article group, and user who made the changes.
+        columns:
+          - name: IONRBR
+            description: "Purchase order number"
+          - name: IRNRBR
+            description: >
+              Purchase order line number.
+              First line number is equal to the highest line number in BESTELPF + 1,
+              then incremented further.
+          - name: ORIRBR
+            description: >
+              Original IR number that triggered the adjustment.
+              If no article-level condition was set, this value is 0.
+          - name: ARGRBR
+            description: >
+              Article group used in determining financial routing.
+              Filled based on article or supplier conditions or fallback rules.
+          - name: RDKDBR
+            description: "Correction reason code in invoice control"
+          - name: RDOMBR
+            description: >
+              Reason description.
+              Matches description from REDENPF or manually entered in invoice control.
+          - name: EHAABR
+            description: >
+              Quantity used for adjustment, based on business logic:
+              - Received colli * -1 if condition per colli = 'J' and ARGRBR not 850/851
+              - Received colli if condition per colli = 'J' and ARGRBR = 850 or 851
+              - Equals 1 for freight/customs costs
+              - Equals -1 in all other cases
+          - name: EHPRBR
+            description: >
+              Unit price for the adjustment:
+              - Calculated discount/surcharge if automatic
+              - Manually entered if manual invoice control
+          - name: OSKDBR
+            description: >
+              Source of adjustment:
+              A = Auto after goods receipt (e.g., bonus)
+              F = Auto during invoice control
+              H = Manual invoice control
+              J = Journal entry (e.g., invoice approval)
+          - name: GRFDBR
+            description: "G/L account (food)"
+          - name: KPFDBR
+            description: "Cost center (food)"
+          - name: KDFDBR
+            description: "Cost object (food)"
+          - name: GRNFBR
+            description: "G/L account (non-food)"
+          - name: KPNFBR
+            description: "Cost center (non-food)"
+          - name: KDNFBR
+            description: "Cost object (non-food)"
+          - name: HTDTBR
+            description: "Date manually added by invoice controller to the purchase order line"
+          - name: HTUSBR
+            description: "User ID of the person who manually added the line to the purchase order"
+          - name: LAKDBR
+            description: "Country code"
+          - name: MSFDBR
+            description: "Tax base or OBT code (food)"
+          - name: MSNFBR
+            description: "Tax base or OBT code (non-food)"
+
+      - name: inkfrcpf
+        description: "Purchase invoice lines"
+        columns:
+          - name: ARNRC1
+            description: "Article number"
+          - name: BDRGC1
+            description: "Amount"
+          - name: BDRGC2
+            description: "Amount goods"
+          - name: BDRGC3
+            description: "Amount discount"
+          - name: BDRGC4
+            description: "Amount surcharges"
+          - name: BDRGC5
+            description: "Amount VAT"
+          - name: BDRGC6
+            description: "Amount packaging"
+          - name: BDRGC8
+            description: "Amount VBR"
+          - name: CYDXC1
+            description: "Mutation date"
+          - name: EAN1C1
+            description: "EAN code 1"
+          - name: FCAAC1
+            description: "Invoiced quantity"
+          - name: GLAAC2
+            description: "Delivered quantity EDI"
+          - name: HFDKC1
+            description: "Head office"
+          - name: IONRC1
+            description: "Purchase order number"
+          - name: IRNRC1
+            description: "Purchase order line"
+          - name: PRYEC1
+            description: "Price EDI"
+          - name: RGNRC3
+            description: "Line number"
+          - name: STKDC1
+            description: "Status"
+          - name: STNRC2
+            description: "Piece number (Sligro)"
+          - name: UPDATE_IDENT
+            description: "Field update / access identifier"
+          - name: USRXC1
+            description: "User last mutation"
+
+      - name: rioifrpf
+        description: "Relation table for purchase orders and purchase invoices"
+        columns:
+          - name: hfdki1
+            description: "The headoffice related to the order and invoice"
+          - name: ionrii
+            description: "the purchase order number"
+          - name: rinrii
+            description: "the relationnumber of the purchase order and purchase invoice combination"
+          - name: stnrii
+            description: "the purchase invoice number"
+
+  - name: sligro60_slgmutlib_leverdatum
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    config:
+      freshness:
+        warn_after:
+          count: 7 # fivetran syncs this table every 6 hours
+          period: hour
+        filter: _fivetran_synced > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1
+          DAY)
+      loaded_at_field: _fivetran_synced
+    tables:
+      - name: verzamel_gebied_vestiging
+        config:
+          freshness: null
+        description: Collection area information, for BS and ZB
+        columns:
+          - name: VERZAMEL_GEBIED_ID
+            description: "collection_area_id"
+          - name: VESTIGING_ID
+            description: "branch_id"
+          - name: VERZAMEL_GEBIED_OMS_KORT
+            description: "collection_area_oms_brief"
+          - name: VERZAMEL_GEBIED_OMS
+            description: "collection_area_oms"
+          - name: AFSCHERMEN_ARTIKEL
+            description: "shield_item"
+          - name: VERZAMEL_GEBIED_IS_FOLDER_STRAAT
+            description: "collection_area_is_folder_street"
+          - name: SAMEN_VOEG_CODE_AFDRUKKEN_AFLEVER_BON
+            description: "merge_code_print_delivery_receipt"
+          - name: UITSLUITEN_EXTRA_KOSTEN_MENU_KAART
+            description: "exclude_extra_costs_menu_card"
+          - name: TRANSPORT_CONDITIE
+            description: "transport_condition"
+          - name: AANVUL_VERZOEKEN
+            description: "replenishment_requests"
+          - name: BULK_NAAR_PICK_SCANNEN
+            description: "bulk_to_pick_scan"
+          - name: VERZAMEL_GEBIED_CODE
+            description: "collection_area_code"
+          - name: GO_DIRECT_NAAR_LOCATIE_BIJ_LABEL
+            description: "go_direct_to_location_at_label"
+          - name: VOLUME_PERCENTAGE_INTERTOUR
+            description: "volume_percentage_intertour"
+          - name: VOLUME_BEREKENEN_KRATTEN
+            description: "volume_calculate_crates"
+          - name: CONTROLE_BIJ_INNAME
+            description: "control_at_intake"
+          - name: EMBALLAGE_NR
+            description: "packaging_no"
+          - name: SSCC_VANAF
+            description: "sscc_from"
+          - name: SSCC_TOT_EN_MET
+            description: "sscc_to_and_with"
+          - name: SAMEN_VOEGEN_OP_SSCC
+            description: "merge_on_sscc"
+          - name: SAMEN_VOEG_CODE_VERDICHTEN_EMBALLAGE
+            description: "merge_code_compact_packaging"
+          - name: ORDER_TIJD
+            description: "order_time"
+          - name: AFKAPPEN_VOLUME_ROL_CONTAINER
+            description: "truncate_volume_role_container"
+          - name: AFKAP_PER_STUK_ROL_CONTAINER
+            description: "cut_per_piece_roll_container"
+          - name: LABELS_ROL_CONTAINER
+            description: "labels_role_container"
+          - name: PICK_LIJST_OP_KLANT_NIVEAU
+            description: "pick_list_at_customer_level"
+          - name: PICK_LIJST_AUTOMATISCH_VRIJGEVEN
+            description: "pick_list_automatic_release"
+          - name: VERZAMEL_CODE
+            description: "collection_code"
+          - name: MONO_PALLETS_ORDERS_AFSPLITSEN
+            description: "mono_pallets_orders_split"
+          - name: MONO_PALLET_VERZAMEL_GEBIED
+            description: "mono_pallet_collection_area"
+          - name: CONSUMENTEN_ADVIES_PRIJS_AFDRUKKEN
+            description: "consumer_advice_price_print"
+          - name: ORDER_NUMMER_OP_STICKER
+            description: "order_number_on_sticker"
+          - name: KLANT_NUMMER_AFKORTING_AFDRUKKEN
+            description: "customer_number_abbreviation_print"
+          - name: CODE_LOCATIE
+            description: "code_location"
+          - name: TIJDEN_VERZAMELAAR_REGISTREREN
+            description: "times_collector_register"
+          - name: COLLI_PER_UUR_VERZAMELEN
+            description: "collect_packages_per_hour"
+          - name: VOLUME_PER_KRAT
+            description: "volume_per_crate"
+          - name: AANTAL_LABELS
+            description: "number_labels"
+          - name: VERVOER_LABEL_VOORAF_AFDRUKKEN
+            description: "transport_label_preprinting"
+          - name: SOORT_PICK_LIJST
+            description: "kind_pick_list"
+          - name: OUTQUEUE_PICK_LIJST
+            description: "outqueue_pick_list"
+          - name: OUTQUEUE_VERVOER_LABEL
+            description: "outqueue_transport_label"
+          - name: SOORT_TRANSPORT_LABEL
+            description: "type_transport_label"
+          - name: SCANNING_ACTIEF
+            description: "scanning_active"
+          - name: BACK_ORDER_BIJ_SCANNING
+            description: "back_order_at_scanning"
+          - name: OUTQUEUE_SCANNING
+            description: "outqueue_scanning"
+          - name: VERVOER_LABEL_VERZAMEL_EENHEID
+            description: "transport_label_collection_unit"
+          - name: FOLDER_VERDELING
+            description: "folder_distribution"
+          - name: MAP_FOLDER_VERDELING
+            description: "folder_folder_distribution"
+          - name: VERSIE_FOLDER_VERDELING
+            description: "version_folder_distribution"
+          - name: SOORT_PTL
+            description: "species_ptl"
+          - name: MAP_PICK_TO_LIGHT
+            description: "map_pick_to_light"
+          - name: PICK_TO_LIGHT_VERSIE
+            description: "pick_to_light_version"
+          - name: OUTQUEUE_PTL
+            description: "outqueue_ptl"
+          - name: PTL_ACTIEF
+            description: "ptl_active"
+          - name: AUTO_AANVULVZ_MANCOS_PTL
+            description: "auto_additional_mancos_ptl"
+          - name: AUTOMATISCH_INNEMEN
+            description: "auto_take"
+          - name: BACK_ORDER_BIJ_AUTO_INNAME
+            description: "back_order_by_auto_intake"
+          - name: ALTERNATIEF_VERZAMEL_GEBIED
+            description: "alternative_collection_area"
+          - name: VOLUME
+            description: "volume"
+          - name: TOTAAL_GEWICHT
+            description: "total weight"
+          - name: AANTAL_COLLI
+            description: "number_packs"
+          - name: ORDER_AFKAPPEN_COLLI_AANTAL
+            description: "order_truncate_package_quantity"
+          - name: TOEGEVOEGD_DOOR
+            description: "added_by"
+          - name: TOEGEVOEGD_DATUM
+            description: "added_date"
+          - name: GEWIJZIGD_DOOR
+            description: "changed by"
+          - name: GEWIJZIGD_DATUM
+            description: "modified_date"
+          - name: MUTATIE_TELLER
+            description: "mutation_counter"
+
+      - name: bbb_schema_stam
+        description: "BBB schema master table"
+        columns:
+          - name: bbb_schema_id
+            description: "BBB schema identifier"
+          - name: aantal_dagen_benaderen_bellen
+            description: "Number of days to approach by phone"
+          - name: aantal_dagen_benaderen_email
+            description: "Number of days to approach by email"
+          - name: aantal_dagen_benaderen_slimis
+            description: "Number of days to approach by Slimis"
+          - name: aantal_dagen_benaderen_sms
+            description: "Number of days to approach by SMS"
+          - name: aantal_dagen_bestellen_voor
+            description: "Number of days to order in advance"
+          - name: actief
+            description: "Active"
+          - name: bbb_inhaal_periode_id
+            description: "BBB catch-up period identifier"
+          - name: bel_schema_id
+            description: "Call schema identifier"
+          - name: bellen_dag
+            description: "Call day"
+          - name: bellen_tijd
+            description: "Call time"
+          - name: bestel_dag
+            description: "Order day"
+          - name: bestel_tijd
+            description: "Order time"
+          - name: bezorg_dag
+            description: "Delivery day"
+          - name: bezorg_tijd
+            description: "Delivery time"
+          - name: datum_geldig_tot
+            description: "Date valid until"
+          - name: datum_geldig_van
+            description: "Date valid from"
+          - name: email_dag
+            description: "Email day"
+          - name: email_tijd
+            description: "Email time"
+          - name: folder
+            description: "Folder"
+          - name: folder_voor_tijdens
+            description: "Folder before during"
+          - name: gewijzigd_datum
+            description: "Date modified"
+          - name: gewijzigd_door
+            description: "Modified by"
+          - name: klant_id
+            description: "Customer identifier"
+          - name: max_wagen_type
+            description: "Max vehicle type"
+          - name: min_wagen_type
+            description: "Min vehicle type"
+          - name: mutatie_teller
+            description: "Mutation counter"
+          - name: percentage
+            description: "Percentage"
+          - name: route
+            description: "Route"
+          - name: route_soort
+            description: "Route type"
+          - name: slimis_dag
+            description: "Slimis day"
+          - name: slimis_tijd
+            description: "Slimis time"
+          - name: sms_dag
+            description: "SMS day"
+          - name: sms_tijd
+            description: "SMS time"
+          - name: soort_schema
+            description: "Schema type"
+          - name: status_code
+            description: "Status code"
+          - name: toegevoegd_datum
+            description: "Date added"
+          - name: toegevoegd_door
+            description: "Added by"
+          - name: vaste_stop_tijd
+            description: "Fixed stop time"
+          - name: venster_dag_1_tot
+            description: "Window day 1 until"
+          - name: venster_dag_1_van
+            description: "Window day 1 from"
+          - name: venster_dag_2_tot
+            description: "Window day 2 until"
+          - name: venster_dag_2_van
+            description: "Window day 2 from"
+          - name: venster_tijd_1_tot
+            description: "Window time 1 until"
+          - name: venster_tijd_1_van
+            description: "Window time 1 from"
+          - name: venster_tijd_2_tot
+            description: "Window time 2 until"
+          - name: venster_tijd_2_van
+            description: "Window time 2 from"
+          - name: vestiging_id
+            description: "Site identifier"
+
+      - name: route_stam_tabel
+        config:
+          freshness: null
+        description: "Route master table"
+        columns:
+          - name: bezorg_dag
+            description: "Delivery day"
+          - name: route
+            description: "Route"
+          - name: vestiging_id
+            description: "Site identifier"
+          - name: dock_dag
+            description: "Docking dag"
+          - name: dock_tijd
+            description: "Docking time"
+          - name: drop_kosten_laad_meters_berekenen
+            description: "Calculate drop costs load meters"
+          - name: expeditie_scanning
+            description: "Expedition scanning"
+          - name: export_boord_computer
+            description: "Export on-board computer"
+          - name: export_intertour
+            description: "Export intertour"
+          - name: gewijzigd_datum
+            description: "Date modified"
+          - name: gewijzigd_door
+            description: "Modified by"
+          - name: mutatie_teller
+            description: "Mutation counter"
+          - name: print_wachtende_retour_bonnen
+            description: "Print pending return notes"
+          - name: toegevoegd_datum
+            description: "Date added"
+          - name: toegevoegd_door
+            description: "Added by"
+          - name: verplaatsen_naar_route_toegestaan
+            description: "Allowed to move to route"
+          - name: verplaatsen_van_route_toegestaan
+            description: "Allowed to move from route"
+
+  - name: sligro60_slgmutlib_slgfilelib
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    config:
+      freshness:
+        warn_after:
+          count: 7 # fivetran syncs this table every 6 hours
+          period: hour
+        filter: _fivetran_synced > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1
+          DAY)
+      loaded_at_field: _fivetran_synced
+    tables:
+      - name: dcnawpf
+        config:
+          freshness: null
+        description: "NAW (Name, Address, City) data of Sligro distribution centers"
+        columns:
+          - name: adrsdn
+            description: "Address"
+          - name: dckddn
+            description: "Distribution center"
+          - name: dcomdn
+            description: "Description of the distribution center"
+          - name: dcpkdn
+            description: "Postal code"
+          - name: dcstdn
+            description: "Distribution center status"
+          - name: dctadn
+            description: "Attention to"
+          - name: dcwpdn
+            description: "City"
+          - name: finrdn
+            description: "Site number"
+          - name: fxnrdn
+            description: "Fax number"
+
+      - name: artikcpf
+        description: Articles information, including stock location, for CDC
+        columns:
+          - name: S013C1
+            description: "Item status"
+          - name: ARNRC1
+            description: "Article number"
+          - name: LVNRC1
+            description: "Supplier number"
+          - name: ARGRC1
+            description: "Item group"
+          - name: VPOMC1
+            description: "Packaging"
+          - name: LKNMC1
+            description: "Shortened supplier name"
+          - name: IVAAC1
+            description: "Package contents"
+          - name: DCAAC2
+            description: "Decimals"
+          - name: ODAAC1
+            description: "Outer carton"
+          - name: PTAAC1
+            description: "Number of packages on a pallet"
+          - name: PLAAC1
+            description: "Number of packages on a pallet layer"
+          - name: ASKDC1
+            description: "Item type"
+          - name: AROMC1
+            description: "Item description"
+          - name: INPRC1
+            description: "Purchase price"
+          - name: BSDDC1
+            description: "Order day"
+          - name: BTKDC1
+            description: "VAT code"
+          - name: AREAC1
+            description: "Area"
+          - name: GANGC1
+            description: "Warehouse corridor"
+          - name: ANDVC1
+            description: "Number of days of desired stock"
+          - name: VRKLC1
+            description: "Item sales location"
+          - name: ETIKC1
+            description: "Label"
+          - name: GEWIC1
+            description: "Average weight"
+          - name: VOLMC1
+            description: "Volume"
+          - name: OGKDC1
+            description: "Order size code"
+          - name: APPRC1
+            description: "Price-a (reserve)"
+          - name: XCPRC1
+            description: "X-colli price"
+          - name: VRKDC1
+            description: "Stock code"
+          - name: DPKDC1
+            description: "Change decentralized price"
+          - name: HAKDC1
+            description: "Main/action article"
+          - name: BOKDC1
+            description: "Code bonus"
+          - name: MTGTC1
+            description: "Mate"
+          - name: KLOMC1
+            description: "Colour"
+          - name: AS01C1
+            description: "Release assortment code"
+          - name: AS02C1
+            description: "Direct import"
+          - name: AS03C1
+            description: "Assortment code Den Bosch"
+          - name: AS04C1
+            description: "Assortment code Leidschendam"
+          - name: AS05C1
+            description: "Assortment code VanderVelde"
+          - name: AS06C1
+            description: "Assortment code Helmond"
+          - name: AS07C1
+            description: "Item is included for customer"
+          - name: AS08C1
+            description: "Assortment code RVC Nijkerk"
+          - name: AS09C1
+            description: "Assortment code Weert"
+          - name: AS10C1
+            description: "Assortment code Tiel"
+          - name: AS11C1
+            description: "Assortment code Tilburg"
+          - name: AS12C1
+            description: "Assortment code Emmen"
+          - name: AS13C1
+            description: "Assortment code Alkmaar"
+          - name: AS14C1
+            description: "Hoeckel assortment code"
+          - name: AS15C1
+            description: "Assortment code Sittard"
+          - name: AS16C1
+            description: "Assortment code Apeldoorn"
+          - name: AS17C1
+            description: "Assortment code Venlo"
+          - name: AS18C1
+            description: "Assortment code Doetinchem"
+          - name: AS19C1
+            description: "Assortment code Zwolle"
+          - name: AS20C1
+            description: "Assortment code Veghel"
+          - name: AS21C1
+            description: "Assortment code Heerlen"
+          - name: AS22C1
+            description: "Van Hoeckel Urgent article"
+          - name: AS23C1
+            description: "Assortment code Maastricht"
+          - name: AS24C1
+            description: "Assortment code Arnhem"
+          - name: AS25C1
+            description: "Assortment code Nijmegen"
+          - name: AS26C1
+            description: "Assortment code Rotterdam South"
+          - name: AS27C1
+            description: "Assortment CD Rotterdam Spanish polder"
+          - name: AS28C1
+            description: "Assortment code Leiden"
+          - name: AS29C1
+            description: "Assortment code Smit Vis"
+          - name: AS30C1
+            description: "Warehouse label"
+          - name: ZBPRC1
+            description: "Self-service price"
+          - name: CNPRC1
+            description: "Consumer price"
+          - name: EMPRC1
+            description: "Packaging price"
+          - name: MVAAC1
+            description: "Minimum stock"
+          - name: THTDC1
+            description: "Best before"
+          - name: AARNC1
+            description: "Promotion item number"
+          - name: BNAAC1
+            description: "Bonus"
+          - name: ZBDTC1
+            description: "Effective date of new ZB price"
+          - name: ZNPRC1
+            description: "New self-service price"
+          - name: ZVPRC1
+            description: "Previous ZB price"
+          - name: INDTC1
+            description: "Effective date of new purchase price"
+          - name: ITPRC1
+            description: "New purchase price"
+          - name: IVPRC1
+            description: "Previous purchase price"
+          - name: NCPRC1
+            description: "New consumer price"
+          - name: NAPRC1
+            description: "Not used"
+          - name: NBPRC1
+            description: "New X-colli price"
+          - name: ALCDC1
+            description: "Delivery location code"
+          - name: AWCDC1
+            description: "Assortment spy"
+          - name: CLKDC1
+            description: "Order directly in Maastricht"
+          - name: MNAAC1
+            description: "Minimum purchase"
+          - name: UPCAC1
+            description: "Not used"
+          - name: VVDTC1
+            description: "Expiration date"
+          - name: MTDTC1
+            description: "Change date"
+          - name: ED1BC1
+            description: "Order via EDI"
+          - name: ED2BC1
+            description: "Order via EDI"
+          - name: NVDTC1
+            description: "Date out of stock until"
+          - name: KDOPC1
+            description: "Storage code"
+          - name: KRKDC1
+            description: "Own brand item"
+          - name: ZP01C1
+            description: "Price price group 1"
+          - name: CP01C1
+            description: "Consumer price price group 1"
+          - name: ZN01C1
+            description: "New price price group 1"
+          - name: CN01C1
+            description: "New consumer price price group 1"
+          - name: TMKDC1
+            description: "Code printed on overview SLM115"
+          - name: AS31C1
+            description: "Assortment code Groningen"
+          - name: AS32C1
+            description: "Assortment code Eindhoven"
+          - name: AS33C1
+            description: "Assortment code Fresh Partners Elsloo"
+          - name: AS34C1
+            description: "Assortment code DC Kapelle"
+          - name: AS35C1
+            description: "Assortment DC Putten"
+          - name: SLHOC1
+            description: "Smart main group"
+          - name: SLSUC1
+            description: "Smart subgroup"
+          - name: XCAAC1
+            description: "X-colli quantity"
+          - name: SEVNC1
+            description: "Seasonal collection issue"
+          - name: RS05C1
+            description: "Not used"
+          - name: RS06C1
+            description: "Not used"
+          - name: SLPRC1
+            description: "Smart consumer price"
+          - name: CPPRC1
+            description: "Not used"
+          - name: DPPRC1
+            description: "Volume of an article"
+          - name: AS36C1
+            description: "Assortment code Drachten"
+          - name: AS37C1
+            description: "Fresh settings"
+          - name: AS38C1
+            description: "Fresh Catering"
+          - name: AS39C1
+            description: "Assortment code Rosenberg"
+          - name: AS40C1
+            description: "Assortment code Amersfoort"
+          - name: AS41C1
+            description: "Assortment code Gouda"
+          - name: AS42C1
+            description: "Assortment code Goes"
+          - name: AS43C1
+            description: "Compass"
+          - name: AS44C1
+            description: "In order set Rosenberg"
+          - name: AS45C1
+            description: "Assortment code Vlissingen"
+          - name: AS46C1
+            description: "Convert Rosenberg"
+          - name: AS47C1
+            description: "Assortment code Smeding AGF"
+          - name: AS48C1
+            description: "Assortment code Huijbregts Riel"
+          - name: AS49C1
+            description: "Assortment code Almelo"
+          - name: AS50C1
+            description: "Catalog text available"
+          - name: AS51C1
+            description: "Assortment code Fresh Partners The Hague"
+          - name: AS52C1
+            description: "Assortment code Terneuzen"
+          - name: AS53C1
+            description: "Photo available"
+          - name: AS54C1
+            description: "Item statistics"
+          - name: AS55C1
+            description: "Order set Setting"
+          - name: AS56C1
+            description: "Orderset Catering"
+          - name: AS57C1
+            description: "Assortment code Gorinchem"
+          - name: AS58C1
+            description: "ZOB article"
+          - name: AS59C1
+            description: "Order set Holiday shops"
+          - name: AS60C1
+            description: "Order set Milo"
+          - name: AS61C1
+            description: "Assortment code Fresh partner Goirle"
+          - name: AS62C1
+            description: "Item suitable for pallet order"
+          - name: AS63C1
+            description: "A pallet label is printed"
+          - name: AS64C1
+            description: "Assortment code Groningen (temporary)"
+          - name: AS65C1
+            description: "Assortment code Sligro Drachten ZB"
+          - name: AS66C1
+            description: "Assortment code Drachten RVC"
+          - name: AS67C1
+            description: "Assortment code Loek van den Elzen"
+          - name: AS68C1
+            description: "Assortment code Breda"
+          - name: AS69C1
+            description: "Assortment code Roosendaal"
+          - name: AS70C1
+            description: "Assortment code Bergen op Zoom"
+          - name: AS71C1
+            description: "Order set Home market/Super nearby"
+          - name: AS72C1
+            description: "Order set Traditional retail"
+          - name: AS73C1
+            description: "Itinerant retail"
+          - name: AS74C1
+            description: "Order set expanded Retail"
+          - name: AS75C1
+            description: "Order set Cafeteria"
+          - name: AS76C1
+            description: "Order set Restaurant"
+          - name: AS77C1
+            description: "Item is Transit item GVA"
+          - name: AS78C1
+            description: "Item is a Christmas package"
+          - name: AS79C1
+            description: "Item is included in a Christmas package"
+          - name: AS80C1
+            description: "Item is seasonal item"
+          - name: DEAFC1
+            description: "Date descending"
+          - name: PLURC1
+            description: "PLU no for scales"
+          - name: ZK01C1
+            description: "Search key 1"
+          - name: ZK02C1
+            description: "Search key 2"
+          - name: EA01C1
+            description: "EAN code 1 HE"
+          - name: EA02C1
+            description: "EAN Code 2 CE"
+          - name: INBAC1
+            description: "Bin contents"
+          - name: WIDTC1
+            description: "Purchase price change date"
+          - name: WZDTC1
+            description: "Zb price change date"
+          - name: IADEC1
+            description: "Date of item in range"
+          - name: YCPRC1
+            description: "Y-colli price"
+          - name: YNPRC1
+            description: "New Y-colli price"
+          - name: YCAAC1
+            description: "Y-pack quantity"
+          - name: KOPRC1
+            description: "Cost price"
+          - name: KVPRC1
+            description: "Previous cost"
+          - name: NKPRC1
+            description: "New cost price"
+          - name: ZP02C1
+            description: "Disposal fee"
+          - name: ZP03C1
+            description: "Price price group 3"
+          - name: ZP04C1
+            description: "To scale Vers"
+          - name: ZP05C1
+            description: "Atl. art. pallet (lev.)"
+          - name: ZP06C1
+            description: "Atl. art. pallet layer (lev)"
+          - name: ZP07C1
+            description: "Number of items on Sligro pallet"
+          - name: ZP08C1
+            description: "Number of items on Sligro Palletlaag"
+          - name: ZP09C1
+            description: "Light up in RF screen"
+          - name: ZP10C1
+            description: "Automatic credit item"
+          - name: ZP11C1
+            description: "Item assortment module code"
+          - name: ZP12C1
+            description: "VBR code"
+          - name: ZP13C1
+            description: "Not used"
+          - name: ZN02C1
+            description: "Ecological product"
+          - name: ZN03C1
+            description: "Vegetarian product"
+          - name: ZN04C1
+            description: "Halal suitability"
+          - name: ZN05C1
+            description: "Low sodium product"
+          - name: ZN06C1
+            description: "Product fat percentage"
+          - name: ZN07C1
+            description: "Genetically modified product"
+          - name: ZN08C1
+            description: "Order unit display coding"
+          - name: ZN09C1
+            description: "Save last communicated status"
+          - name: ZN10C1
+            description: "Not used"
+          - name: ZN11C1
+            description: "Not used"
+          - name: ZN12C1
+            description: "Not used"
+          - name: ZN13C1
+            description: "Not used"
+          - name: CP02C1
+            description: "Not used"
+          - name: CP03C1
+            description: "Not used"
+          - name: CP04C1
+            description: "Not used"
+          - name: CP05C1
+            description: "Not used"
+          - name: CP06C1
+            description: "Not used"
+          - name: CP07C1
+            description: "Not used"
+          - name: CP08C1
+            description: "Not used"
+          - name: CP09C1
+            description: "Not used"
+          - name: CP10C1
+            description: "Not used"
+          - name: CP11C1
+            description: "Not used"
+          - name: CP12C1
+            description: "Not used"
+          - name: CP13C1
+            description: "Not used"
+          - name: CN02C1
+            description: "Not used"
+          - name: CN03C1
+            description: "Not used"
+          - name: CN04C1
+            description: "Not used"
+          - name: CN05C1
+            description: "Not used"
+          - name: CN06C1
+            description: "Not used"
+          - name: CN07C1
+            description: "Not used"
+          - name: CN08C1
+            description: "Not used"
+          - name: CN09C1
+            description: "Not used"
+          - name: CN10C1
+            description: "Not used"
+          - name: CN11C1
+            description: "Not used"
+          - name: CN12C1
+            description: "Not used"
+          - name: CN13C1
+            description: "Not used"
+          - name: WYNWC1
+            description: "Wine appreciation"
+          - name: SLPSC1
+            description: "Type Sligro pallet"
+          - name: RS09C1
+            description: "Not used"
+          - name: RS10C1
+            description: "Not used"
+          - name: RS11C1
+            description: "Not used"
+          - name: RS12C1
+            description: "Not used"
+          - name: PRARC1
+            description: "Linked item no. price changes"
+          - name: MTE1C1
+            description: "Change date EAN code 1"
+          - name: MTE2C1
+            description: "Change date EAN code 2"
+          - name: DCKDC1
+            description: "DC code"
+          - name: RS07C1
+            description: "Not used"
+          - name: PGNRC1
+            description: "Pick corridor"
+          - name: PVNRC2
+            description: "Pick box"
+          - name: PLNRC2
+            description: "Pick low"
+          - name: PPNRC2
+            description: "Pick place"
+          - name: RS08C1
+            description: "Not used"
+          - name: BVNRC1
+            description: "Not used"
+          - name: BLNRC1
+            description: "Not used"
+          - name: RS14C1
+            description: "Not used"
+          - name: IMKDC1
+            description: "In warehouse stock"
+          - name: MGGWC1
+            description: "Weight of an item"
+          - name: SPAAC1
+            description: "Number of items on a Sligro pallet"
+          - name: SBAAC1
+            description: "Number of items per Sligro pallet layer"
+          - name: MGTXC1
+            description: "Warehouse text"
+          - name: OMOMC1
+            description: "Storage method"
+          - name: P1PRC1
+            description: "Not used"
+          - name: P2PRC1
+            description: "Not used"
+          - name: P3PRC1
+            description: "Not used"
+          - name: N1PRC1
+            description: "Not used"
+          - name: N2PRC1
+            description: "Not used"
+          - name: N3PRC1
+            description: "Not used"
+          - name: ACRFC1
+            description: "Excise reference"
+          - name: ILITC1
+            description: "Contents in litres"
+          - name: ALCPC1
+            description: "Alcohol percentage"
+          - name: VEKDC1
+            description: "Collection unit"
+          - name: CBNRC1
+            description: "Statistical number of article for export declaration"
+          - name: BD01C1
+            description: "Order day Monday"
+          - name: BD02C1
+            description: "Order day Tuesday"
+          - name: BD03C1
+            description: "Order day Wednesday"
+          - name: BD04C1
+            description: "Order day Thursday"
+          - name: BD05C1
+            description: "Order day Friday"
+          - name: AKN2C1
+            description: "Supplier item number"
+          - name: GR01C2
+            description: "Internet group level 1"
+          - name: GR03C1
+            description: "Internet group 3"
+          - name: GR04C2
+            description: "Internet group level 4"
+          - name: UPDATE_IDENT
+            description: "Field update/access identifier"
+
+      - name: folkoppf
+        description: Information about the folder headers
+        columns:
+          - name: aadegw
+            description: "Date definitive folder suggestion"
+          - name: akdegw
+            description: "Date definitive folder"
+          - name: badegw
+            description: "Date concept folder"
+          - name: bedegw
+            description: "Date end delivery service"
+          - name: bsdegw
+            description: "Date freeze folder"
+          - name: btdegw
+            description: "Date freeze folder suggestion"
+          - name: bvdegw
+            description: "Date start delivery service"
+          - name: cedegw
+            description: "End date consumer"
+          - name: crdegw
+            description: "Date concept folder suggestion"
+          - name: cvdegw
+            description: "Start date consumer"
+          - name: dedegw
+            description: "Date deadline"
+          - name: eidegw
+            description: "End date sign up retail"
+          - name: fejngw
+            description: "Status folder suggestion adjustment"
+          - name: foejgw
+            description: "Folder year"
+          - name: fojngw
+            description: "Status folder adjustment"
+          - name: fokdgw
+            description: "Folder code"
+          - name: fonrgw
+            description: "Folder number"
+          - name: mtdegw
+            description: "Mutation date"
+          - name: mttdgw
+            description: "Mutation time"
+          - name: mtusgw
+            description: "Last mutation userid"
+          - name: mtwsgw
+            description: "Last mutation workstation"
+          - name: oms3gw
+            description: "Theme"
+          - name: sckdgw
+            description: "Status folder suggestion"
+          - name: swkdgw
+            description: "Status folder"
+          - name: tmdegw
+            description: "End date deal"
+          - name: uzkdgw
+            description: "Code delivery service / cash and carry"
+          - name: vndegw
+            description: "Date start deal"
+          - name: zedegw
+            description: "End date cash and carry"
+          - name: zvdegw
+            description: "Start date cash and carry"
+
+      - name: arfkpcpf
+        config:
+          freshness: null # does not have base or stg model at all
+        description: "Article mapping table for invoicing"
+        columns:
+          - name: arnrc1
+            description: "Article number"
+          - name: cpidc1
+            description: "Campaign identifier"
+          - name: cpjrc1
+            description: "Campaign year"
+          - name: cpomc1
+            description: "Campaign description"
+          - name: cpsrc1
+            description: "Campaign type"
+          - name: cpstc1
+            description: "Campaign status"
+          - name: cydxc1
+            description: "Date mutation"
+          - name: fromc1
+            description: "Campaign start date"
+          - name: tarnc1
+            description: "Counter article number"
+          - name: tillc1
+            description: "Campaing end date"
+          - name: usrxc1
+            description: "Last mutation user"
+          - name: vlgnc1
+            description: "Reference number"
+
+      - name: folderpf
+        config:
+          freshness: null # does not have base or stg model at all
+        description: "Folder descriptive data"
+        columns:
+          - name: artgrp
+            description: "Article group"
+          - name: artnr
+            description: "Article number"
+          - name: ass01
+            description: "Distribution"
+          - name: ass02
+            description: "Veghel"
+          - name: ass03
+            description: "s Hertogenbosch"
+          - name: ass04
+            description: "Den Haag"
+          - name: ass05
+            description: "Ufic"
+          - name: ass06
+            description: "Helmond"
+          - name: ass07
+            description: "Veldhoven"
+          - name: ass08
+            description: "OKC"
+          - name: ass09
+            description: "Weert"
+          - name: ass10
+            description: "Tiel"
+          - name: ass11
+            description: "Tilburg"
+          - name: ass12
+            description: "Drachten"
+          - name: ass13
+            description: "Alkmaar"
+          - name: ass14
+            description: "Arnhem"
+          - name: ass15
+            description: "Sittard"
+          - name: ass16
+            description: "Apeldoorn"
+          - name: ass17
+            description: "Venlo"
+          - name: ass18
+            description: "Doetinchem"
+          - name: ass19
+            description: "Zwolle"
+          - name: ass20
+            description: "Veghel"
+          - name: ass21
+            description: "Heerlem"
+          - name: ass22
+            description: "Utrecht"
+          - name: ass23
+            description: "Maastricht"
+          - name: ass24
+            description: "Arnhem"
+          - name: ass25
+            description: "Nijmegen"
+          - name: ass26
+            description: "Rotterdam Zuid"
+          - name: ass27
+            description: "Rotterdam Spaanse P"
+          - name: ass28
+            description: "Zoeterwoude"
+          - name: ass29
+            description: "Bemmel"
+          - name: ass30
+            description: "Warehouse"
+          - name: ass31
+            description: "Dieren"
+          - name: ass32
+            description: "J Louwers"
+          - name: ass33
+            description: "RESERVE"
+          - name: ass34
+            description: "RESERVE"
+          - name: ass35
+            description: "RESERVE"
+          - name: ass36
+            description: ""
+          - name: ass37
+            description: ""
+          - name: ass38
+            description: ""
+          - name: ass39
+            description: ""
+          - name: ass40
+            description: ""
+          - name: ass41
+            description: ""
+          - name: ass42
+            description: ""
+          - name: ass43
+            description: ""
+          - name: ass44
+            description: ""
+          - name: ass45
+            description: ""
+          - name: ass46
+            description: ""
+          - name: ass47
+            description: ""
+          - name: ass48
+            description: ""
+          - name: ass49
+            description: ""
+          - name: ass50
+            description: ""
+          - name: ass51
+            description: ""
+          - name: ass52
+            description: ""
+          - name: ass53
+            description: ""
+          - name: ass54
+            description: ""
+          - name: ass55
+            description: ""
+          - name: ass56
+            description: ""
+          - name: ass57
+            description: ""
+          - name: ass58
+            description: ""
+          - name: ass59
+            description: ""
+          - name: ass60
+            description: ""
+          - name: ass61
+            description: ""
+          - name: ass62
+            description: ""
+          - name: ass63
+            description: ""
+          - name: ass64
+            description: ""
+          - name: ass65
+            description: ""
+          - name: ass66
+            description: ""
+          - name: ass67
+            description: ""
+          - name: ass68
+            description: ""
+          - name: ass69
+            description: ""
+          - name: ass70
+            description: ""
+          - name: ass71
+            description: ""
+          - name: ass72
+            description: ""
+          - name: ass73
+            description: ""
+          - name: ass74
+            description: ""
+          - name: ass75
+            description: ""
+          - name: ass76
+            description: ""
+          - name: ass77
+            description: ""
+          - name: ass78
+            description: ""
+          - name: ass79
+            description: ""
+          - name: ass80
+            description: ""
+          - name: cdsi
+            description: "SLIGRO/IFA folder"
+          - name: cfpr
+            description: "Cons folder price"
+          - name: fbprys
+            description: "F.XCOL'PRYS"
+          - name: fcons
+            description: "Consumenten folder Y/N"
+          - name: fff
+            description: "Food folder Y/N"
+          - name: fjj
+            description: "Year"
+          - name: fnf
+            description: "Nonfood folder Y/N"
+          - name: fnr
+            description: "Folder number"
+          - name: fpr
+            description: "Folder price"
+          - name: fres3
+            description: "F.X-Colli"
+          - name: ftxt25
+            description: "Txt per folder article"
+          - name: fycol
+            description: "F.YCOLLI"
+          - name: fyprys
+            description: "F.YCOL'PRYS"
+          - name: levnr
+            description: "Supplier number"
+          - name: mutdat
+            description: "Last mutation date"
+          - name: smcfpr
+            description: "SMAEKR CONS FPR"
+
+      - name: artpgcpf
+        config:
+          freshness: null # does not have base or stg model at all
+        description: "Folder descriptive data"
+        columns:
+          - name: arnrhy
+            description: "Article code"
+          - name: hpcphy
+            description: "Current consumer price group price"
+          - name: hpprhy
+            description: "Current price group price"
+          - name: mtdehy
+            description: "Mutation date current price"
+          - name: mtd2hy
+            description: "Mutation date new price"
+          - name: mtushy
+            description: "Mutation user id current price"
+          - name: mtu2hy
+            description: "Mutation user id new price"
+          - name: npcphy
+            description: "New consumer price group price"
+          - name: npprhy
+            description: "New price group price"
+          - name: prnrhy
+            description: "Price code"
+          - name: vndehy
+            description: "Start date current price"
+          - name: vnd2hy
+            description: "Start date new price"
+
+      - name: ictpscpf
+        config:
+          freshness: null
+        description: "Intercompany type control"
+        columns:
+          - name: adcdc1
+            description: "Address code EDI"
+          - name: cydxc1
+            description: "Date of mutation"
+          - name: excoc1
+            description: "Extracompany Y/N"
+          - name: figic1
+            description: "Branch integrated Y/N"
+          - name: fkhac1
+            description: "Allow invoice reprint Y/N"
+          - name: gbjnc1
+            description: "General ledger Y/N"
+          - name: icomc1
+            description: "Intercompany type description"
+          - name: ictpc1
+            description: "Intercompany type"
+          - name: prtpc1
+            description: "Price type"
+          - name: update_ident
+            description: "Field update / access identifier"
+          - name: usrxc1
+            description: "User of the last mutation"
+
+      - name: omstabpf
+        config:
+          freshness: null
+        description: "MO: Descriptions table (Suffix: OT)"
+        columns:
+          - name: koomot
+            description: "Short description"
+          - name: lgomot
+            description: "Long description"
+          - name: omkdot
+            description: "Code description"
+          - name: wakdot
+            description: "Value code description"
+
+  - name: sligro60_slgmutlib_centraal
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    config:
+      freshness:
+        warn_after:
+          count: 7 # fivetran syncs this table every 6 hours
+          period: hour
+        filter: _fivetran_synced > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1
+          DAY)
+      loaded_at_field: _fivetran_synced
+    tables:
+      - name: btw_codering_tarief
+        config:
+          freshness: null
+        description: "VAT Coding Rate"
+        columns:
+          - name: btw_id
+            description: "VAT ID"
+          - name: btw_percentage
+            description: "VAT Percentage"
+          - name: geldig_tm
+            description: "Valid Until"
+          - name: geldig_vanaf
+            description: "Valid From"
+          - name: gewijzigd_datum
+            description: "Date Modified"
+          - name: gewijzigd_door
+            description: "Modified By"
+          - name: land_id
+            description: "Country ID"
+          - name: mutatie_teller
+            description: "Mutation Counter"
+          - name: toegevoegd_datum
+            description: "Date Added"
+          - name: toegevoegd_door
+            description: "Added By"
+      - name: btw_codering
+        config:
+          freshness: null
+        description: "VAT Coding Rate descriptions"
+        columns:
+          - name: btw_id
+            description: "VAT ID"
+          - name: land_id
+            description: "Country ID"
+          - name: gewijzigd_datum
+            description: "Date Modified"
+          - name: btw_oms
+            description: "Vat description"
+          - name: mutatie_teller
+            description: "Mutation Counter"
+          - name: toegevoegd_datum
+            description: "Date Added"
+          - name: toegevoegd_door
+            description: "Added By"
+          - name: orchestra_btw_code
+            description: "Orchestra VAT code"
+          - name: gewijzigd_door
+            description: "Modified By"
+
+      - name: btw_codering
+        description: "Includes BTW Descriptions"
+        columns:
+          - name: btw_id
+          - name: land_id
+          - name: gewijzigd_datum
+          - name: btw_oms
+          - name: mutatie_teller
+          - name: toegevoegd_datum
+          - name: toegevoegd_door
+          - name: orchestra_btw_code
+          - name: gewijzigd_door
+          - name: _fivetran_synced
+          - name: _fivetran_deleted
+          - name: _fivetran_start
+          - name: _fivatran_end
+          - name: _fivetran_active
+
+      - name: artikel_btw
+        description: VAT data on articles
+        columns:
+          - name: artikel_id
+            description: "Article code"
+          - name: land_id
+            description: "Country code"
+          - name: btw_id
+            description: "VAT Code"
+          - name: gewijzigd_datum
+            description: "Adjusted date"
+          - name: gewijzigd_door
+            description: "Adjusted by"
+          - name: mutatie_teller
+            description: "Mutation counter"
+          - name: toegevoegd_datum
+            description: "Date added"
+          - name: toegevoegd_door
+            description: "Added by"
+
+      - name: artikel_prijs
+        description: Article price data
+        columns:
+          - name: artikel_id
+            description: "Article code"
+          - name: calculatie_prijs_soort_id
+            description: "Price calculation type "
+          - name: hoofd_kantoor_id
+            description: "Headquarter id"
+          - name: actueel_bruto_winst
+            description: "Current gross profit"
+          - name: actueel_bruto_winst_consument_prijs
+            description: "Current gross profit consumer price"
+          - name: actueel_consument_prijs
+            description: "Current consumer price"
+          - name: actueel_opslag
+            description: "Current mark up"
+          - name: actueel_prijs
+            description: "Current price"
+          - name: actueel_prijs_ingang_datum
+            description: "Current price start date"
+          - name: calculatie_batch_nr
+            description: "Calculation batch number"
+          - name: calculatie_prijs_volgorde
+            description: "Price calculation sequence"
+          - name: gewijzigd_datum
+            description: "Date adjusted"
+          - name: gewijzigd_door
+            description: "Adjusted by"
+          - name: mutatie_teller
+            description: "Mutation counter"
+          - name: nieuw_bruto_winst
+            description: "New gross profit"
+          - name: nieuw_bruto_winst_consument_prijs
+            description: "New gross profit consumer price"
+          - name: nieuw_consument_prijs
+            description: "New consumer price"
+          - name: nieuw_opslag
+            description: "New mark up"
+          - name: nieuw_prijs
+            description: "New price"
+          - name: nieuw_prijs_akkoord
+            description: "New price agreement"
+          - name: nieuw_prijs_ingang_datum
+            description: "New price start date"
+          - name: prijs_aantal
+            description: "Price amount"
+          - name: prijs_courant_code
+            description: "Currenct price code"
+          - name: toegevoegd_datum
+            description: "Date added"
+          - name: toegevoegd_door
+            description: "Added by"
+          - name: via_gui
+            description: "Via gui"
+
+  - name: sligro60_filchg_slgfilelib
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    config:
+      freshness:
+        warn_after:
+          count: 7 # fivetran syncs this table every 6 hours
+          period: hour
+        filter: _fivetran_synced > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1
+          DAY)
+      loaded_at_field: _fivetran_synced
+    tables:
+      - name: bstalgpf
+        description: "Table containing the header information of purchase orders, including supplier, shipping, and status details."
+        columns:
+          - name: ionrba
+            description: "Purchase order number (primary key)."
+          - name: stkdba
+            description: "Status of the purchase order."
+          - name: lvnrba
+            description: "Supplier number."
+          - name: znkdba
+            description: "Send method code: E=EDI, F=FAX, N=None."
+          - name: iosoba
+            description: "Type of purchase order."
+          - name: orioba
+            description: "Original purchase order number."
+          - name: fekdba
+            description: "Fiat code."
+          - name: iodtba
+            description: "Purchase order creation date."
+          - name: srdtba
+            description: "Sorting date for purchase order."
+          - name: zndtba
+            description: "Send date of the purchase order."
+          - name: podtba
+            description: "Date of professional receipt note."
+          - name: cbdtba
+            description: "Cumulative order status date."
+          - name: godtba
+            description: "Delivery date."
+          - name: kkdtba
+            description: "Correction of delivery conditions date."
+          - name: jgdtba
+            description: "JP Delivery date."
+          - name: gbdtba
+            description: "Date of goods receipt."
+          - name: codtba
+            description: "Cumulative receipt status date."
+          - name: i1dtba
+            description: "Cumulative purchase order status date."
+          - name: fedtba
+            description: "Fiat date."
+          - name: ffdtba
+            description: "Date of invoice error control."
+          - name: hkdtba
+            description: "Date of re-control."
+          - name: fgdtba
+            description: "Date of invoice approval."
+          - name: ogdtba
+            description: "Date of report for good purchase order."
+          - name: ivdtba
+            description: "Date on purchase result report."
+          - name: jfdtba
+            description: "JP Invoice control date."
+          - name: i2dtba
+            description: "Cumulative purchase order status 2 date."
+          - name: vvdtba
+            description: "Cancelled purchase order date."
+          - name: jvdtba
+            description: "JP Cancelled purchase order date."
+          - name: iousba
+            description: "User ID who created the purchase order."
+          - name: gousba
+            description: "User ID who confirmed the purchase order."
+          - name: feusba
+            description: "User ID who gave fiat for the purchase order."
+          - name: hkusba
+            description: "User ID who rechecked the purchase order."
+          - name: vvusba
+            description: "User ID who cancelled the purchase order."
+          - name: fkdtba
+            description: "Invoice date."
+          - name: vfdtba
+            description: "Invoice due date."
+          - name: bfdtba
+            description: "Letter date."
+          - name: btanba
+            description: "Payment to supplier number."
+          - name: finrba
+            description: "Branch number."
+          - name: fiifba
+            description: "Branch invoice number."
+          - name: dckdba
+            description: "Distribution center code."
+          - name: tacoba
+            description: "Total accepted goods."
+          - name: temoba
+            description: "Total received packaging."
+          - name: tzboba
+            description: "Total received ZB goods."
+          - name: tikoba
+            description: "Total received goods."
+          - name: twioba
+            description: "Total purchase order value excluding VAT."
+          - name: toioba
+            description: "Outstanding invoice amount."
+          - name: toifba
+            description: "Invoice to be controlled."
+          - name: ahalba
+            description: "Delivery hall."
+          - name: dockba
+            description: "Delivery dock."
+          - name: fojjba
+            description: "Folder year."
+          - name: fonrba
+            description: "Folder number."
+          - name: lvdtba
+            description: "Delivery date."
+          - name: lvtdba
+            description: "Delivery time."
+          - name: argrba
+            description: "Article group."
+      - name: bestelpf
+        description: "Table containing the line-level details for each item within a purchase order."
+        columns:
+          - name: ionrbe
+            description: "Purchase order number (foreign key to BSTALGPF)."
+            tests:
+              - not_null
+          - name: irnrbe
+            description: "Purchase order line number."
+            tests:
+              - not_null
+          - name: arnrbe
+            description: "Article number."
+          - name: lvnrbe
+            description: "Supplier number."
+          - name: argrbe
+            description: "Article group."
+          - name: ivaabe
+            description: "Quantity per packaging."
+          - name: vpombe
+            description: "Packaging type (e.g., KG, ST)."
+          - name: arombe
+            description: "Article description."
+          - name: btkdbe
+            description: "VAT code."
+          - name: zbprbe
+            description: "ZB price."
+          - name: inprbe
+            description: "Purchase price."
+          - name: aiprbe
+            description: "Deviant purchase price."
+          - name: kopcbe
+            description: "Discount percentage."
+          - name: kobdbe
+            description: "Discount amount."
+          - name: emprbe
+            description: "Packaging price."
+          - name: cnprbe
+            description: "Consumer price."
+          - name: odaabe
+            description: "Outer box."
+          - name: dcaabe
+            description: "Decimal multiplier."
+          - name: gewibe
+            description: "Average weight."
+          - name: askdbe
+            description: "Article type code."
+          - name: etikbe
+            description: "Label type."
+          - name: etaabe
+            description: "Number of labeled items."
+          - name: vrklbe
+            description: "Article location."
+          - name: bsaabe
+            description: "Quantity ordered."
+          - name: toaabe
+            description: "Quantity to be received."
+          - name: ovaabe
+            description: "Quantity received."
+          - name: ovkgbe
+            description: "Quantity received in kilograms."
+          - name: tbaabe
+            description: "Quantity to be paid."
+          - name: tibdbe
+            description: "Total purchase value."
+          - name: bdbtbe
+            description: "Is amount including VAT?"
+          - name: rdkdbe
+            description: "Reason code."
+          - name: oskdbe
+            description: "Origin code for IR."
+          - name: stikbe
+            description: "Status code for invoice."
+          - name: bkdtbe
+            description: "Barcode control date."
+          - name: godtbe
+            description: "Date of goods receipt."
+          - name: jgdtbe
+            description: "JP delivery date."
+          - name: fedtbe
+            description: "Fiat date."
+          - name: bkusbe
+            description: "User ID who controlled the barcode."
+          - name: gousbe
+            description: "User ID who confirmed the purchase order."
+          - name: feusbe
+            description: "User ID who gave fiat for the purchase order."
+          - name: fekdbe
+            description: "Fiat code."
+          - name: acbdbe
+            description: "Excise amount."
+          - name: akkbe
+            description: "Action code."
+
+  - name: sligro60_slglouwers_slgfilelib_slgfilelib
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    config:
+      freshness:
+        warn_after:
+          count: 7 # fivetran syncs this table every 6 hours
+          period: hour
+        filter: _fivetran_synced > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1
+          DAY)
+      loaded_at_field: _fivetran_synced
+    tables:
+      - name: loufktpf
+        description: "Invoice totals only for Louwers, normal invoices."
+        columns:
+          - name: BETKOD
+            description: "Payment Code ZB"
+          - name: BUISNR
+            description: "Business Number"
+          - name: DATUM
+            description: "Date"
+          - name: EMBSAL
+            description: "Balance Emballage ZB"
+          - name: FAKRIS
+            description: "Customer Number"
+          - name: FAKTNR
+            description: "Invoice Number"
+          - name: FILNR
+            description: "Branch Number"
+          - name: INBKH
+            description: "Input Post Number BKH"
+          - name: JNKDLT
+            description: "Without VAT Y/N"
+          - name: KLANR
+            description: "Customer Number"
+          - name: MINUUT
+            description: "Minutes"
+          - name: NETEXC
+            description: "Net + Emballage + VAT Excluding Contract"
+          - name: NETTO
+            description: "Net Amount Excluding VAT"
+          - name: PCNR
+            description: "PC Number"
+          - name: SPECPR
+            description: "Contract Price Searched"
+          - name: SRTFAK
+            description: "Type of Invoice ZB"
+          - name: UUR
+            description: "Hour"
+          - name: VRZDAT
+            description: "Invoice Dispatch Date"
+          - name: VRZFAK
+            description: "Dispatch Invoice Number"
+  - name: sligro60_slgmutlib_boordcomp
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    tables:
+      - name: transporteur
+        description: Carrier data in operational system (Thinkwise onboard computer application)
+        columns:
+          - name: begin_datum
+            description: "start_date"
+          - name: eind_datum
+            description: "end_date"
+          - name: gewijzigd_datum
+            description: "modified_date"
+          - name: gewijzigd_door
+            description: "modified_by"
+          - name: mutatie_teller
+            description: "mutation_counter"
+          - name: toegevoegd_datum
+            description: "added_date"
+          - name: toegevoegd_door
+            description: "added_by"
+          - name: transporteur_id
+            description: "carrier_id"
+          - name: transporteur_status
+            description: "carrier_status"
+          - name: transporteur_volgnummer
+            description: "carrier_sequence_number"
+          - name: vestiging_id
+            description: "site_id"

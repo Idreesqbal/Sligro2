@@ -1,0 +1,771 @@
+version: 2
+
+models:
+  - name: rv_esat__stock__stock_location
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+    columns:
+      - name: STOCK_STOCK_LOCATION_HK
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+  - name: rv_sat__purchase_invoice_status_omschrijving
+    config:
+      unique_key: ["pk_purchase_invoice_code"]
+    label:
+      source: AS400
+    columns:
+      - name: end_datetime
+        data_type: timestamp
+  - name: rv_masat__article_allergen_specification
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_masat__article_description
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_masat__article_instructions
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_masat__article_operational_information
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_masat__trade_item_additional_gtin
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_masat__article_type_specific_attribute
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_masat__stock_location_details_bs
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_masat__stock_location_details_cdc
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+  - name: rv_sat__article
+    config:
+      apply_source_filter: true
+
+  - name: rv_sat__article_AS400_details
+    config:
+      apply_source_filter: false
+      unique_key: ["START_DATETIME", "ARTICLE_HK"]
+    label:
+      source: AS400
+    columns:
+      - name: ARTICLE_HK
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__article_AS400_price
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__rpe_supplier
+    config:
+      apply_source_filter: true
+    label:
+      source: STEP
+
+  - name: rv_sat__trade_item
+    config:
+      apply_source_filter: true
+
+  - name: rv_sat__trade_item_hierarchy
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__article_AS400_vat
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__article_data_ownership
+    columns:
+      - name: article_id
+        data_type: string
+        quote: true
+      - name: hashdiff
+        data_type: string
+      - name: article_ownership_nl
+        data_type: string
+        quote: true
+      - name: article_ownership_be
+        data_type: string
+        quote: true
+      - name: unit
+        data_type: string
+        quote: true
+      - name: load_datetime
+        data_type: timestamp
+      - name: record_source
+        data_type: string
+      - name: end_datetime
+        data_type: timestamp
+
+  - name: rv_sat__collection_area_details_bs_zb
+    config:
+      apply_source_filter: false
+      unique_key: ["START_DATETIME", "COLLECTION_AREA_HK"]
+    label:
+      source: AS400
+    columns:
+      - name: COLLECTION_AREA_HK
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__collection_area_details_cdc
+    config:
+      apply_source_filter: false
+      unique_key: ["START_DATETIME", "COLLECTION_AREA_HK"]
+    label:
+      source: AS400
+    columns:
+      - name: COLLECTION_AREA_HK
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__article_attributes_bs
+
+  - name: rv_sat__article_attributes_cdc
+
+  - name: rv_sat__forecast_bs
+
+  - name: rv_sat__forecast_cdc
+
+  - name: rv_sat__site_details
+    config:
+      apply_source_filter: false
+      unique_key: ["START_DATETIME", "SITE_HK"]
+    label:
+      source: AS400
+    columns:
+      - name: SITE_HK
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__site_details_with_formula
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__site_cdc_info
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__stock_bs
+    config:
+      apply_source_filter: false
+      unique_key: ["START_DATETIME", "STOCK_HK"]
+    label:
+      source: AS400
+    columns:
+      - name: STOCK_HK
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__stock_cdc
+    config:
+      apply_source_filter: false
+      unique_key: ["START_DATETIME", "STOCK_HK"]
+    label:
+      source: AS400
+    columns:
+      - name: STOCK_HK
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__promotion_article
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__promotion_article_concept_site
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__promotion_article_definitive_site
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__promotion_article_discount_mechanism
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__promotion_article_expected_sales_volume
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__promotion_article_price
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__promotion_article_text
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__promotion_header
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__promotion_header_central
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__promotion_header_online
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_masat__supplier_category
+    config:
+      apply_source_filter: true
+      unique_key: ["supplier_hk", "categorie", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: supplier_hk
+        tests:
+          - not_null
+
+  - name: rv_masat__supplier_purchasers
+    config:
+      apply_source_filter: true
+      unique_key: ["supplier_hk", "EMPLOYEE_BK", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: supplier_hk
+        tests:
+          - not_null
+
+  - name: rv_sat__purchase_order_lines
+    config:
+      apply_source_filter: true
+      unique_key: ["purchase_order_line_article_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: purchase_order_line_article_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__purchase_order
+    config:
+      apply_source_filter: true
+      unique_key: ["purchase_order_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: purchase_order_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__purchase_order_extended
+    config:
+      apply_source_filter: true
+      unique_key: ["purchase_order_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: purchase_order_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__purchase_invoice_lines
+    config:
+      apply_source_filter: true
+      unique_key: ["purchase_invoice_lines_transactions_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: purchase_invoice_lines_transactions_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__purchase_invoice
+    config:
+      apply_source_filter: true
+      unique_key: ["purchase_invoice_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: purchase_invoice_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__supplier_contacts
+    config:
+      apply_source_filter: true
+      unique_key: ["supplier_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: supplier_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime > CURRENT_TIMESTAMP()"
+
+  - name: rv_sat__supplier_intercompany
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__supplier_edi
+    config:
+      apply_source_filter: true
+      unique_key: ["supplier_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: supplier_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime > CURRENT_TIMESTAMP()"
+
+  - name: rv_sat__supplier_finance
+    config:
+      apply_source_filter: true
+      unique_key: ["supplier_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: supplier_hk
+        tests:
+          - not_null
+
+  - name: rv_sat__supplier_general_info
+    config:
+      apply_source_filter: true
+      unique_key: ["supplier_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: supplier_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime > CURRENT_TIMESTAMP()"
+
+  - name: rv_sat__sales_invoice
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__sales_invoice_line
+    config:
+      apply_source_filter: false
+      unique_key: ["START_DATETIME", "SALES_INVOICE_LINES_TRANSACTIONS_HK"]
+    label:
+      source: AS400
+    columns:
+      - name: SALES_INVOICE_LINES_TRANSACTIONS_HK
+        tests:
+          - not_null
+          - unique:
+              # The currently active rows have an end-date in the future.
+              where: "end_datetime > CURRENT_TIMESTAMP()"
+
+  - name: rv_masat__sales_invoice_delivery
+    config:
+      apply_source_filter: true
+      unique_key: ["sales_invoice_hk", "load_datetime"]
+    label:
+      source: AS400
+
+  - name: rv_sat__sales_invoice_collective
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_sat__calendar_AS400
+    config:
+      apply_source_filter: true
+    label:
+      source: AS400
+
+  - name: rv_masat__calendar_national_holiday
+    config:
+      apply_source_filter: true
+    label:
+      source: gcs_manual_imports
+
+  - name: rv_masat__company_reference_contact_person
+    config:
+      unique_key: ["company_reference_hk", "sizocpkey", "load_datetime"]
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_masat__company_reference_keyword_categories
+    config:
+      unique_key:
+        ["company_reference_hk", "sizolockey", "klantkey", "load_datetime"]
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_masat__company_reference_location
+    config:
+      unique_key:
+        ["company_reference_location_hk", "postcode6", "load_datetime"]
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_masat__company_reference_location_predictions
+    config:
+      unique_key:
+        ["company_reference_location_hk", "postcode6", "load_datetime"]
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_masat__postcode_commercial_area
+    config:
+      unique_key: ["postcode_hk", "sizopcd", "sizobtrvnr", "load_datetime"]
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__company_reference_address_details
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__company_reference_building_details
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__company_reference_business_activity
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__company_reference_company_keys_deleted
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__company_reference_customer_matching
+    config:
+      apply_source_filter: true
+      tags:
+        - "company_reference"
+        - "company_reference_matching"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__company_reference_details
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__company_reference_concern_details
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__company_reference_webdata_keywords_ultimate_parent
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__postcode_details
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__postcode_distance
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_sat__goods_received_header
+    config:
+      apply_source_filter: true
+      unique_key: ["goods_received_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: goods_received_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__goods_received_line
+    config:
+      apply_source_filter: true
+      unique_key: ["goods_received_line_article_hk", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: goods_received_line_article_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_sat__goods_received_line_pallet
+    config:
+      apply_source_filter: true
+      unique_key: ["ARTICLE_GOODS_RECEIVED_PALLET_HK", "start_datetime"]
+    label:
+      source: AS400
+    columns:
+      - name: ARTICLE_GOODS_RECEIVED_PALLET_HK
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: rv_xts__company_reference_bag
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_bag_pand
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_branches
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_concerns
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_instellingen
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_matching_table
+    config:
+      apply_source_filter: true
+      tags:
+        - "company_reference"
+        - "company_reference_matching"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_postcode4
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_postcode4_afstanden
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_sizokeys_opgeheven
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_view_webdata_keyword_concern
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_bedrijfsterreinen
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_contactpersonen
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_keyword_categories
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_locaties
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+
+  - name: rv_xts__company_reference_voorspelmodellen_locatie
+    config:
+      apply_source_filter: true
+      tags: "company_reference"
+    label:
+      source: COMPANY_INFO
+  - name: rv_sat__data_hub_customer_address
+    columns:
+      - name: emailAddress
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_EMAIL', 'not_set') }}"
+      - name: phoneNumber
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_MEDIUM', 'not_set') }}"
+      - name: phoneNumberMobile
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_MEDIUM', 'not_set') }}"
+
+  - name: rv_sat__data_hub_customer_contact_person
+    columns:
+      - name: emailAddress
+        description: The email address of the contact person
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_EMAIL', 'not_set') }}"
+      - name: dateOfBirth
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_DOB', 'not_set') }}"
+      - name: phoneNumberHome
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_MEDIUM', 'not_set') }}"
+      - name: phoneNumberMobile
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_MEDIUM', 'not_set') }}"
+      - name: phoneNumberWork
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_MEDIUM', 'not_set') }}"
+
+  - name: rv_sat__data_hub_customer_location
+    columns:
+      - name: emailAddress
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_EMAIL', 'not_set') }}"
+      - name: phoneNumber
+        policy_tags:
+          - "{{ env_var('DBT_MASKING_POLICY_MEDIUM', 'not_set') }}"
+
+  - name: rv_sat__data_hub_customer_customer
+    config:
+      apply_source_filter: true
+  - name: rv_sat__btw_description
+
+  - name: rv_sat__btw_rate

@@ -1,0 +1,132 @@
+version: 2
+sources:
+  - name: gcs_manual_imports
+    schema: "{{ target.schema }}_external_gcs_manual_imports"
+    tables:
+      - name: promotion_discount_mechanism_mapping
+        description: A mapping from a discount mechanism code to the related value that describes the mechanism in an interpretable way
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-dbt-dropzone/promotion/Promotion_discount_mechanism_mapping.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+        columns:
+          - name: Omschrijving
+            data_type: STRING
+            description: The description of the discount mechanism code
+          - name: Code
+            data_type: STRING
+            description: The discount mechanism code
+      - name: calendar_national_holiday
+        description: Data for public and school holidays across the Netherlands and Belgium
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-dbt-dropzone/calendar/*
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-dbt-dropzone/calendar
+          partitions:
+            - name: type
+              data_type: STRING
+        columns:
+          - name: holiday_name
+            data_type: STRING
+            description: The name or description of the holiday (e.g., Christmas, New Year's Day, Easter).
+          - name: holiday_type
+            data_type: STRING
+            description: The type or category of the holiday (e.g., Religion, Cultural,  Father's day, Mother's day, etc).
+          - name: holiday_start_date
+            data_type: DATE
+            description: The start date of the holiday
+          - name: holiday_end_date
+            data_type: DATE
+            description: The end date of the holiday
+          - name: country_region
+            data_type: STRING
+            description: Identifying the region where the holiday is observed (if applicable, especially for countries with diverse holiday observance)
+          - name: country
+            data_type: STRING
+            description: Country ISO Code identifying the country where the holiday is observed (if applicable, especially for multinational organizations).
+      - name: company_reference_SBI_category_segment_mapping
+        description: A list of SBI codes along with their descriptions, representing a company's business activities, as well as their classification into Sligro customer categories and segments.
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-dbt-dropzone/company_reference/company_reference_SBI_category_segment_mapping.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: "|"
+        columns:
+          - name: sbi_code
+            data_type: STRING
+            description: Code that indicates in which branch a company is active. Lowest level within sbi segment.
+          - name: sbi_description
+            data_type: STRING
+            description: Description that indicates in which branch a company is active. Lowest level within sbi segment.
+          - name: category_code
+            data_type: STRING
+            description: A unique code used by Sligro to categorize customers.
+          - name: category_description
+            data_type: STRING
+            description: Description of the Category code.
+          - name: segment_code
+            data_type: STRING
+            description: A unique code used by Sligro to represent a higher-level grouping that includes multiple related categories.
+          - name: segment_description
+            data_type: STRING
+            description: Description of the segment code
+      - name: slim4_description_forecast_exception
+        description: Descriptions of the forecast exceptions used in Slim4
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-dbt-dropzone/forecast/description_forecast_exception.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+        columns:
+          - name: code
+            data_type: INTEGER
+            description: The forecast exception code
+          - name: details
+            data_type: STRING
+            description: Details of the forecast exception code
+          - name: Omschrijving
+            data_type: STRING
+            description: Description of the forecast exception code
+      - name: slim4_description_stock_exception
+        description: Descriptions of the stock exceptions used in Slim4
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-dbt-dropzone/forecast/description_stock_exception.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+        columns:
+          - name: code
+            data_type: INTEGER
+            description: The stock exception code
+          - name: details
+            data_type: STRING
+            description: Details of the stock exception code
+          - name: Omschrijving
+            data_type: STRING
+            description: Description of the stock exception code
+      - name: slim4_description_sales_class
+        description: Descriptions of the sales classes used in Slim4
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-dbt-dropzone/forecast/description_sales_class.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ","
+        columns:
+          - name: code
+            data_type: INTEGER
+            description: The sales class code
+          - name: details
+            data_type: STRING
+            description: Details of the sales class code
+          - name: Omschrijving
+            data_type: STRING
+            description: Description of the sales class code

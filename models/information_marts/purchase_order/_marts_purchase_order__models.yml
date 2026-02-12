@@ -1,0 +1,234 @@
+version: 2
+
+models:
+  - name: im_purchase_order__header
+    description: Contains information about the purchase orders
+    columns:
+      - name: pk_purchase_order_code
+        description: The primary key of this sub-entity, unique identifier for each purchase order. Combination of purchase order code and created date.
+        tests:
+          - unique
+          - not_null
+      - name: purchase_order_code
+        description: Purchase order code, which is reused over time.
+        tests:
+          - not_null
+      - name: fk_supplier_code
+        description: Foreign key to the entity Supplier describing to which supplier the purchase order is addressed.
+      - name: fk_ship_to_site_code
+        description: Foreign key to the entity Site describing where the purchase order's articles will be shipped to.
+      - name: fk_promotion_code
+        description: Foreign key to the entity Promotion which applies to a subset of purchase orders that are directly linked to a specific promotion (=folder).
+      - name: fk_cost_centre_code
+        description: Foreign key to the entity 'Cost centre'.
+      - name: fk_currency_code
+        description: Foreign key to the entity 'Currency'.
+      - name: fk_requester_code
+        description: Foreign key to the entity 'Employee' linking to the employee that requested this purchase order. This is therefore not necessarily the person who created the order.
+      - name: purchase_order_type
+        description: Purchase order type (I / RZ / Kerst / F ).
+      - name: purchase_order_type_description
+        description: Description of all the type values.
+      - name: purchase_order_status
+        description: Purchase order status.
+      - name: purchase_order_status_description
+        description: Description of each status value.
+      - name: communication_method
+        description: How has the PO been sent to the supplier (EDI, pdf , …).
+      - name: communication_method_description
+        description: Description of each communication method value.
+      - name: creation_date
+        description: The date on which the purchase order was initially created.
+      - name: ordered_date
+        description: The date on which the purchase order was sent to the supplier.
+      - name: requested_delivery_date
+        description: The date on which Sligro wants the articles to be delivered by the supplier.
+      - name: total_amount_excluding_vat
+        description: The total amount for which articles in this order will be purchased excluding VAT.
+      - name: total_amount_excise_duties
+        description: The total amount of excise duties (taxes) for which articles in this order will be purchased.
+      - name: vat_amount
+        description: The total amount of Value Added Taxes on articles in this order.
+      - name: total_amount
+        description: The total amount for which articles in this order will be purchased including VAT.
+      - name: comments
+        description: Free form comments that can be added to a purchase order.
+      - name: distribution_center
+        description: Distribution center code.
+      - name: valid_from
+        description: Date from when the record is valid in the source system.
+      - name: valid_to
+        description: Date from when the record is no longer valid in the source system.
+      - name: load_datetime
+        description: Date when the record is ingested in the data warehouse.
+
+  - name: im_purchase_order__line
+    description: Contains information about the individual items ordered within each purchase order.
+    columns:
+      - name: pk_purchase_order_line_code
+        description: The primary key of this sub-entity.
+        tests:
+          - not_null
+          - unique
+      - name: fk_purchase_order_code
+        description: Foreign key to the 'Purchase order header' table.
+        tests:
+          - not_null
+      - name: purchase_order_line_number
+        description: Row number for each article inside a purchase order.
+      - name: fk_trade_item_code
+        description: Foreign key to the 'Article' entity to get the data for the trade item listed on the purchase order line.
+      - name: sligro_article_number
+        description: Article number.
+      - name: unit_of_measure
+        description: The unit of measure in which the article was sold.
+      - name: quantity_uom
+        description: The quantity of the trade item's UoM that has been ordered.
+      - name: quantity_ordered
+        description: The total quantity of the trade item that has been ordered.
+      - name: article_unit_price_excluding_vat
+        description: The price for which each unit of this article excluding VAT that was purchased.
+      - name: article_unit_price_including_vat
+        description: The price for which each unit of this article including VAT that was purchased.
+      - name: article_excise_duties
+        description: Excise duties applicable to a specific item in the purchase order.
+      - name: discount_amount
+        description: An optional discount applied to the article's purchase price.
+      - name: article_custom_unit_price_excluding_vat
+        description: The purchase price that has been applied on this purchase order for this article. This can deviate from the purchase price agreed with the supplier for the article if any discounts are applied.
+      - name: line_total_amount_excluding_vat
+        description: The total amount excluding VAT paid for this article. I.e. quantity multiplied by the per unit exvat price.
+      - name: line_total_discounted_amount_excluding_vat
+        description: The total amount excluding VAT paid for this article. I.e. quantity multiplied by the per unit exvat price, deducting the discount.
+      - name: vat_rate
+        description: The VAT rate that should be applied to this article.
+      - name: vat_percentage
+        description: The VAT percentage that should be applied to this article.
+      - name: comments
+        description: Free form comments that can be added to a purchase order line.
+      - name: valid_from
+        description: Date from when the record is valid in the source system.
+      - name: valid_to
+        description: Date from when the record is no longer valid in the source system.
+      - name: load_datetime
+        description: Date when the record is ingested in the data warehouse.
+
+  - name: im_purchase_order__header_history
+    description: Contains information about the purchase orders, for the full historical updates.
+    columns:
+      - name: pk_purchase_order_history
+        description: A primary key to this model.
+        tests:
+          - unique
+          - not_null
+      - name: fk_purchase_order_code
+        description: A foreign key to the im_purchase_order_header model.
+        tests:
+          - not_null
+      - name: purchase_order_code
+        description: Purchase order code, which is reused over time.
+        tests:
+          - not_null
+      - name: fk_supplier_code
+        description: Foreign key to the entity Supplier describing to which supplier the purchase order is addressed.
+      - name: fk_ship_to_site_code
+        description: Foreign key to the entity Site describing where the purchase order's articles will be shipped to.
+      - name: fk_promotion_code
+        description: Foreign key to the entity Promotion which applies to a subset of purchase orders that are directly linked to a specific promotion (=folder).
+      - name: fk_cost_centre_code
+        description: Foreign key to the entity 'Cost centre'.
+      - name: fk_currency_code
+        description: Foreign key to the entity 'Currency'.
+      - name: fk_requester_code
+        description: Foreign key to the entity 'Employee' linking to the employee that requested this purchase order. This is therefore not necessarily the person who created the order.
+      - name: purchase_order_type
+        description: Purchase order type (I / RZ / Kerst / F ).
+      - name: purchase_order_type_description
+        description: Description of all the type values.
+      - name: purchase_order_status
+        description: Purchase order status.
+      - name: purchase_order_status_description
+        description: Description of each status value.
+      - name: communication_method
+        description: How has the PO been sent to the supplier (EDI, pdf , …).
+      - name: communication_method_description
+        description: Description of each communication method value.
+      - name: creation_date
+        description: The date on which the purchase order was initially created.
+      - name: ordered_date
+        description: The date on which the purchase order was sent to the supplier.
+      - name: requested_delivery_date
+        description: The date on which Sligro wants the articles to be delivered by the supplier.
+      - name: total_amount_excluding_vat
+        description: The total amount for which articles in this order will be purchased excluding VAT.
+      - name: total_amount_excise_duties
+        description: The total amount of excise duties (taxes) for which articles in this order will be purchased.
+      - name: vat_amount
+        description: The total amount of Value Added Taxes on articles in this order.
+      - name: total_amount
+        description: The total amount for which articles in this order will be purchased including VAT.
+      - name: comments
+        description: Free form comments that can be added to a purchase order.
+      - name: distribution_center
+        description: Distribution center code.
+      - name: valid_from
+        description: Date from when the record is valid in the source system.
+      - name: valid_to
+        description: Date from when the record is no longer valid in the source system.
+      - name: load_datetime
+        description: Date when the record is ingested in the data warehouse.
+
+  - name: im_purchase_order__line_history
+    description: Contains information about the individual items ordered within each purchase order, for the full historical updates.
+    columns:
+      - name: pk_purchase_order_line_history
+        description: A primary key to this model.
+        tests:
+          - unique
+          - not_null
+      - name: fk_purchase_order_line_code
+        description: A foreign key to the im_purchase_order__lines model.
+        tests:
+          - not_null
+      - name: purchase_order_line_number
+        description: Row number for each article inside a purchase order.
+      - name: fk_purchase_order_code
+        description: Foreign key to the 'Purchase order header' table.
+        tests:
+          - not_null
+      - name: fk_trade_item_code
+        description: Foreign key to the 'Article' entity to get the data for the trade item listed on the purchase order line.
+      - name: sligro_article_number
+        description: Article number.
+      - name: unit_of_measure
+        description: The unit of measure in which the article was sold.
+      - name: quantity_uom
+        description: The quantity of the trade item's UoM that has been ordered.
+      - name: quantity_ordered
+        description: The total quantity of the trade item that has been ordered.
+      - name: article_unit_price_excluding_vat
+        description: The price for which each unit of this article excluding VAT that was purchased.
+      - name: article_unit_price_including_vat
+        description: The price for which each unit of this article including VAT that was purchased.
+      - name: article_excise_duties
+        description: Excise duties applicable to a specific item in the purchase order.
+      - name: discount_amount
+        description: An optional discount applied to the article's purchase price.
+      - name: article_custom_unit_price_excluding_vat
+        description: The purchase price that has been applied on this purchase order for this article. This can deviate from the purchase price agreed with the supplier for the article if any discounts are applied.
+      - name: line_total_amount_excluding_vat
+        description: The total amount excluding VAT paid for this article. I.e. quantity multiplied by the per unit exvat price.
+      - name: line_total_discounted_amount_excluding_vat
+        description: The total amount excluding VAT paid for this article. I.e. quantity multiplied by the per unit exvat price, deducting the discount.
+      - name: vat_rate
+        description: The VAT rate that should be applied to this article.
+      - name: vat_percentage
+        description: The VAT percentage that should be applied to this article.
+      - name: comments
+        description: Free form comments that can be added to a purchase order line.
+      - name: valid_from
+        description: Date from when the record is valid in the source system.
+      - name: valid_to
+        description: Date from when the record is no longer valid in the source system.
+      - name: load_datetime
+        description: Date when the record is ingested in the data warehouse.

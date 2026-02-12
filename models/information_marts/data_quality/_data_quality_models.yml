@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: im_data_quality__soda_failed_rows
+    description: "Processed results of failed rows from SODA."
+    columns:
+      - name: pk_failed_rows_code
+        description: "Unique failed row identifier."
+        tests:
+          - unique
+          - not_null
+
+  - name: im_data_quality__soda_check_results
+    description: "Processed all results"

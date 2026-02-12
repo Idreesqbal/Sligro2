@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: bv_hlnk__purchase_order__article
+
+  - name: bv_lnk__purchase_order__supplier
+
+  - name: bv_lnk__purchase_order__site
+
+  - name: bv_hlnk__goods_received__article
+
+  - name: bv_hlnk__goods_received__article__promotion
+
+  - name: bv_lnk__goods_received__purchase_order__site__supplier
+
+  - name: bv_hlnk__goods_received__article__stock_location
+
+  - name: bv_salnk__customer__demoted_customer
+
+  - name: bv_lnk__company_reference_customer_matching
+    columns:
+      - name: company_reference_customer_hk
+        description: "The company_reference bk + transformed customer key"
+      - name: customer_hk
+        description: "Transformed customer key (incl. adjusted customer number 6 to 7 digits + registration date)"
+    config:
+      tags: "company_reference"

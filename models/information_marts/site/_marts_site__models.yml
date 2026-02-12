@@ -1,0 +1,84 @@
+version: 2
+
+models:
+  - name: im_site__site
+    description: The Site model stores basic information of all the Sligro sites.
+    columns:
+      - name: pk_site_code
+        description: The site code is the unique business key within the site entity. The value of the column contains a unique code for every site stored within the entity. (Site code contains 5000 and 4000 numbers. The 4000 numbers are from the CDC.)
+        tests:
+          - unique
+          - not_null
+      - name: sales_formula_code
+        description: Sligro formula code, such as "Sligro-M".
+      - name: fk_cost_centre_code
+        description: A reference to the PK Cost center code column in the entity Cost center.
+      - name: fk_profit_centre_code
+        description: A reference to the PK Profit center code column in the entity Profit center.
+      - name: fk_building_code
+        description: A reference to the PK Building code column in the sub-entity Geographic Information System.
+      - name: fk_contact_person_code
+        description: A reference to the PK Employee code column in the entity Employee, which defines a unique employee who is the contact person of a location.
+      - name: fk_operational_manager_code
+        description: A reference to the PK Employee code column in the entity Employee, which defines a unique employee who is the operational manager of a location.
+      - name: site
+        description: The name of a site.
+      - name: site_short
+        description: A short name for the site, excluding "Sligro" and "Sligro-M".
+      - name: site_status
+        description: The status of the site. If site status is equal to 1, it means that the site is active.
+      - name: site_status_description
+        description: A description of the current status of the site.
+      - name: address
+        description: The street name and number of a site.
+      - name: postal_code
+        description: The postal code of a site.
+      - name: city
+        description: The city in which a site is located.
+      - name: municipality
+        description: The municipality in which a site is located.
+      - name: province
+        description: The province in which a site is located.
+      - name: country
+        description: The country in which a site is located.
+      - name: latitude
+        description: The latitude of a site.
+      - name: longitude
+        description: The longitude of a site.
+      - name: site_type
+        description: A description of the type of a site. Examples are Offices, ZB, BS, CDC, XDC, etc.
+      - name: revenue_class
+        description: A revenue class categorizes locations based on their annual revenue levels, aiding in understanding their financial performance and market position.
+      - name: operating_company
+        description: An operating company is an entity within an organizational structure responsible for carrying out operational activities and generating revenue.
+      - name: ownership_status
+        description: Indicates whether a site is rented or owned.
+      - name: headoffice_code
+        description: A code representing the head office of the site.
+      - name: headoffice
+        description: The name of the head office associated with the site.
+
+  - name: im_site__cdc_information
+    description: The CDC (central distribution center) information stores data specifically related to CDC locations.
+    columns:
+      - name: fk_site_code
+        description: A reference to the PK Site Code column in the sub-entity Site.
+        tests:
+          - not_null
+      - name: pk_dc_and_site_code
+        description: PK of this table, which consists of the site and dc code combination.
+        tests:
+          - unique
+          - not_null
+      - name: dc_code
+        description: Within the CDC, you have different buildings. Every building has a unique code, which is called the DC code.
+        tests:
+          - not_null
+      - name: dc_description
+        description: The description of this building/location in the CDC.
+      - name: address
+        description: The address of the DC.
+      - name: postal_code
+        description: The postal code of the DC.
+      - name: city
+        description: The city in which the DC is located.

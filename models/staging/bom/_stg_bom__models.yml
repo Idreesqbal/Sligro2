@@ -1,0 +1,4 @@
+version: 2
+
+models:
+  - name: stg_bom__klant_zb_67_relatie

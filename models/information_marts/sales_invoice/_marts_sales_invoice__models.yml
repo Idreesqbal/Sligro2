@@ -1,0 +1,162 @@
+version: 2
+
+models:
+  - name: im_sales_invoice__header
+    description: The header summarizes key details of the invoice, including the invoice number, date, customer information, payment terms, tax details, and total amount due.
+    columns:
+      - name: pk_sales_invoice_code
+        description: "Unique identifier for the sales invoice, used to track and reference specific invoices."
+        tests:
+          - unique
+          - not_null
+      - name: fk_legal_entity_code
+        description: "Foreign key to know the legal entity issuing the invoice, usually referring to the business or company."
+        tests:
+          - not_null
+      - name: fk_site_code
+        description: "Foreign key to know the site where the sale occurred, typically referring to a branch or store."
+        tests:
+          - not_null
+      - name: fk_sales_order_code
+        description: "Foreign key to know the linked sales order associated with the invoice, ensuring traceability of the order."
+        tests:
+          - not_null
+      - name: fk_customer_code
+        description: "Foreign key to know the customer being billed, used to link the invoice to customer records."
+        tests:
+          - not_null
+      - name: fk_employee_code
+        description: "Foreign key to know the employee who processed or handled the sale or order related to the invoice."
+        tests:
+          - not_null
+      - name: fk_payment_code
+        description: "Foreign key to know the payment method or terms associated with the invoice, such as credit card, bank transfer, or net 30."
+        tests:
+          - not_null
+      - name: fk_currency_code
+        description: "Foreign key to know the currency in which the invoice is issued, typically represented in ISO 4217 format (e.g., USD, EUR)."
+        tests:
+          - not_null
+      - name: customer_number
+        description: "Added for testing as a replacement for customer_code from entity customer"
+      - name: employee_number
+        description: "Added for testing as a replacement for employee_code from entity employee"
+      - name: payment_number
+        description: "Added for testing as a replacement for payment_code from entity payment"
+      - name: replenishment_sc
+        description: "Replenishment code for supply chain"
+      - name: date_generated
+        description: "Date for when the invoice was generated."
+      - name: datetime_generated
+        description: "Date and time for when the invoice was generated."
+      - name: invoice_number
+        description: "A long unique number, created based on year,site and invoicecode,  assigned to the invoice for identification and tracking purposes."
+      - name: invoice_number_long
+        description: "A long unique number, created based on year,site and invoicecode,  assigned to the invoice for identification and tracking purposes."
+      - name: customername
+        description: "Full name of the customer associated with the invoice, used for identification and addressing purposes."
+      - name: vat_customer
+        description: "Displays the VAT code for the specific customer"
+      - name: billing_adress
+        description: "The billing address of the customer where the invoice is sent or where the customer is registered for tax purposes."
+      - name: distribution_channel_code
+        description: "Code representing the type of service provided during the transaction, such as self-service or bezorgservice."
+      - name: invoice_type_code
+        description: "Code specifying the type of invoice, such as regular, proforma, or credit note."
+      - name: invoice_type
+        description: "Description of the type of invoice issued."
+      - name: program_code
+        description: "Code representing sales programs linked to the invoice."
+      - name: program
+        description: "Description of the programs associated with the invoice."
+      - name: total_amount_incl_vat
+        description: "The total amount due on the invoice, including VAT and other applicable taxes."
+      - name: checkout_code
+        description: "Code that identifies the checkout or point-of-sale terminal where the transaction took place."
+
+  - name: im_sales_invoice__line
+    description: Each line item lists the product sold, including description, quantity, price, applicable discounts, taxes, and the total cost for that item.
+    columns:
+      - name: pk_sales_invoice_line_code
+        description: "Unique identifier for each line item on the invoice, used to differentiate between individual products or services listed."
+        tests:
+          - unique
+          - not_null
+      - name: fk_sales_invoice_code
+        description: "Code linking the line item to the corresponding invoice in the invoice header."
+        tests:
+          - not_null
+      - name: fk_article_code
+        description: "Foreign key for identifying the article, linked to a specific article in the article entity."
+      - name: fk_promotion_code
+        description: "Foreign key for any promotion or discount applied to the article"
+        tests:
+          - not_null
+      - name: fk_price_code
+        description: "Foreign key for all price rel applied to the product (e.g., regular price, discounted price)."
+        tests:
+          - not_null
+      - name: price_number
+        description: "Added for testing as a replacement for price_code from entity sales price"
+      - name: vat_code
+        description: "A vat_code (Value Added Tax code) is a identifier used to classify goods and services for VAT purposes."
+      - name: line_position
+        description: "The position of the invoiceline on the invoice"
+      - name: invoice_date
+        description: "The date of the invoice"
+      - name: articlenumber
+        description: "Unique number assigned to the article."
+      - name: article_number
+        description: "yet to be filled in TDGP 1932"
+      - name: number_of_base_units
+        description: "The quantity of the article sold, expressed in the base unit of measure (e.g., kilograms, liters, units)."
+      - name: unit_of_measure
+        description: "The unit in which the article is measured and sold (e.g., kg, liter, piece), defining the physical measurement of the item."
+      - name: article_name
+        description: "The name or description of the article or service sold, used to identify the item on the invoice."
+      - name: variant
+        description: "Any variations of the article sold, such as size, color, or other distinguishing features."
+      - name: article_group
+        description: "Group or category the article belongs to, often used for classification and reporting purposes."
+      - name: comments
+        description: "Any additional notes or comments related to the line item, such as special instructions or customizations."
+      - name: lotnumber
+        description: "The batch or lot number of the article sold, useful for tracking and quality control."
+      - name: invoice_excl_vat_indicator
+        description: "A indicator if the VAT is inclusive or exclusive on the invoice amount"
+      - name: transaction_type
+        description: "Code indicating if a invoice is related to FoodService, Heineken , InterCompany , KCS OR Supply chain replenishment number 9"
+      - name: concessionaire_number
+        description: "yet to be filled in TDGP 1932"
+      - name: price_type
+        description: "A code that defines what type of price is related to the invoice line"
+      - name: net_price
+        description: "The price of the article excluding taxes."
+      - name: gross_price
+        description: "The price of the article including taxes."
+      - name: vat_amount
+        description: "The amount of VAT (Value Added Tax) applied to the article, calculated based on the applicable tax rate."
+      - name: vat_rate
+        description: "yet to be filled in TDGP 1932"
+      - name: vat_description
+        description: "The type of VAT based on vat id and country code"
+      - name: quantity
+        description: "The total number of units of the article sold, used to calculate the total price of the article on the invoice."
+      - name: cost_price
+        description: "The Cost Price refers to the total expense incurred to produce or purchase a product or service."
+      - name: zb_price
+        description: "The self-service price for customers."
+      - name: discount_percentage
+        description: "The percentage of discount on the article"
+      - name: net_amount
+        description: "The net price X the quantity of articles"
+      - name: cost_value
+        description: "The cost price X the quantity of articles"
+      - name: gross_value
+        description: "The gross price X the quantity of articles"
+      - name: zb_value
+        description: "The self-service prie X the quantity of articles"
+      - name: discount_per_unit
+        description: "The amount of discount applied to the article, showing any reduction from the standard price."
+      - name: discount_value
+        description: "The discount_unit_price X the quantity of articles"

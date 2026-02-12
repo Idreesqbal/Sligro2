@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: sfg_soda
+    tables:
+      - name: failed_rows_v2
+      - name: check_results_v2
+      - name: datasets

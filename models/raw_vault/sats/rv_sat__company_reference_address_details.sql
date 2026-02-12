@@ -1,0 +1,70 @@
+{{ config(
+    materialized='incremental',
+    unique_key= ['COMPANY_ADDRESS_HK', 'LOAD_DATETIME']
+) }}
+
+{%- set yaml_metadata -%}
+source_model: "stg_company_info__bag"
+src_pk: "COMPANY_ADDRESS_HK"
+src_hashdiff: "HASHDIFF"
+src_payload:
+    - "sizolocidm"
+    - "bagonumid"
+    - "bagoobrid"
+    - "bagopltid"
+    - "bagovboid"
+    - "bagoligid"
+    - "bagostdid"
+    - "bagopndid"
+    - "bagcnumtyp"
+    - "bagopcd"
+    - "bagohnr"
+    - "bagothn"
+    - "bagokix"
+    - "bagwbwjr"
+    - "bagkbwjr"
+    - "bagwopvl"
+    - "bagkopvl"
+    - "bagcgbdl"
+    - "baglgd1bij"
+    - "baglgd2cel"
+    - "baglgd3gez"
+    - "baglgd4ind"
+    - "baglgd5kan"
+    - "baglgd6log"
+    - "baglgd7ond"
+    - "baglgd8spo"
+    - "baglgd9win"
+    - "baglgd10wo"
+    - "baglgd0ove"
+    - "bagcstpnd"
+    - "bagcstvbo"
+    - "sizolatit"
+    - "sizolongit"
+    - "sizordx"
+    - "sizordy"
+    - "sizogeo"
+    - "sizogeotxt"
+    - "sizcloctyp"
+    - "sizwconadr"
+    - "sizkconadr"
+    - "pectypwo"
+    - "pecceig"
+    - "pecwwoz"
+    - "peccenerl"
+    - "peccorient"
+    - "cienerl"
+    - "cieninx"
+    - "cienest"
+    - "bagladrhfd"
+    - "bagrbesnum"
+    - "bagostr"
+src_extra_columns:
+    - "END_DATETIME"
+src_ldts: "LOAD_DATETIME"
+src_source: "RECORD_SOURCE"
+{%- endset -%}
+
+{% set metadata_dict = fromyaml(yaml_metadata) %}
+
+{{ add_end_datetime_to_sat(metadata_dict) }}

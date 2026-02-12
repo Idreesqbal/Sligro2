@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+  - name: step_to_dwh_landing_zone
+    database: sfg-data-lake-prod-happ
+    config:
+      freshness:
+        warn_after:
+          count: 25
+          period: hour
+        filter: publish_time >= CURRENT_TIMESTAMP - INTERVAL 48 HOUR
+      loaded_at_field: publish_time
+    tables:
+      - name: raw_article_data_quality
+        description: Article data
+        columns:
+          - name: products.id
+            description: The Article id from STEP
+          - name: products.articleOwnership_NL
+            description: The Owner of the Article in the Netherlands Region
+          - name: products.articleOwnership_BE
+            description: The Owner of the Article in Belgium Region
+          - name: products.Unit
+            description: The Unit responsible within the IAM organization
+          - name: products.rpe_Supplier.supplierID
+            description: The Unique identifier from STEP for the Data Supplier
+          - name: products.rpe_Supplier.supplierName
+            description: The Name for the Data Supplier
+          - name: products.rpe_Supplier.supplierGLN
+            description: The Global Location Number Unique identifier for the Data Supplier

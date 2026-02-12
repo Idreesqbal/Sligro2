@@ -1,0 +1,20 @@
+{%- set yaml_metadata -%}
+source_model:
+    - "stg_as400__artikcpf"
+    - "stg_as400__goedbwpf"
+    - "stg_as400__rel_voorraad_beheerder_artikel_groep"
+    - "stg_as400__thtw1cpf"
+    - "stg_as400__thtw5cpf"
+src_pk: "ARTICLE_GROUP_HK"
+src_nk: "ARTICLE_GROUP_NK"
+src_ldts: "LOAD_DATETIME"
+src_source: "RECORD_SOURCE"
+{%- endset -%}
+
+{% set metadata_dict = fromyaml(yaml_metadata) %}
+
+{{ automate_dv.hub(src_pk=metadata_dict["src_pk"],
+                   src_nk=metadata_dict["src_nk"],
+                   src_ldts=metadata_dict["src_ldts"],
+                   src_source=metadata_dict["src_source"],
+                   source_model=metadata_dict["source_model"]) }}

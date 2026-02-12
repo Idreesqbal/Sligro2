@@ -1,0 +1,388 @@
+version: 2
+
+models:
+  - name: im_customer__address
+    description: Contains customer address details, including contact and location information.
+    columns:
+      - name: pk_customer_address_code
+        description: Primary key for the customer address record.
+        tests:
+          - unique
+          - not_null
+
+      - name: fk_customer_code
+        description: Foreign key for the customer code record.
+        tests:
+          - not_null
+
+      - name: attention_of
+        description: The name of the person or department the address is directed to.
+
+      - name: address_id
+        description: Unique identifier for the address within the system.
+
+      - name: address_type
+        description: Type of the address (e.g. business address, delivery address).
+
+      - name: address_status
+        description: Current status of the address (e.g. valid).
+
+      - name: address_name
+        description: Descriptive name for the address, such as 'Headquarters' or 'Warehouse'.
+
+      - name: street
+        description: Street name of the address.
+
+      - name: house_number
+        description: House or building number of the address.
+
+      - name: house_number_addition
+        description: Additional information for the house number (e.g., A, B, H).
+
+      - name: postal_code
+        description: Postal or ZIP code for the address.
+
+      - name: city
+        description: City or locality of the address.
+
+      - name: country_code
+        description: ISO country code representing the country of the address.
+
+      - name: email_address
+        description: Email address associated with the customer at this location.
+
+      - name: phone_number
+        description: Primary phone number for the customer at this address.
+
+      - name: phone_number_mobile
+        description: Mobile phone number for the customer at this address.
+
+  - name: im_customer__location
+    description: Contains customer location details, including contact and address references.
+    columns:
+      - name: pk_customer_address_code
+        description: Primary key for the customer location record.
+        tests:
+          - unique
+          - not_null
+
+      - name: fk_customer_code
+        description: Foreign key linking to the unique identifier of a customer.
+
+      - name: address_code
+        description: Unique identifier for the address within the system.
+
+      - name: attention_of
+        description: The name of the person or department at this location.
+
+      - name: email_address
+        description: Email address associated with this location.
+
+      - name: location_name
+        description: Descriptive name for the location, such as 'Main Office' or 'Warehouse'.
+
+      - name: phone_number
+        description: Primary phone number for the location.
+
+  - name: im_customer__characteristics
+    description: Stores customer-specific characteristics and attributes.
+    columns:
+      - name: pk_customer_characteristic_code
+        description: Primary key for the customer characteristic record.
+        tests:
+          - unique
+          - not_null
+
+      - name: fk_customer_code
+        description: Foreign key linking to the unique identifier of a customer.
+
+      - name: characteristic_type
+        description: Type of characteristic (e.g., preference, category, demographic).
+
+      - name: characteristic_code
+        description: Code representing a specific characteristic.
+
+      - name: characteristic_value
+        description: Value assigned to the characteristic (e.g., 'Gold Member', 'VIP').
+
+  - name: im_customer__contact_person
+    description: Stores details of customer contact persons, including personal and communication information.
+    columns:
+      - name: pk_contact_person_code
+        description: Primary key for the contact person record.
+        tests:
+          - unique
+          - not_null
+
+      - name: fk_customer_code
+        description: Foreign key linking to the unique identifier of a customer.
+
+      - name: contact_person_code
+        description: Unique identifier for the contact person within the system.
+
+      - name: country_language_code
+        description: Foreign key linking to the language code associated with the customer's country.
+
+      - name: state
+        description: Current status of the contact person (e.g., active, inactive).
+
+      - name: contact_person_type
+        description: Type of contact person (e.g., primary, secondary, billing contact).
+
+      - name: initials
+        description: Initials of the contact person.
+
+      - name: first_name
+        description: First name of the contact person.
+
+      - name: preposition
+        description: Middle name or preposition used in the contact person's name (e.g., 'van', 'de').
+
+      - name: last_name
+        description: Last name of the contact person.
+
+      - name: full_name
+        description: Combination of first_name, preposition and last_name.
+
+      - name: salutation
+        description: Formal salutation or title (e.g., Mr., Ms., Dr.).
+
+      - name: sex
+        description: Gender of the contact person.
+
+      - name: date_of_birth
+        description: Date of birth of the contact person.
+
+      - name: email_address
+        description: Email address of the contact person.
+
+      - name: phone_number_work
+        description: Work phone number of the contact person.
+
+      - name: phone_number_home
+        description: Home phone number of the contact person.
+
+      - name: phone_number_mobile
+        description: Mobile phone number of the contact person.
+
+      - name: street
+        description: Street name of the contact person's address.
+
+      - name: house_number
+        description: House or building number of the contact person's address.
+
+      - name: house_number_addition
+        description: Additional information for the house number (e.g., apartment, unit, suite).
+
+      - name: postal_code
+        description: Postal or ZIP code of the contact person's address.
+
+      - name: city
+        description: City or locality of the contact person's address.
+
+      - name: country_code
+        description: ISO country code representing the contact person's country.
+
+      - name: job_position
+        description: Job title or position of the contact person within the organization.
+
+  - name: im_customer__customer
+    description: Stores core customer information, including hierarchy, classification, and registration details.
+    columns:
+      - name: pk_customer_code
+        description: Primary key for the unique customer record.
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_code
+        description: Unique identifier for the customer within the system.
+
+      - name: registration_date
+        description: Date the customer was registered in the system.
+
+      - name: trade_name
+        description: Trading name or brand name used by the customer.
+
+      - name: deregistration_reason
+        description: Explanation for the current status of the customer.
+
+      - name: segment_description
+        description: Description of the customer's specific subsegment within the industry.
+
+      - name: segment_code
+        description: Code representing the customer's subsegment.
+
+      - name: sbi_code
+        description: Standard Business Identifier (SBI) primary code for industry classification.
+
+      - name: sbi_description
+        description: Description of the primary SBI industry classification.
+
+      - name: sbi2_code
+        description: Secondary Standard Business Identifier (SBI) code for industry classification.
+
+      - name: sbi2_description
+        description: Description of the secondary SBI industry classification.
+
+      - name: formula_type
+        description: Formula type used to categorize the customer.
+
+      - name: customer_of
+        description: Indicates which entity or organization the customer is associated with.
+
+      - name: head_office_indicator
+        description: Boolean flag indicating if the customer is a head office (true/false).
+
+      - name: origin
+        description: Source or origin of the customer record (e.g., manually added, imported).
+
+      - name: status_code
+        description: Code representing the customer's current status.
+
+      - name: national_account_level
+        description: Level of the customer within a national account structure.
+
+      - name: status_description
+        description: Detailed description of the customer's current status.
+
+      - name: statutory_name
+        description: Official legal name of the customer.
+
+      - name: legal_form
+        description: Legal entity type of the customer (e.g., LLC, Corporation, Sole Proprietor).
+
+      - name: chamber_of_commerce_number
+        description: Registration number assigned by the Chamber of Commerce.
+
+      - name: chamber_of_commerce_establishment_number
+        description: Establishment number associated with the Chamber of Commerce registration.
+
+      - name: category_code
+        description: General category classification of the customer.
+
+      - name: account_manager_employee_id
+        description: Employee ID of the account manager responsible for the customer.
+
+  - name: im_customer__groups
+    description: Contains information about which groups a customer belongs to. Groups can have different properties, e.g. 'project codes', but this is not implemented yet.
+    columns:
+      - name: pk_customer_group_code
+        description: Primary key for the customer group record.
+        tests:
+          - unique
+          - not_null
+
+      - name: fk_customer_code
+        description: Foreign key linking to the unique identifier of a customer.
+
+      - name: description
+        description: Description of the group, e.g. project_codes
+
+      - name: group_code
+        description: Unique identifier for the group within the system.
+
+      - name: type_code
+        description: Specific code to identify the group
+
+      - name: type_description
+        description: Description of the group type
+
+  - name: im_customer__hierarchy
+    description: Hierarchy of customers referencing the parent-child relationship. This is also known as 'hoofdhuis' structuur.
+    columns:
+      - name: pk_customer_code
+        description: The unique customer ID combining the AS400 ID and registration date of the customer
+        tests:
+          - not_null
+          - unique
+
+      - name: trade_name
+        description: The commercial name under which the customer operates.
+
+      - name: customer_code
+        description: The original customer code, typically from the source system (e.g., AS400).
+
+      - name: level
+        description: The level into which the pk_customer_code belongs into. Level 0 means that it it doesn't belong to any hierarchy.
+
+      - name: fk_customer_parent_code_level_1
+        description: Level 1 foreign key to the im_customer__customer entity. Level 1 is the ultimate parent.
+
+      - name: customer_parent_code_level_1
+        description: The customer code of the level 1 parent entity.
+
+      - name: parent_trade_name_level_1
+        description: The trade name of the level 1 parent customer.
+
+      - name: fk_customer_parent_code_level_2
+        description: Level 2 foreign key to the im_customer__customer entity.
+
+      - name: customer_parent_code_level_2
+        description: The customer code of the level 2 parent entity.
+
+      - name: parent_trade_name_level_2
+        description: The trade name of the level 2 parent customer.
+
+      - name: fk_customer_parent_code_level_3
+        description: Level 3 foreign key to the im_customer__customer entity.
+
+      - name: customer_parent_code_level_3
+        description: The customer code of the level 3 parent entity.
+
+      - name: parent_trade_name_level_3
+        description: The trade name of the level 3 parent customer.
+
+      - name: fk_customer_parent_code_level_4
+        description: Level 4 foreign key to the im_customer__customer entity.
+
+      - name: customer_parent_code_level_4
+        description: The customer code of the level 4 parent entity.
+
+      - name: parent_trade_name_level_4
+        description: The trade name of the level 4 parent customer.
+
+      - name: fk_customer_parent_code_level_5
+        description: Level 5 foreign key to the im_customer__customer entity.
+
+      - name: customer_parent_code_level_5
+        description: The customer code of the level 5 parent entity.
+
+      - name: parent_trade_name_level_5
+        description: The trade name of the level 5 parent customer.
+
+      - name: fk_customer_parent_code_level_6
+        description: Level 6 foreign key to the im_customer__customer entity.
+
+      - name: customer_parent_code_level_6
+        description: The customer code of the level 6 parent entity.
+
+      - name: parent_trade_name_level_6
+        description: The trade name of the level 6 parent customer.
+
+      - name: fk_customer_parent_code_level_7
+        description: Level 7 foreign key to the im_customer__customer entity.
+
+      - name: customer_parent_code_level_7
+        description: The customer code of the level 7 parent entity.
+
+      - name: parent_trade_name_level_7
+        description: The trade name of the level 7 parent customer.
+
+      - name: fk_customer_parent_code_level_8
+        description: Level 8 foreign key to the im_customer__customer entity.
+
+      - name: customer_parent_code_level_8
+        description: The customer code of the level 8 parent entity.
+
+      - name: parent_trade_name_level_8
+        description: The trade name of the level 8 parent customer.
+
+      - name: fk_customer_parent_code_level_9
+        description: Level 9 foreign key to the im_customer__customer entity.
+
+      - name: customer_parent_code_level_9
+        description: The customer code of the level 9 parent entity.
+
+      - name: parent_trade_name_level_9
+        description: The trade name of the level 9 parent customer.

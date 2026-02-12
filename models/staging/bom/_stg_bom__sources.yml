@@ -1,0 +1,53 @@
+version: 2
+
+sources:
+  - name: sligro60_slgmutlib_bom
+    database: '{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}'
+    config:
+      freshness:
+        warn_after:
+          count: 7 # fivetran syncs every 6 hours
+          period: hour
+        filter: _fivetran_synced > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1
+          DAY)
+      loaded_at_field: _fivetran_synced
+    tables:
+      - name: klant_zb_67_relatie
+        description: "This table contains the mapping to demoted customer codes from 6 to 7 digits."
+        columns:
+          - name: naar_7_klant_id
+            description: "naar_7_klant_id"
+          - name: gewijzigd_datum
+            description: "gewijzigd_datum"
+          - name: orig_verval_datum
+            description: "orig_verval_datum"
+          - name: naar_7_verval_datum
+            description: "naar_7_verval_datum"
+          - name: klant_verzamel_nr
+            description: "klant_verzamel_nr"
+          - name: naar_6_verval_datum
+            description: "naar_6_verval_datum"
+          - name: toegevoegd_datum
+            description: "toegevoegd_datum"
+          - name: toegevoegd_door
+            description: "toegevoegd_door"
+          - name: naar_6_opschoon_datum
+            description: "naar_6_opschoon_datum"
+          - name: orig_creatie_datum
+            description: "orig_creatie_datum"
+          - name: gewijzigd_door
+            description: "gewijzigd_door"
+          - name: orig_klant_id
+            description: "orig_klant_id"
+          - name: mutatie_teller
+            description: "mutatie_teller"
+          - name: naar_7_creatie_datum
+            description: "naar_7_creatie_datum"
+          - name: klanten_kaart_print_datum_gepland
+            description: "klanten_kaart_print_datum_gepland"
+          - name: naar_6_creatie_datum
+            description: "naar_6_creatie_datum"
+          - name: orig_opschoon_datum
+            description: "orig_opschoon_datum"
+          - name: naar_6_klant_id
+            description: "naar_6_klant_id"

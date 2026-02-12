@@ -1,0 +1,127 @@
+version: 2
+
+models:
+  - name: bv_bdv__purchase_order
+    config:
+      apply_source_filter: false
+    label:
+      source: AS400
+    columns:
+      - name: purchase_order_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_bdv__purchase_order_extended
+    config:
+      apply_source_filter: false
+    label:
+      source: AS400
+    columns:
+      - name: purchase_order_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_bdv__purchase_order_line
+    config:
+      apply_source_filter: false
+    label:
+      source: AS400
+    columns:
+      - name: purchase_order_line_article_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_bdv__goods_received
+    config:
+      apply_source_filter: false
+    label:
+      source: AS400
+    columns:
+      - name: goods_received_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_bdv__goods_received_line
+    config:
+      apply_source_filter: false
+    label:
+      source: AS400
+    columns:
+      - name: goods_received_line_article_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_bdv__goods_received_line_pallet
+    config:
+      apply_source_filter: false
+    label:
+      source: AS400
+    columns:
+      - name: goods_received_article_pallet_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_bdv__customer_customer
+    columns:
+      - name: customer_bk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_bdv__customer_address
+    columns:
+      - name: customer_address_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_bdv__customer_characteristics
+
+  - name: bv_bdv__customer_contact_person
+
+  - name: bv_bdv__customer_groups
+
+  - name: bv_bdv__customer_location
+    columns:
+      - name: customer_address_hk
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+
+  - name: bv_bdv__customer_hierarchy
+    config:
+      apply_source_filter: false
+      unique_key: ["customer_hk", "customer_parent_hk", "load_datetime"]
+
+  - name: bv_bdv__company_reference_customer_matching
+    description: "Transformed customer key that covers combination with registration date and adjustment from 6 to 7 digits in order to align with the bv_hub_customer"
+    columns:
+      - name: company_reference_customer_hk
+        description: "The company_reference bk + customer number (incl. from 6 to 7 digits) + registration date"
+        tests:
+          - not_null
+          - unique:
+              where: "end_datetime IS null"
+      - name: raw_company_reference_customer_hk
+        description: "The company reference bk + original customer number + registration date as stored in the raw vault"
+      - name: raw_customer_bk
+        description: "The original customer number + registration date as stored in the raw vault"
+      - name: customer_bk
+        description: "The customer number (incl. from 6 to 7 digits) + registration date"
+    config:
+      tags: "company_reference"

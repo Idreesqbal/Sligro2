@@ -1,0 +1,574 @@
+version: 2
+sources:
+  - name: slim4
+    schema: "{{ target.schema }}_external_slim4"
+    config:
+      freshness:
+        warn_after:
+          count: 48 # 2 days, They export once a day, with only a date format, thus there can be at max 48 hours delay
+          period: hour
+        filter: dt > DATE_SUB(CURRENT_DATE(), INTERVAL 3
+          DAY)
+      loaded_at_field: CAST(dt AS TIMESTAMP)
+    tables:
+      - name: bs_forecast
+        description: Delivery Service Forecast
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/SLIM4/BS_Forecast/*.csv
+          options:
+            format: csv
+            skip_leading_rows: 0
+            field_delimiter: ";"
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/SLIM4/BS_Forecast/
+        columns:
+          - name: slim4_id
+            description: Unique identifier of slim4.
+            data_type: STRING
+          - name: legacy_article_number
+            description: The original article number in the legacy system.
+            data_type: STRING
+          - name: store_number
+            description: Identifier for the specific store.
+            data_type: STRING
+          - name: week_number
+            description: The week number of the year for the record.
+            data_type: INTEGER
+          - name: day_number
+            description: The day number of the week (e.g., 1 for Monday, 7 for Sunday).
+            data_type: INTEGER
+          - name: date
+            description: The specific date of the record.
+            data_type: STRING
+          - name: starting_stock
+            description: The amount of stock at the beginning of the day.
+            data_type: NUMERIC
+          - name: forecast
+            description: The predicted demand for the article on this day.
+            data_type: NUMERIC
+          - name: event_forecast
+            description: The predicted demand due to specific events on this day.
+            data_type: INTEGER
+          - name: total_confirmed_demand
+            description: The total confirmed customer demand for the article on this day.
+            data_type: NUMERIC
+          - name: additional_above_demand
+            description: Any additional quantity ordered or planned above the confirmed demand.
+            data_type: NUMERIC
+          - name: on_order
+            description: The quantity of the article currently on order and expected to be delivered.
+            data_type: NUMERIC
+          - name: to_order
+            description: The calculated quantity of the article that needs to be ordered.
+            data_type: NUMERIC
+          - name: purchase_forecast
+            description: The forecasted quantity to be purchased for this article on this day.
+            data_type: NUMERIC
+          - name: end_stock
+            description: The amount of stock at the end of the day.
+            data_type: NUMERIC
+          - name: delivery_date
+            description: The expected delivery date of a relevant order (if applicable).
+            data_type: STRING
+          - name: order_date
+            description: The date when a relevant order was placed (if applicable).
+            data_type: STRING
+          - name: supplier_number
+            description: The unique identifier for the supplier of the article.
+            data_type: STRING
+          - name: supplier_name
+            description: The name of the supplier of the article.
+            data_type: STRING
+          - name: dummy_1
+            description: Unknown
+            data_type: STRING
+          - name: dummy_2
+            description: Unknown
+            data_type: STRING
+      - name: cdc_forecast
+        description: Central Distribution Center Forecast
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/SLIM4/CDC_Forecast/*.csv
+          options:
+            format: csv
+            skip_leading_rows: 0
+            field_delimiter: ";"
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/SLIM4/CDC_Forecast/
+        columns:
+          - name: slim4_id
+            description: Unique identifier of slim4.
+            data_type: STRING
+          - name: legacy_article_number
+            description: The original article number in the legacy system.
+            data_type: STRING
+          - name: store_number
+            description: Identifier for the specific store.
+            data_type: STRING
+          - name: week_number
+            description: The week number of the year for the record.
+            data_type: INTEGER
+          - name: day_number
+            description: The day number of the week (e.g., 1 for Monday, 7 for Sunday).
+            data_type: INTEGER
+          - name: date
+            description: The specific date of the record.
+            data_type: STRING
+          - name: starting_stock
+            description: The amount of stock at the beginning of the day.
+            data_type: NUMERIC
+          - name: forecast
+            description: The predicted demand for the article on this day.
+            data_type: NUMERIC
+          - name: event_forecast
+            description: The predicted demand due to specific events on this day.
+            data_type: INTEGER
+          - name: total_confirmed_demand
+            description: The total confirmed customer demand for the article on this day.
+            data_type: NUMERIC
+          - name: additional_above_demand
+            description: Any additional quantity ordered or planned above the confirmed demand.
+            data_type: NUMERIC
+          - name: on_order
+            description: The quantity of the article currently on order and expected to be delivered.
+            data_type: NUMERIC
+          - name: to_order
+            description: The calculated quantity of the article that needs to be ordered.
+            data_type: NUMERIC
+          - name: purchase_forecast
+            description: The forecasted quantity to be purchased for this article on this day.
+            data_type: NUMERIC
+          - name: end_stock
+            description: The amount of stock at the end of the day.
+            data_type: NUMERIC
+          - name: delivery_date
+            description: The expected delivery date of a relevant order (if applicable).
+            data_type: STRING
+          - name: order_date
+            description: The date when a relevant order was placed (if applicable).
+            data_type: STRING
+          - name: supplier_number
+            description: The unique identifier for the supplier of the article.
+            data_type: STRING
+          - name: supplier_name
+            description: The name of the supplier of the article.
+            data_type: STRING
+          - name: dummy_1
+            description: Unknown
+            data_type: STRING
+          - name: dummy_2
+            description: Unknown
+            data_type: STRING
+      - name: bs_article_attributes
+        description: Delivery Service Article Attributes
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/SLIM4/BS_Article_Attributes/*.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ";"
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/SLIM4/BS_Article_Attributes/
+        columns:
+          - name: slim4_id
+            data_type: STRING
+          - name: legacy_article_number
+            data_type: STRING
+          - name: store_number
+            data_type: STRING
+          - name: is_stock_controlled
+            data_type: INTEGER
+          - name: trend
+            data_type: NUMERIC
+          - name: season_status
+            data_type: INTEGER
+          - name: seasonal_probability
+            data_type: INTEGER
+          - name: season
+            data_type: INTEGER
+          - name: season_profile
+            data_type: STRING
+          - name: use_aggregated_client_forecast
+            data_type: INTEGER
+          - name: relevant_period
+            data_type: INTEGER
+          - name: tracking_signal
+            data_type: NUMERIC
+          - name: offset
+            data_type: NUMERIC
+          - name: forecast_exception
+            data_type: INTEGER
+          - name: stock_exception
+            data_type: INTEGER
+          - name: sales_class
+            data_type: INTEGER
+          - name: base_forecast
+            data_type: NUMERIC
+          - name: event_forecast
+            data_type: INTEGER
+          - name: confirmed_extra
+            data_type: INTEGER
+          - name: total_safety_stock
+            data_type: INTEGER
+          - name: order_level
+            data_type: INTEGER
+          - name: purchase_advice
+            data_type: INTEGER
+          - name: maximum_loss
+            data_type: NUMERIC
+          - name: resulting_loss_service_level
+            data_type: NUMERIC
+          - name: service_level
+            data_type: NUMERIC
+      - name: cdc_article_attributes
+        description: Central Distribution Center Article Attributes
+        external:
+          location: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/SLIM4/CDC_Article_Attributes/*.csv
+          options:
+            format: csv
+            skip_leading_rows: 1
+            field_delimiter: ";"
+            hive_partition_uri_prefix: gs://{{ env_var("DBT_DATA_LAKE_PROJECT_ID", "not_set") }}-raw-goanywhere/SLIM4/CDC_Article_Attributes/
+        columns:
+          - name: code
+            description: Unique identifier for the product.
+            data_type: STRING
+          - name: artikel_code
+            description: Code associated with the article.
+            data_type: STRING
+          - name: abc
+            description: ABC classification of the article (e.g., for inventory management).
+            data_type: STRING
+          - name: afzet_deze_periode
+            description: Sales quantity for the current period.
+            data_type: INTEGER
+          - name: aantal_orders
+            description: Number of orders for the article.
+            data_type: INTEGER
+          - name: aantal_maanden_obsolete
+            description: Number of months the article has been obsolete.
+            data_type: INTEGER
+          - name: afzet_0
+            description: Sales quantity for month 0.
+            data_type: INTEGER
+          - name: afzet_1
+            description: Sales quantity for month 1.
+            data_type: INTEGER
+          - name: afzet_2
+            description: Sales quantity for month 2.
+            data_type: INTEGER
+          - name: afzet_3
+            description: Sales quantity for month 3.
+            data_type: INTEGER
+          - name: afzet_4
+            description: Sales quantity for month 4.
+            data_type: INTEGER
+          - name: afzet_5
+            description: Sales quantity for month 5.
+            data_type: INTEGER
+          - name: afzet_6
+            description: Sales quantity for month 6.
+            data_type: INTEGER
+          - name: afzet_7
+            description: Sales quantity for month 7.
+            data_type: INTEGER
+          - name: afzet_8
+            description: Sales quantity for month 8.
+            data_type: INTEGER
+          - name: afzet_9
+            description: Sales quantity for month 9.
+            data_type: INTEGER
+          - name: afzet_10
+            description: Sales quantity for month 10.
+            data_type: INTEGER
+          - name: afzet_11
+            description: Sales quantity for month 11.
+            data_type: INTEGER
+          - name: afzet_12
+            description: Sales quantity for month 12.
+            data_type: INTEGER
+          - name: afzet_13
+            description: Sales quantity for month 13.
+            data_type: INTEGER
+          - name: afzet_14
+            description: Sales quantity for month 14.
+            data_type: INTEGER
+          - name: afzet_15
+            description: Sales quantity for month 15.
+            data_type: INTEGER
+          - name: afzet_16
+            description: Sales quantity for month 16.
+            data_type: INTEGER
+          - name: afzet_17
+            description: Sales quantity for month 17.
+            data_type: INTEGER
+          - name: afzet_18
+            description: Sales quantity for month 18.
+            data_type: INTEGER
+          - name: afzet_19
+            description: Sales quantity for month 19.
+            data_type: INTEGER
+          - name: afzet_20
+            description: Sales quantity for month 20.
+            data_type: INTEGER
+          - name: afzet_21
+            description: Sales quantity for month 21.
+            data_type: INTEGER
+          - name: afzet_22
+            description: Sales quantity for month 22.
+            data_type: INTEGER
+          - name: afzet_23
+            description: Sales quantity for month 23.
+            data_type: INTEGER
+          - name: sales_class
+            description: Class of sales performance.
+            data_type: INTEGER
+          - name: afzet_lopende_week
+            description: Sales quantity for the current week.
+            data_type: STRING
+          - name: afzet_vorige_week
+            description: Sales quantity for the previous week.
+            data_type: NUMERIC
+          - name: art_gr
+            description: Article group.
+            data_type: INTEGER
+          - name: artikel_omschrijving
+            description: Description of the article.
+            data_type: STRING
+          - name: afgerond_besteladvies
+            description: Rounded order advice.
+            data_type: INTEGER
+          - name: basis_forecast
+            description: Basic forecast value.
+            data_type: NUMERIC
+          - name: bd
+            description: Business driver or business development code.
+            data_type: INTEGER
+          - name: besteladvies
+            description: Order advice.
+            data_type: INTEGER
+          - name: besteladvies_genereren
+            description: Flag indicating if order advice should be generated.
+            data_type: STRING
+          - name: besteld
+            description: Quantity ordered.
+            data_type: STRING
+          - name: bestelfreq
+            description: Order frequency.
+            data_type: STRING
+          - name: bestelfreq_bd_levdatum
+            description: Combined information of order frequency, BD, and delivery date.
+            data_type: STRING
+          - name: bestelniveau
+            description: Order level.
+            data_type: INTEGER
+          - name: veiligheidsvoorraad
+            description: Safety stock.
+            data_type: INTEGER
+          - name: buffer_vrd
+            description: Buffer requirement.
+            data_type: INTEGER
+          - name: cover_tijd_m
+            description: Cover time in months.
+            data_type: NUMERIC
+          - name: cover_tijd_d
+            description: Cover time in days.
+            data_type: INTEGER
+          - name: cover_tijd_w
+            description: Cover time in weeks.
+            data_type: NUMERIC
+          - name: dc_locatie
+            description: Distribution center location code.
+            data_type: STRING
+          - name: geimporteerde_eoq
+            description: Imported Economic Order Quantity.
+            data_type: INTEGER
+          - name: excess_stock
+            description: Quantity of excess stock.
+            data_type: INTEGER
+          - name: f_test_waarde
+            description: F-test value for statistical analysis.
+            data_type: NUMERIC
+          - name: forecast_1
+            description: Forecast for month 1.
+            data_type: NUMERIC
+          - name: forecast_2
+            description: Forecast for month 2.
+            data_type: NUMERIC
+          - name: forecast_3
+            description: Forecast for month 3.
+            data_type: NUMERIC
+          - name: forecast_4
+            description: Forecast for month 4.
+            data_type: NUMERIC
+          - name: forecast_5
+            description: Forecast for month 5.
+            data_type: NUMERIC
+          - name: forecast_6
+            description: Forecast for month 6.
+            data_type: NUMERIC
+          - name: forecast_7
+            description: Forecast for month 7.
+            data_type: NUMERIC
+          - name: forecast_8
+            description: Forecast for month 8.
+            data_type: NUMERIC
+          - name: forecast_9
+            description: Forecast for month 9.
+            data_type: NUMERIC
+          - name: forecast_10
+            description: Forecast for month 10.
+            data_type: NUMERIC
+          - name: forecast_11
+            description: Forecast for month 11.
+            data_type: NUMERIC
+          - name: forecast_12
+            description: Forecast for month 12.
+            data_type: NUMERIC
+          - name: folder_info
+            description: Information related to folders or promotions.
+            data_type: STRING
+          - name: forecast_cp
+            description: Forecast considering promotions.
+            data_type: NUMERIC
+          - name: forecast_cp_vrd
+            description: Forecast considering promotions requirement.
+            data_type: INTEGER
+          - name: forecast_exception
+            description: Forecast exception flag.
+            data_type: INTEGER
+          - name: geen_interesse_voorheen_boycot
+            description: Flag indicating no interest (formerly boycott).
+            data_type: INTEGER
+          - name: gemiddelde_forecast
+            description: Average forecast value.
+            data_type: NUMERIC
+          - name: ijzeren_voorraad
+            description: Iron stock level.
+            data_type: INTEGER
+          - name: ioq
+            description: Independent Order Quantity.
+            data_type: INTEGER
+          - name: importartikel
+            description: Flag indicating if the article is imported.
+            data_type: STRING
+          - name: in_folder
+            description: Flag indicating if the article is in a folder/promotion.
+            data_type: STRING
+          - name: laatste_afzet
+            description: Last sales quantity.
+            data_type: INTEGER
+          - name: laatste_maandverkoop
+            description: Last month's sales quantity.
+            data_type: STRING
+          - name: originele_leverancier
+            description: Original supplier code.
+            data_type: STRING
+          - name: leveranciersnaam
+            description: Name of the supplier.
+            data_type: STRING
+          - name: levertijd_d
+            description: Lead time in days.
+            data_type: INTEGER
+          - name: misorders_manco_lev
+            description: Number of misorders / missing deliveries.
+            data_type: STRING
+          - name: misorders_afgel_wk
+            description: Number of misorders in the last week.
+            data_type: INTEGER
+          - name: moq
+            description: Minimum Order Quantity.
+            data_type: INTEGER
+          - name: prijs
+            description: Price of the article.
+            data_type: NUMERIC
+          - name: relevante_periode
+            description: Relevant period for analysis.
+            data_type: INTEGER
+          - name: bestelinterval_d
+            description: Order interval in days.
+            data_type: INTEGER
+          - name: run_code
+            description: Run code for processing.
+            data_type: STRING
+          - name: scp_naam
+            description: SCP (Supply Chain Planning) Name.
+            data_type: STRING
+          - name: seizoen
+            description: Season of the year.
+            data_type: STRING
+          - name: seizoensstatus
+            description: Seasonal status.
+            data_type: STRING
+          - name: seizoensprofiel
+            description: Seasonal profile.
+            data_type: STRING
+          - name: servicelevel
+            description: Service level target.
+            data_type: NUMERIC
+          - name: setting_ijzeren_vrd
+            description: Setting for iron stock.
+            data_type: STRING
+          - name: tht_garantie
+            description: THT (Best Before Date) Guarantee.
+            data_type: STRING
+          - name: tht_pick
+            description: THT for picking.
+            data_type: STRING
+          - name: verkoopprijs
+            description: Selling price.
+            data_type: NUMERIC
+          - name: vest_voorraad_totaal
+            description: Total stock at the location.
+            data_type: STRING
+          - name: voorraadgestuurd
+            description: Flag indicating if stock is controlled.
+            data_type: STRING
+          - name: stock_exception
+            description: Stock exception flag.
+            data_type: INTEGER
+          - name: voorraadmanager
+            description: Responsible stock manager.
+            data_type: STRING
+          - name: fysieke_voorraad
+            description: Physical stock quantity.
+            data_type: INTEGER
+          - name: vrd_min_best_per_max
+            description: Combined information of requirement, minimum, order per, and maximum stock.
+            data_type: STRING
+          - name: werkelijk_te_bestellen
+            description: Quantity actually to be ordered.
+            data_type: INTEGER
+          - name: verstuurdatum
+            description: Dispatch date.
+            data_type: STRING
+          - name: verstuurdatum_2
+            description: Second dispatch date (if applicable).
+            data_type: STRING
+          - name: leverdatum
+            description: Delivery date.
+            data_type: STRING
+          - name: leverdatum_2
+            description: Second delivery date (if applicable).
+            data_type: STRING
+          - name: artikelgroep_omschrijving
+            description: Description of the article group.
+            data_type: STRING
+          - name: abs_voorspelling
+            description: ABS (Absolute) forecast.
+            data_type: STRING
+          - name: formule
+            description: Formula used for calculation.
+            data_type: STRING
+          - name: st
+            description: Unit of measure.
+            data_type: NUMERIC
+          - name: totale_veiligheidsvoorraad
+            description: Total safety stock.
+            data_type: INTEGER
+          - name: demandplanner_primair
+            description: Primary demand planner.
+            data_type: STRING
+          - name: nullev_leverancier
+            description: Supplier with zero delivery.
+            data_type: STRING
+          - name: gtin
+            description: Global Trade Item Number.
+            data_type: STRING

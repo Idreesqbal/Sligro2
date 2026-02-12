@@ -1,0 +1,40 @@
+{%- set yaml_metadata -%}
+source_model:
+    'base_as400__btw_codering_tarief'
+derived_columns:
+    {# Creating metadata and keys #}
+    RECORD_SOURCE: "!AS400__btw_codering_tarief"
+    LOAD_DATETIME: "{{ fivetran_last_touched() }}"
+    EFFECTIVE_FROM: "_fivetran_start"
+    START_DATETIME: "_fivetran_start"
+    END_DATETIME: "{{ fivetran_end() }}"
+    BTW_BK:
+        - "TRIM(CAST(btw_id AS STRING))"
+    land_id:
+        - "TRIM(CAST(land_id AS STRING))"
+hashed_columns:
+    BTW_HK:
+        - "BTW_BK"
+    HASHDIFF:
+        is_hashdiff: true
+        columns:
+            - "btw_id"
+            - "btw_percentage"
+            - "geldig_tm"
+            - "geldig_vanaf"
+            - "land_id"
+            - "mutatie_teller"
+            - "gewijzigd_door"
+            - "gewijzigd_datum"
+            - "toegevoegd_datum"
+            - "toegevoegd_door"
+            - "_fivetran_start"
+            - "_fivetran_end"
+            - "_fivetran_synced"
+            - "_fivetran_active"
+
+{%- endset -%}
+
+{% set metadata_dict = fromyaml(yaml_metadata) %}
+
+{{ automate_dv.stage(**metadata_dict) }}

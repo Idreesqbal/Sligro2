@@ -1,0 +1,133 @@
+version: 2
+
+models:
+  - name: im_supplier__supplier
+    description: >
+      The supplier entity stores all the general information that is known of a supplier. This information is added to the systems by using the supplierform called: "Leverancier opvoerformulier*"
+    columns:
+      - name: pk_supplier_code
+        description: "Unique identifier for the supplier, used to track and reference suppliers."
+        tests:
+          - unique
+          - not_null
+      - name: fk_currency_code
+        description: "Foreign key to the currency entity. Represents the currency code relate to the supplier"
+      - name: fk_carrier_code
+        description: "Foreign key to the carrier entity. Representes the carrier code for a supplier if the supplier also acts as a carrier."
+      - name: supplier_number_as400
+        description: "The unique supplier number from the as400"
+      - name: supplier_number_sap
+        description: "The unique supplier number from SAP"
+      - name: supplier_name
+        description: "The name of the supplier"
+      - name: vat_code
+        description: "A vat related code assigned to businesses for tax purposes"
+      - name: vat_number
+        description: "The vat-number related to the supplier"
+      - name: company_url
+        description: "The company URL"
+      - name: emergency_number
+        description: "The number to call of the supplier in case of a emergency"
+      - name: trade_relation_indicator
+        description: "A definition if the trade relation is intercompany (Yes/No)"
+      - name: order_receipt_mail
+        description: "A indicator if they want their Order recept via Mail"
+      - name: gln_edi
+        description: "Destination EAN-Code"
+      - name: bank_account_number
+        description: "The bankaccount number of the supplier"
+      - name: bic_swift_code
+        description: "The BIC- / SWIFT code for the supplier. This is mandatory when the supplier is using a IBAN in the bank account field"
+      - name: bank
+        description: "The name of the bank of the bankaccount number"
+      - name: status
+        description: "The status of a supplier in the as400"
+
+  - name: im_supplier__contact_person
+    description: >
+      The contactperson entity stores information about the people to contact for a specific topic at the supplier.
+    columns:
+      - name: pk_supplier_contact_person_code
+        description: "Unique identifier for the supplier contact table bij concatenating supplier_code and contact_type, used to track and reference contacts for a supplier."
+        tests:
+          - not_null
+      - name: fk_supplier_code
+        description: "Foreign key to know the supplier"
+        tests:
+          - not_null
+      - name: contact_type
+        description: "The type of contact of the supplier"
+        tests:
+          - not_null
+      - name: contact_name
+        description: "The name of the contact"
+      - name: phone_number
+        description: "The phone number of the contact"
+      - name: email_address
+        description: "The mail of the contact"
+
+  - name: im_supplier__address
+    description: >
+      The adress entity stores information about all the physical adresses that apply to a supplier.
+    columns:
+      - name: pk_supplier_address_code
+        description: "Unique identifier for the supplier address table bij concatenating supplier_code and address_type, used to track and reference addresses for a supplier."
+        tests:
+          - unique
+          - not_null
+      - name: fk_supplier_code
+        description: "Foreign key to know the supplier"
+        tests:
+          - not_null
+      - name: address_type
+        description: "The type of address the supplier uses"
+        tests:
+          - not_null
+      - name: address
+        description: "The address of the supplier"
+      - name: postal_code
+        description: "The postal code"
+      - name: city
+        description: "The city where the address is located"
+      - name: country
+        description: "The country where the address is located"
+
+  - name: im_supplier__buyer
+    description: >
+      The buyer entity stores information the buyers from each country connected to the supplier.
+    columns:
+      - name: pk_supplier_buyer_code
+        description: "Unique identifier for the supplier buyer table bij concatenating supplier_code and country of buyer, used to track and reference buyers for a supplier."
+        tests:
+          - unique
+          - not_null
+      - name: fk_supplier_code
+        description: "Foreign key to know the supplier"
+        tests:
+          - not_null
+      - name: fk_employee_code
+        description: "Foreign key to know the employee (buyer)"
+        tests:
+          - not_null
+      - name: buyer
+        description: "The name of the buyer"
+      - name: country
+        description: "The country for whom the buyer is buying the products from the supplier"
+      - name: headbuyer
+        description: " indicator if the buyer is the headbuyer for the supplier"
+
+  - name: im_supplier__category
+    description: >
+      The category entity stores information about all the categories that are related to a supplier.
+    columns:
+      - name: pk_supplier_category_code
+        description: "Unique identifier for the supplier category table by concatenating supplier_code and category, used to track and reference categories related to a supplier."
+        tests:
+          - unique
+          - not_null
+      - name: fk_supplier_code
+        description: "Foreign key to know the supplier."
+        tests:
+          - not_null
+      - name: supplier_category
+        description: "The category that can be related to a supplier"

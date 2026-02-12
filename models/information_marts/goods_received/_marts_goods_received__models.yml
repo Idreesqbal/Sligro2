@@ -1,0 +1,199 @@
+version: 2
+
+models:
+  - name: im_goods_received__header
+    description: Stores information about each goods received delivery, including only the last update for each goods received code.
+    columns:
+      - name: pk_goods_received_code
+        description: Unique identifier for the goods received delivery. Combination of goods received code and received date.
+        tests:
+          - unique
+          - not_null
+      - name: goods_received_code
+        description: Code for each goods received that is re-used over time by the source system.
+        tests:
+          - not_null
+      - name: fk_purchase_order_code
+        description: Reference to the purchase order associated with the goods received from the purchase order entity.
+        tests:
+          - not_null
+      - name: fk_supplier_code
+        description: Reference to the supplier of the goods out of supplier entity.
+      - name: fk_advanced_shipping_notification_code
+        description: Reference to ASN sent by the supplier for the shipping of the goods.
+      - name: fk_site_code
+        description: Reference to the site entity where the goods were received.
+      - name: communication_method
+        description: How has the goods reiceved been originally sent to the supplier (EDI, pdf , …).
+      - name: communication_method_description
+        description: Description of each communication method value.
+      - name: goods_received_delivery_status
+        description: Status code of each goods received delivery.
+      - name: goods_received_delivery_status_description
+        description: Description of each status code for the goods received delivery.
+      - name: original_planned_date
+        description: The initial date when the delivery was first planned or scheduled.
+      - name: current_planned_date
+        description: The most up-to-date date when the delivery is now expected to occur.
+      - name: received_date
+        description: The actual date when the goods were received.
+      - name: planned_date_change_count
+        description: To track the number of times a supplier changes the planned delivery date.
+      - name: valid_from
+        description: Date from when the record is valid in the source system.
+      - name: valid_to
+        description: Date from when the record is no longer valid in the source system.
+      - name: load_datetime
+        description: Date when the record is ingested in the data warehouse.
+
+  - name: im_goods_received__line
+    description: Stores information about each goods received item, including only the last update for each goods received code + article combination.
+    columns:
+      - name: pk_goods_received_line_code
+        description: Primary key for each goods received order item.
+        tests:
+          - unique
+          - not_null
+      - name: fk_goods_received_code
+        description: Reference to the goods received delivery table.
+        tests:
+          - not_null
+      - name: goods_received_code
+        description: Code for each goods received that is re-used over time by the source system.
+        tests:
+          - not_null
+      - name: goods_received_line_number
+        description: Line number for each received article.
+      - name: sligro_article_number
+        description: Article number.
+      - name: fk_trade_item_code
+        description: Foreign key to the 'Article' entity to get the data for the trade item listed on the goods received line.
+      - name: received_colli_quantity
+        description: Quantity of packages or units received.
+      - name: received_amount
+        description: Total amount of goods received.
+      - name: received_weight_kg
+        description: Weight received for the goods received item.
+      - name: valid_from
+        description: Date from when the record is valid in the source system.
+      - name: valid_to
+        description: Date from when the record is no longer valid in the source system.
+      - name: load_datetime
+        description: Date when the record is ingested in the data warehouse.
+
+  - name: im_goods_received__header_history
+    description: Stores information about each goods received delivery, including all updates for each goods received code.
+    columns:
+      - name: pk_goods_received_history
+        description: Unique identifier for the goods received delivery. Combination of goods received code, received date, valid from and to dates.
+        tests:
+          - unique
+          - not_null
+      - name: fk_goods_received_code
+        description: Reference to the im_goods_received__delivery model.
+        tests:
+          - not_null
+      - name: goods_received_code
+        description: Code for each goods received that is re-used over time by the source system.
+        tests:
+          - not_null
+      - name: fk_purchase_order_code
+        description: Reference to the purchase order associated with the goods received from the purchase order entity.
+        tests:
+          - not_null
+      - name: fk_supplier_code
+        description: Reference to the supplier of the goods out of supplier entity.
+      - name: fk_advanced_shipping_notification_code
+        description: Reference to ASN sent by the supplier for the shipping of the goods.
+      - name: fk_site_code
+        description: Reference to the site entity where the goods were received.
+      - name: communication_method
+        description: How has the goods reiceved been originally sent to the supplier (EDI, pdf , …).
+      - name: communication_method_description
+        description: Description of each communication method value.
+      - name: goods_received_delivery_status
+        description: Status code of each goods received delivery.
+      - name: goods_received_delivery_status_description
+        description: Description of each status code for the goods received delivery.
+      - name: original_planned_date
+        description: The initial date when the delivery was first planned or scheduled.
+      - name: current_planned_date
+        description: The most up-to-date date when the delivery is now expected to occur.
+      - name: received_date
+        description: The actual date when the goods were received.
+      - name: planned_date_change_count
+        description: To track the number of times a supplier changes the planned delivery date.
+      - name: valid_from
+        description: Date from when the record is valid in the source system.
+      - name: valid_to
+        description: Date from when the record is no longer valid in the source system.
+      - name: load_datetime
+        description: Date when the record is ingested in the data warehouse.
+
+  - name: im_goods_received__line_history
+    description: Stores information about each goods received item, including all the updates for each goods received code + article combination.
+    columns:
+      - name: pk_goods_received_line_code_history
+        description: Unique identifier for the goods received item. Combination of goods received code, line code, sligro article number, received date, valid from and to dates.
+        tests:
+          - unique
+          - not_null
+      - name: fk_goods_received_line_code
+        description: Reference to the im_goods_received__line table.
+        tests:
+          - not_null
+      - name: fk_goods_received_code
+        description: Reference to the goods received delivery table.
+        tests:
+          - not_null
+      - name: goods_received_code
+        description: Code for each goods received that is re-used over time by the source system.
+        tests:
+          - not_null
+      - name: goods_received_line_number
+        description: Line number for each received article.
+      - name: sligro_article_number
+        description: Article number.
+      - name: fk_trade_item_code
+        description: Foreign key to the 'Article' entity to get the data for the trade item listed on the goods received line.
+      - name: received_colli_quantity
+        description: Quantity of packages or units received.
+      - name: received_amount
+        description: Total amount of goods received.
+      - name: received_weight_kg
+        description: Weight received for the goods received item.
+      - name: valid_from
+        description: Date from when the record is valid in the source system.
+      - name: valid_to
+        description: Date from when the record is no longer valid in the source system.
+      - name: load_datetime
+        description: Date when the record is ingested in the data warehouse.
+
+  - name: im_goods_received__pallet
+    description: Stores information about the pallet number that is related to each goods received article.
+    columns:
+      - name: pk_goods_received_pallet_code
+        description: Unique identifier for the goods received pallet item. Combination of goods received code, pallet code and sligro article number.
+        tests:
+          - unique
+          - not_null
+      - name: fk_goods_received_code
+        description: Reference to the goods received delivery table.
+        tests:
+          - not_null
+      - name: sligro_article_number
+        description: Article number.
+      - name: fk_trade_item_code
+        description: Foreign key to the 'Article' entity to get the data for the trade item listed on the goods received line.
+      - name: fk_stock_location_code
+        description: Foreign key to the 'Stock' entity to get the data for the stock location code where the pallet is received.
+      - name: fk_promotion_code
+        description: Foreign key to the 'Promotion' entity to get the data for the promotion code applied to a pallet.
+      - name: valid_from
+        description: Date from when the record is valid in the source system.
+      - name: valid_to
+        description: Date from when the record is no longer valid in the source system.
+      - name: load_datetime
+        description: Date when the record is ingested in the data warehouse.
+      - name: pallet_number
+        description: AS400 pallet number where the goods were received.

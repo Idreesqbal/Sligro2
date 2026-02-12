@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: rv_tlnk__stock_transactions_cdc
+
+  - name: rv_tlnk__stock_zb
+    config:
+      apply_source_filter: true
+
+  - name: rv_tlnk__sales_invoice_header_transactions
+
+  - name: rv_tlnk__sales_invoice_lines_transactions
+
+  - name: rv_tlnk__purchase_invoice_header_transactions
+
+  - name: rv_tlnk__purchase_invoice_lines_transactions

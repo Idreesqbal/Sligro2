@@ -1,0 +1,93 @@
+version: 2
+
+models:
+  - name: im_manual_bi_imports__budget_cashandcarry
+    description: "Budget data for cash and carry stores"
+    columns:
+      - name: distribution_channel
+        description: Distribution channel
+      - name: business_unit
+        description: The business unit for the distribution channel
+      - name: year
+        description: Year the budget applies to
+      - name: weeknumber
+        description: Weeknumber the budget applies to
+        tests:
+          - not_null
+          - unique
+      - name: week_budget_cashandcarry
+        description: The budget for the cash and carry stores in the given week
+      - name: week_budget_cashandcarry_cumulative
+        description: The cumulative budget for the cash and carry stores up to the given week
+
+  - name: im_manual_bi_imports__budget_cashandcarry_mkb
+    description: "Budget data for mkb for cash and carry stores"
+    columns:
+      - name: distribution_channel
+        description: Distribution channel
+      - name: business_unit
+        description: The business unit for the distribution channel
+      - name: year
+        description: Year the budget applies to
+      - name: weeknumber
+        description: Weeknumber the budget applies to
+        tests:
+          - not_null
+          - unique
+      - name: week_budget_cashandcarry
+        description: The budget for the cash and carry stores in the given week
+      - name: week_budget_cashandcarry_cumulative
+        description: The cumulative budget for the cash and carry stores up to the given week
+
+  - name: im_manual_bi_imports__budget_cashandcarry_foodprof
+    description: "Budget data for foodprof for cash and carry stores"
+    columns:
+      - name: distribution_channel
+        description: Distribution channel
+      - name: business_unit
+        description: The business unit for the distribution channel
+      - name: year
+        description: Year the budget applies to
+      - name: weeknumber
+        description: Weeknumber the budget applies to
+        tests:
+          - not_null
+          - unique
+      - name: week_budget_cashandcarry
+        description: The budget for the cash and carry stores in the given week
+      - name: week_budget_cashandcarry_cumulative
+        description: The cumulative budget for the cash and carry stores up to the given week
+
+  - name: im_manual_bi_imports__budget_month_cashandcarry
+    description: "Monthly budget data for cash and carry stores"
+    columns:
+      - name: distribution_channel
+        description: Distribution channel
+      - name: business_unit
+        description: The business unit for the distribution channel
+      - name: year
+        description: Year the budget applies to
+      - name: monthnumber
+        description: Month number the budget applies to
+        tests:
+          - not_null
+          - unique
+      - name: month_budget_cashandcarry
+        description: The budget for the cash and carry stores in the given month
+      - name: month_budget_cashandcarry_cumulative
+        description: The cumulative budget for the cash and carry stores up to the given month
+
+  - name: im_manual_bi_imports__dt_promo_targets
+    description: "Promotion targets for the Sligro brochures"
+    columns:
+      - name: brochure_description
+        description: Description number of the brochure
+        tests:
+          - not_null
+          - unique
+      - name: brochure_target
+        description: Sales target for the brochure
+      - name: business_unit
+        description: The business unit for the distribution channel
+      - name: year
+        description: Year the brochure target apply to

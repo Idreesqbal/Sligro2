@@ -1,0 +1,49 @@
+models:
+  - name: im_promotion__header
+    description: >
+      The promotion header refers to a specific promotion activity or object. Currently the main use case are folders which contain articles
+      that are promoted at discounted prices or simply highlighted. These folders are distinguishable by their year, number and folder code
+      (e.g. food, non-food, beverages).
+    columns:
+      - name: promotion_code
+        tests:
+          - unique
+          - not_null
+
+  - name: im_promotion__article
+    description: >
+      The promotion article model contains the data describing specific articles contained within a promotion header. Also here that currently
+      mostly reflects articles that are shown in folders. Articles can be contained within multiple folders over time hence this combination
+      of the two entities can contain different data (e.g. promotional prices change between folders).
+    columns:
+      - name: promotion_code
+        tests:
+          - not_null
+      - name: article_code
+        tests:
+          - not_null
+    # WIP in another branch to resolve a issue that will fail this test
+    # tests:
+    #   - dbt_utils.unique_combination_of_columns:
+    #       combination_of_columns:
+    #         - promotion_code
+    #         - article_code
+
+  - name: im_promotion__article_site
+    description: >
+      This model describes at what sites an article promotion is valid. This information is
+      contained in two tables but for each folder-article should only be represented by one
+      depending on whether the folder is in the concept stage or has been published definitively.
+    columns:
+      - name: promotion_code
+        tests:
+          - not_null
+      - name: article_code
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - promotion_code
+            - article_code
+            - site_code

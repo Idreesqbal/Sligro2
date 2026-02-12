@@ -1,0 +1,54 @@
+version: 2
+
+sources:
+  - name: data_hubs_to_dwh_landing_zone
+    database: sfg-data-lake-prod-happ
+    config:
+      freshness:
+        warn_after:
+          count: 25
+          period: hour
+        filter: event_datetime >= CURRENT_TIMESTAMP - INTERVAL 48 HOUR
+      loaded_at_field: event_datetime
+    tables:
+      - name: raw_article_v1_1
+        description: Article data
+        columns:
+          - name: event_datetime
+            description: The datetime of when the article event was received by the data hub
+          - name: event_type
+            description: The type of event considered ('created', 'updated' or 'deleted')
+          - name: typeSpecificAttributes
+            description: A structured column containing attributes that are only relevant to a small subset of articles
+          - name: tradeItems
+            description: A structured column containing attributes describing GTINs that relate to the article
+          - name: sligroLegacyBrandCode
+            description: The article's brand code
+          - name: scalesArticle
+            description: Whether the article is weighed on the scales or not
+          - name: pluCode
+            description: The article's price lookup code that is used by the scales to retrieve the right price data
+          - name: variableWeightItem
+            description: Whether the article is sold in variable weights
+          - name: operationalInformation
+            description: A structured column containing attributes that describes how the article should be handled and stored
+          - name: orderUnit
+            description: Describes in which unit of measure the article can be ordered by Sligro with its suppliers
+          - name: claimsAndLabels
+            description: A structured column containing various claims and labels (e.g. vegan, halal) that can be assigned to an article
+          - name: instructions
+            description: A structured column containing instructions on an article intended for the consumer (e.g. storage and defrost instructions)
+          - name: baseUnitOfMeasure
+            description: Describes the base unit of measure for the article (e.g. EA = each for an article if the base unit is an individual item)
+          - name: brandName
+            description: The brand name relating to the brand's code
+          - name: articleCode
+            description: The article's unique code as created in the master data management system STEP
+          - name: articleDescriptions
+            description: A structured column containing a variety of descriptions of the article
+          - name: articleType
+            description: Describes the type of article according to a Sligro internal categorisation which is assigned when the article is created
+          - name: issueUnitOfMeasure
+            description: This one will be removed in the 2nd batch...
+          - name: allergenSpecifications
+            description: A structured column containing allergen specifications in potentially multiple languages

@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: rv_hub__article
+
+  - name: rv_hub__article_AS400
+
+  - name: rv_hub__article_group
+
+  - name: rv_hub__collection_area
+
+  - name: rv_hub__forecast
+
+  - name: rv_hub__employee
+
+  - name: rv_hub__promotion
+
+  - name: rv_hub__rpe_supplier
+
+  - name: rv_hub__sales_order
+
+  - name: rv_hub__site
+
+  - name: rv_hub__stock
+
+  - name: rv_hub__stock_location
+
+  - name: rv_hub__supplier
+
+  - name: rv_hub__trade_item
+
+  - name: rv_hub__purchase_order
+
+  - name: rv_hub__purchase_invoice
+
+  - name: rv_hub__sales_invoice
+
+  - name: rv_hub__goods_received
+
+  - name: rv_hub__company_reference
+    config:
+      tags: "company_reference"
+
+  - name: rv_hub__company_reference_address
+    config:
+      tags: "company_reference"
+
+  - name: rv_hub__company_reference_building
+    config:
+      tags: "company_reference"
+
+  - name: rv_hub__postcode
+    config:
+      tags: "company_reference"
+
+  - name: rv_hub__customer
+    config:
+      tags:
+        - "company_reference"
+        - "company_reference_matching"
+
+  - name: rv_hub__carrier
+
+  - name: rv_hub__btw_code

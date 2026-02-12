@@ -1,0 +1,169 @@
+models:
+  - name: im_bigquery_costs
+    description: >
+      This model contains the final table with the cost of the BigQuery jobs, the Looker dashboards and users.
+    columns:
+      - name: query_created_time
+        description: The time when the query was created
+      - name: query_id
+        description: The ID of the query
+      - name: look_id
+        description: The ID of the Looker dashboard
+      - name: look_title
+        description: The title of the Looker dashboard
+      - name: query_model
+        description: The model of the query
+      - name: query_created_date
+        description: The date when the query was created
+      - name: dashboard_id
+        description: The ID of the Looker dashboard
+      - name: dashboard_is_legacy
+        description: Whether the dashboard is legacy
+      - name: dashboard_title
+        description: The title of the Looker dashboard
+      - name: user_email
+        description: The email of the user who created the Looker query
+      - name: user_name
+        description: The name of the user who created the Looker query
+      - name: query_formatted_pivots
+        description: The formatted pivots of the query
+      - name: dashboard_creator_name
+        description: The name of the creator of the Looker dashboard
+      - name: history_cache
+        description: A flag indicating whether the query result was served from cache
+      - name: history_connection_name
+        description: The name of the connection used to run the query
+      - name: query_view
+        description: The view of the query
+      - name: history_runtime
+        description: The runtime of the query in seconds
+      - name: history_message
+        description: The message of the query
+      - name: history_status
+        description: The status of the query
+      - name: project_id
+        description: The ID of the project where the job was created
+      - name: looker_service_account_email
+        description: The email of the Looker service account
+      - name: looker_service_account_name
+        description: The name of the Looker service account
+      - name: job_type
+        description: The type of the job
+      - name: cache_hit
+        description: A flag indicating whether the job result was served from cache
+      - name: statement_type
+        description: The type of the statement in the job
+      - name: priority
+        description: The priority of the job
+      - name: query
+        description: The query that was executed
+      - name: state
+        description: The state of the job
+      - name: total_bytes_processed
+        description: The total number of bytes processed by the job
+      - name: total_bytes_billed
+        description: The total number of bytes billed for the job
+      - name: analysis_costs_eur
+        description: The cost of the job in euros
+
+  - name: im_bigquery_jobs
+    description: >
+      This model materializes the BigQuery jobs table, containing the history of the jobs that have been executed in
+      BigQuery on DataWarehouse GCP project, extracted from the INFORMATION_SCHEMA.JOBS table.
+    columns:
+      - name: project_id
+        description: The ID of the project where the job was created
+      - name: user_email
+        description: The email address of the user who created the job
+      - name: user_name
+        description: The name of the user who created the job
+      - name: job_id
+        description: The ID of the job
+      - name: date_time
+        description: The time when the job was created
+      - name: job_type
+        description: The type of the job
+      - name: cache_hit
+        description: A flag indicating whether the job result was served from cache
+      - name: statement_type
+        description: The type of the statement in the job
+      - name: priority
+        description: The priority of the job
+      - name: query
+        description: The query that was executed
+      - name: state
+        description: The state of the job
+      - name: total_bytes_processed
+        description: The total number of bytes processed by the job
+      - name: total_bytes_billed
+        description: The total number of bytes billed for the job
+      - name: analysis_costs_eur
+        description: The cost of the job in euros
+
+  - name: im_looker_system_activity_history
+    description: >
+      This model contains data retrieved from the Looker system activity schema and history table.
+      It includes information about Looker users, the dashboard, and query related to the dashboard.
+    columns:
+      - name: look_id
+        description: The ID of the Looker dashboard
+      - name: look_title
+        description: The title of the Looker dashboard
+      - name: query_id
+        description: The ID of the Looker query
+      - name: query_model
+        description: The model of the query
+      - name: query_created_date
+        description: The date when the query was created
+      - name: dashboard_id
+        description: The ID of the Looker dashboard
+      - name: dashboard_is_legacy
+        description: Whether the dashboard is legacy
+      - name: dashboard_title
+        description: The title of the Looker dashboard
+      - name: user_email
+        description: The email of the user who created the Looker query
+      - name: user_name
+        description: The name of the user who created the Looker query
+      - name: query_formatted_pivots
+        description: The formatted pivots of the query
+      - name: dashboard_creator_name
+        description: The name of the creator of the Looker dashboard
+      - name: history_cache
+        description: A flag indicating whether the query result was served from cache
+      - name: history_completed_date
+        description: The date when the query was completed
+      - name: history_connection_name
+        description: The name of the connection used to run the query
+      - name: history_created_time
+        description: The time when the history record was created
+      - name: query_view
+        description: The view of the query
+      - name: query_created_time
+        description: The time when the query was created
+      - name: history_runtime
+        description: The runtime of the query in seconds
+      - name: history_most_recent_run_at_time,
+        description: The time when the most recent run of the query was completed
+      - name: history_most_recent_length
+        description: The length of the query
+      - name: history_message
+        description: The message of the query
+      - name: history_status
+        description: The status of the query
+      - name: inserted_date
+        description: The date when the row was inserted to the BigQuery table (ingestion date)
+
+  - name: im_looker_system_activity_query_metrics
+    description: >
+      This model contains the link between Looker queries and BigQuery job IDs, allowing to match
+      the cost of the query with the dashboard and user.
+    columns:
+      - name: query_created_time
+        description: The time when the query was created on Looker side
+      - name: bigquery_job_id
+        description: The ID of the BigQuery job associated with the query
+      - name: query_id
+        description: The ID of the Looker query
+      - name: inserted_date
+        description: The date when the row was inserted to the BigQuery table (ingestion date)

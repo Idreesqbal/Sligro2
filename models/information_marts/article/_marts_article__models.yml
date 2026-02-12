@@ -1,0 +1,140 @@
+models:
+  - name: im_article__article
+    description: >
+      The article mart contains data that is on the grain of an article and not language specific
+    columns:
+      - name: pk_article_code
+        description: Unique STEP/SAP product number
+        tests:
+          - unique
+          - not_null
+      - name: fk_sligro_legacy_brand_code
+        description: Cross identifier for the legacy brand name that identifies the brand to which the article belongs to
+      - name: brand_name
+        description: The name of the brand to which the article belongs to
+      - name: article_type
+        description: Identifier for the Article Type Variants
+      - name: scales_article_indicator
+        description: Indicator to know if the data for this article should be sent to the scales or not
+      - name: plu_code
+        description: The price lookup code is used in the scales to retrieve the correct price for the item that is being weighed
+      - name: variable_weight_item_indicator
+        description: Indicator to know if the item's price is determined by the weight purchased
+      - name: order_unit_of_measure
+        description: Identifier for the Unit Of Measure of the Order
+      - name: base_unit_of_measure
+        description: Identifier for the Unit Of Measure of the smallest pack unit (stock-keeping-unit)
+      - name: issue_unit_of_measure
+        description: Identifier for the Unit Of Measure of the Issue
+
+  - name: im_trade_item__trade_item
+    description: >
+      The article mart contains data that is on the grain of a trade-item and not language specific
+    columns:
+      - name: pk_trade_item_code
+        description: The trade item code is the GTIN that uniquely identifies the trade item
+        tests:
+          - unique
+          - not_null
+
+  - name: im_article__data_supplier
+    description: >
+      The data supplier for article information
+    columns:
+      - name: pk_data_supplier_code
+        description: The unique identifier for the data supplier.
+        tests:
+          - unique
+          - not_null
+      - name: fk_article_code
+        description: The business key to identify articles
+        tests:
+          - not_null
+      - name: ownership_nl
+        description: The owner of the data in the Netherlands
+      - name: ownership_be
+        description: The owner of the data in Belgium
+      - name: unit
+        description: The responsible team within the IAM organization
+      - name: data_supplier_id
+        description: The unique Identifier for the data supplier
+      - name: data_supplier_name
+        description: The the data supplier's name
+      - name: data_supplier_gln
+        description: The Global Location Number, it also serve as Unique identifier for the Data Supplier when available
+
+  - name: im_article__multi_language_description
+    description: >
+      This mart contains any descriptive data on the articles that is language-specific, e.g. operational information, descriptions, instructions.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - fk_article_code
+            - fk_locale_code
+    columns:
+      - name: fk_article_code
+        description: The business key to identify articles
+        tests:
+          - not_null
+      - name: fk_locale_code
+        description: The locale for which the data is recorded
+        tests:
+          - not_null
+
+  - name: im_article__type_specific_attribute
+    description: >
+      This mart contains article attributes that only apply to a subset of article types and which are language-specific.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - fk_article_code
+            - fk_locale_code
+    columns:
+      - name: pk_article_type_specific_attribute_code
+        description: Composite key to uniquely identify article code and locale for each attribute
+        tests:
+          - not_null
+      - name: fk_article_code
+        description: The business key to identify articles
+        tests:
+          - not_null
+      - name: fk_locale_code
+        description: The locale for which the data is recorded
+        tests:
+          - not_null
+
+  - name: im_trade_item__additional_gtin
+    description: >
+      This mart describes which GTINs are used interchangeably with a main GTIN.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - pk_trade_item_additional_code
+            - fk_trade_item_main_code
+    columns:
+      - name: pk_trade_item_additional_code
+        description: The business key to identify the additional trade items
+        tests:
+          - not_null
+      - name: fk_trade_item_main_code
+        description: The business key to identify the main trade item to which the additional trade items are mapped
+        tests:
+          - not_null
+
+  - name: im_trade_item__hierarchy
+    description: >
+      This mart describes the established hierarchy between trade items. E.g. a six-pack being the child trade item of a tray.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - fk_trade_item_child_code
+            - fk_trade_item_parent_code
+    columns:
+      - name: fk_trade_item_child_code
+        description: The business key to identify the child in the trade item hierarchy
+        tests:
+          - not_null
+      - name: fk_trade_item_parent_code
+        description: The business key to identify the parent in the trade item hierarchy
+        tests:
+          - not_null

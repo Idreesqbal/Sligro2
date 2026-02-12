@@ -1,0 +1,42 @@
+{%- set yaml_metadata -%}
+source_model: "stg_as400__dcarecpf"
+src_pk: "COLLECTION_AREA_HK"
+src_hashdiff: "HASHDIFF"
+src_payload:
+    - "COLLECTION_AREA_NK"
+    - "DCKDC1"
+    - "AREAC1"
+    - "COURC1"
+    - "AFCOC1"
+    - "AFVOC1"
+    - "DAOMC1"
+    - "AKKDC1"
+    - "APKDC1"
+    - "PLJNC1"
+    - "PLDRC1"
+    - "PIJNC1"
+    - "RFKDC1"
+    - "OLJNC1"
+    - "LWJNC1"
+    - "SLJNC1"
+    - "PLVRC1"
+    - "PLZTC1"
+    - "PLRSC1"
+    - "FVJNC1"
+    - "FVDRC1"
+    - "FVVRC1"
+    - "BPSCC1"
+    - "PLBLC1"
+    - "MCAVC1"
+    - "PLSRC2"
+    - "PLACC1"
+    - "AIPCC1"
+    - "START_DATETIME"
+    - "END_DATETIME"
+src_ldts: "LOAD_DATETIME"
+src_source: "RECORD_SOURCE"
+{%- endset -%}
+
+{% set metadata_dict = fromyaml(yaml_metadata) %}
+
+{{ automate_dv.sat(**metadata_dict) }}

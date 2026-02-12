@@ -1,0 +1,131 @@
+version: 2
+
+models:
+  - name: stg_as400__artikcpf
+
+  - name: stg_as400__purchase_invoice_status_description
+
+  - name: stg_as400__artikel_magazijn_locatie
+
+  - name: stg_as400__calendpf
+
+  - name: stg_as400__catlvcpf
+
+  - name: stg_as400__dcarecpf
+
+  - name: stg_as400__filialpf
+
+  - name: stg_as400__goebwdpf
+
+  - name: stg_as400__inklvcpf
+
+  - name: stg_as400__leverpf
+
+  - name: stg_as400__lvedicpf
+
+  - name: stg_as400__lvfiscpf
+
+  - name: stg_as400__lvinkcpf
+
+  - name: stg_as400__rel_voorraad_beheerder_artikel_groep
+
+  - name: stg_as400__thtw1cpf
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - stock_hk
+            - start_datetime
+
+  - name: stg_as400__thtw5cpf
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - stock_hk
+            - start_datetime
+          where: "start_datetime != '2025-02-24 12:48:11.999000 UTC'"
+
+  - name: stg_as400__verzamel_gebied_vestiging
+
+  - name: stg_as400__vrdvscpf
+
+  - name: stg_as400__bbb_schema_stam
+
+  - name: stg_as400__route_stam_tabel
+
+  - name: stg_as400__btw_codering
+
+  - name: stg_as400__btw_codering_tarief
+
+  - name: stg_as400__dwfkrcpf
+
+  - name: stg_as400__dwfktcpf
+
+  - name: stg_as400__prijs_groep
+
+  - name: stg_as400__rfkabcpf
+
+  - name: stg_as400__loufktpf
+
+  - name: stg_as400__folkoppf
+
+  - name: stg_as400__folartpf
+
+  - name: stg_as400__flvzflpf
+
+  - name: stg_as400__folvkwpf
+
+  - name: stg_as400__folokcpf
+
+  - name: stg_as400__flkencpf
+
+  - name: stg_as400__folprspf
+
+  - name: stg_as400__fofilcpf
+
+  - name: stg_as400__folfilpf
+
+  - name: stg_as400__flartxpf
+
+  - name: stg_as400__flaancpf
+
+  - name: stg_as400__artikel_prijs
+
+  - name: stg_as400__artikel_btw
+
+  - name: stg_as400__bstalgpf
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - purchase_order_hk
+            - start_datetime
+
+  - name: stg_as400__bestelpf
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - purchase_order_hk
+            - purchase_order_line_hk
+            - start_datetime
+
+  - name: stg_as400__bsta2cpf
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - purchase_order_hk
+            - start_datetime
+
+  - name: stg_as400__filia2pf
+
+  - name: stg_as400__dcnawpf
+
+  - name: stg_as400__transporteur
+
+  - name: stg_as400__inkfktpf
+
+  - name: stg_as400__inkfrcpf
+
+  - name: stg_as400__rioifrpf
+
+  - name: stg_as400__purchase_invoice_status_omschrijving
+
+  - name: stg_as400__btw_codering

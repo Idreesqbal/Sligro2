@@ -1,0 +1,32 @@
+models:
+  - name: base_data_hub_customer
+  - name: stg_data_hub_customer
+  - name: base_data_hub_customer_address
+    columns:
+      - name: emailAddress
+        labels:
+          contains_pii: true
+
+  - name: stg_data_hub_customer_address
+  - name: base_data_hub_customer_characteristics
+  - name: stg_data_hub_customer_characteristics
+  - name: base_data_hub_customer_contact_person
+    columns:
+      - name: emailAddress
+        description: The email address of the contact person
+        labels:
+          contains_pii: true
+      - name: dateOfBirth
+        labels:
+          contains_pii: true
+  - name: stg_data_hub_customer_contact_person
+  - name: base_data_hub_customer_groups
+  - name: stg_data_hub_customer_groups
+  - name: base_data_hub_customer_hierarchy
+  - name: stg_data_hub_customer_hierarchy
+  - name: base_data_hub_customer_location
+    columns:
+      - name: emailAddress
+        labels:
+          contains_pii: true
+  - name: stg_data_hub_customer_location
