@@ -1,0 +1,32 @@
+version: 2
+
+macros:
+  - name: calculate_period
+    description: >
+      Period is a Sligro-specific unit of time consisting of 4 weeks.
+      This macro is not currently used, but it there to document the logic of a period.
+    arguments:
+      - name: date_column
+        type: date
+        description: Column containing a date
+      - name: iso_week
+        type: bool
+        description: It is possible to overwrite this macro to use Gregorian weeks instead of ISO8601 weeks.
+
+  - name: current_periods
+    description: >
+      It creates 6 columns containing a boolean indicator stating if we are in a certain period.
+      This macro automatically creates one column for the current: year, quarter, month, week, isoweek, and day.
+    arguments:
+      - name: date_column
+        type: date
+        description: Date column that will be compared with today's date.
+
+  - name: national_holiday_current_data
+
+  - name: week_of_the_month
+    description: Finds the number of a week in a month (a number between 1 and 5).
+    arguments:
+      - name: date_column
+        type: date
+        description: Date column that will be used to extract the week of the month

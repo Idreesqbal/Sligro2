@@ -1,0 +1,31 @@
+version: 2
+
+macros:
+  - name: sfg_cast_to_date
+    description: >
+      Transforms a BIGINT into a valid date in the format 'YYYYMMDD'.
+      In the tables, we see dates casted such as 20240325.0.
+      Unfortunately, we also see values such as 1.0 or 0.0 in the same table.
+      This macro checks what could be a date and casts it.
+    arguments:
+      - name: date_column
+        type: bigint
+        description: The name of the column containing the BIGINT date value to be transformed into a `DATE`.
+
+  - name: sfg_cast_to_date_6_digits
+    description: >
+      Similar to the cast_to_date macro.
+      Unfortunately, at Sligro some date columns have 6 digits (e.g. 240101 for 2024-01-01).
+      This macro adds a 20 before casting.
+      However, it is important to make it more dynamic in case there is older data (e.g. 1900s).
+    arguments:
+      - name: date_column
+        type: bigint
+        description: The name of the column containing the BIGINT date value to be transformed into a `DATE`.
+
+  - name: sfg_cast_to_year
+    description: This turns 2-digit years into 4-digit years (e.g. from 20 to 2020).
+    arguments:
+      - name: year_column
+        type: bigint
+        description: Column with a 2-digit year (e.g. 23 instead of 2023)

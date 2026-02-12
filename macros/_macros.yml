@@ -1,0 +1,81 @@
+version: 2
+
+macros:
+  - name: fivetran_enddate
+    description: |
+      For records ingested by Fivetran we determine the time period when a record was valid by with
+      the _fivetran_synced and _fivetran_deleted columns. The _fivetran_synced column is the time when
+      the record was last updated. Hence, when a record is marked as deleted, the _fivetran_synced
+      column is also the end datetime of that record. If it is not deleted, the value is NULL.
+      This makes it easy to select all active records by filtering on `WHERE END_DATETIME IS NULL`.
+
+  - name: fivetran_loaddate
+    description: |
+      For records ingested by Fivetran we determine the time period when a record was valid by with
+      the _fivetran_synced and _fivetran_deleted columns. The _fivetran_synced column is the time when
+      the record was last updated. To determine the load datetime of the current version of the record,
+      we therefore need to look at the end datetime of the previous version of the record, i.e.
+      the _fivetran_synced value. This way we can preserve the history even for records that were not
+      yet in the data vault. However, the first record does not have a previous version, and so the
+      _fivetran_synced value would be the same as the second record. To make sure the ordering is still
+      correct we subtract a microsecond from the _fivetran_synced value for the first record in the table.
+
+  - name: build_field_selection_from_json
+    description: |
+      Dynamically generates a SQL SELECT clause to extract fields from a JSON object or array,
+      based on a provided schema definition (list of fields). Handles nested and repeated fields,
+      including arrays of structs and primitive types, using BigQuery JSON functions.
+      Useful for flattening semi-structured JSON data into tabular format in dbt models.
+      Parameters:
+        fields (list):
+          List of field definitions (dicts) with keys:
+            - name: Field name (string)
+            - type: Field type (STRING, INTEGER, RECORD, etc.)
+            - mode: (optional) Field mode (NULLABLE, REPEATED, etc.)
+            - fields: (optional) Nested fields for RECORD types
+        json_path (string, default='$'):
+          The JSONPath to the current object/array root. Used for recursion into nested fields.
+        parent_alias (string, default=''):
+          The SQL alias or column name for the parent JSON object. Used in JSON_QUERY/JSON_VALUE.
+        source_column (string, default=''):
+          The original source column containing the JSON data. Used if parent_alias is not set.
+
+unit_tests:
+  - name: test_macro_fivetran_enddate
+    model: test_macro_fivetran_enddate
+    given:
+      - input: this
+        rows: []
+
+    expect:
+      rows:
+        - { row_id: 1, output: "2024-01-01 00:00:00" }
+        - { row_id: 2, output: NULL }
+
+  - name: test_macro_fivetran_loaddate_primary_key
+    model: test_macro_fivetran_loaddate_primary_key
+    given:
+      - input: this
+        rows: []
+
+    expect:
+      rows:
+        - { row_id: 1, output: "2023-12-31 23:59:59.999999" }
+        - { row_id: 2, output: "2024-01-01 00:00:00" }
+        - { row_id: 3, output: "2024-01-01 23:59:59.999999" }
+        - { row_id: 4, output: "2024-01-03 00:00:00" }
+        - { row_id: 5, output: "2024-01-02 00:00:00" }
+
+  - name: test_macro_fivetran_loaddate_composite_key
+    model: test_macro_fivetran_loaddate_composite_key
+    given:
+      - input: this
+        rows: []
+
+    expect:
+      rows:
+        - { row_id: 1, output: "2023-12-31 23:59:59.999999" }
+        - { row_id: 2, output: "2024-01-01 00:00:00" }
+        - { row_id: 3, output: "2024-01-01 23:59:59.999999" }
+        - { row_id: 4, output: "2024-01-03 00:00:00" }
+        - { row_id: 5, output: "2024-01-02 00:00:00" }

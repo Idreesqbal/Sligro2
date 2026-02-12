@@ -1,0 +1,16 @@
+version: 2
+
+macros:
+  - name: headquarter_to_country
+    description: Maps a headquarter ID to a country code based on predefined rules.
+    arguments:
+      - name: headquarter_id
+        type: bigint
+        description: The ID representing the headquarter, which will be mapped to a country code.
+
+  - name: vat_rate
+    description: Maps the numeric value of a vat_rate. In the table, each vat_rate has a letter_code (e.g. A, B, C)
+    arguments:
+      - name: vat_code
+        type: string
+        description: One-letter code that will be turned into a vat percentage.
